@@ -110,18 +110,20 @@ export default Ember.Component.extend(ResizeMixin, {
    * Width as computed by the child image element's clientWidth
    * @private
    * @property _width
+   * @default 0
    */
   _width: Ember.computed('_resizeCounter', function () {
-    return this.get('element').clientWidth;
+    return Ember.get('element.clientWidth') || 0;
   }),
 
   /**
    * Height as computed by the child image element's clientHeight
    * @private
    * @property _height
+   * @default 0
    */
   _height: Ember.computed('_resizeCounter', function () {
-    return this.get('element').clientHeight;
+    return Ember.get('element.clientHeight') || 0;
   }),
 
   /**
