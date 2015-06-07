@@ -113,7 +113,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @default 0
    */
   _width: Ember.computed('_resizeCounter', function () {
-    return Ember.get('element.clientWidth') || 0;
+    return this.get('element.clientWidth') || 0;
   }),
 
   /**
@@ -123,7 +123,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @default 0
    */
   _height: Ember.computed('_resizeCounter', function () {
-    return Ember.get('element.clientHeight') || 0;
+    return this.get('element.clientHeight') || 0;
   }),
 
   /**
