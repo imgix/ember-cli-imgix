@@ -40,7 +40,7 @@ module.exports = function(environment) {
 `ember-cli-imgix` exposes a new image container that works will for creating responsive images. It is a `<div>` element with a single
 `<img>` child element. Adding them to your templates is quite easy:
 
-```handlebars
+```hbs
 {{imgix-image path="/users/1.png"}}
 ```
 
