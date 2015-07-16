@@ -6,6 +6,7 @@ import layout from '../templates/components/imgix-image';
 export default Ember.Component.extend(ResizeMixin, {
   layout: layout,
   crossorigin: null,
+  classNames: ['imgix-image-wrap'],
 
   /**
    * @public
