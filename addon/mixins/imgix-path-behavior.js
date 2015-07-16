@@ -15,6 +15,8 @@ export default Ember.Mixin.create({
 
   pixelStep: 10,
 
+  useParentWidth: false,
+
   /**
    * @public
    * @property {string} The main entry point for our component. The final `src` will be set based on a manipulation of this property.
@@ -36,7 +38,15 @@ export default Ember.Mixin.create({
    */
   _query: computed('path', function() {
     let uri = URI(this.get('path'));
-    return uri.search(true);
+    return Ember.Object.create(uri.search(true));
+  }),
+
+  _widthFromPath: computed('_query', function() {
+    return this.get('_query.w');
+  }),
+
+  _heightFromPath: computed('_query', function() {
+    return this.get('_query.h');
   }),
 
   /**
@@ -56,13 +66,7 @@ export default Ember.Mixin.create({
    */
   src: computed('_path', '_query', '_width', '_height', '_dpr', function () {
     let env = this.get('_config');
-    let options = {
-      w: this.get('_width'),
-      h: this.get('_height'),
-      dpr: this.get('_dpr'),
-      crop: "faces",
-      fit: "crop"
-    };
+    let options = {};
 
     if (this.get('_query')) {
       merge(options, this.get('_query'));
@@ -71,6 +75,14 @@ export default Ember.Mixin.create({
     if (!!env && Ember.get(env, 'APP.imgix.debug')) {
       merge(options, this.get('_debugParams'));
     }
+
+    merge(options, {
+      w: this.get('_width'),
+      h: this.get('_height'),
+      dpr: this.get('_dpr'),
+      crop: "faces",
+      fit: "crop"
+    });
 
     return this.get('_client').path(this.get('_path')).toUrl(options).toString();
   }),
@@ -143,8 +155,16 @@ export default Ember.Mixin.create({
    * @property _width
    * @default 0
    */
-  _width: computed('_resizeCounter', 'pixelStep', function () {
-    let newWidth = this.get('element.clientWidth') || 0;
+  _width: computed('_resizeCounter', 'pixelStep', 'useParentWidth', function () {
+    let newWidth = 0;
+
+    if (this.get('useParentWidth') && this.get('element')) {
+      newWidth = this.$().parent().outerWidth();
+    }
+
+    if (!newWidth) {
+      newWidth = this.get('element.clientWidth') || this.get('_widthFromPath');
+    }
     let pixelStep = this.get('pixelStep');
     return Math.ceil(newWidth / pixelStep) * pixelStep;
   }),
