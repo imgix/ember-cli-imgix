@@ -8,6 +8,8 @@ export default Ember.Component.extend(ResizeMixin, {
   crossorigin: null,
   classNames: ['imgix-image-wrap'],
 
+  aspectRatio: null,
+
   /**
    * @public
    * @property {string} The main entry point for our component. The final `src` will be set based on a manipulation of this property.
@@ -124,8 +126,14 @@ export default Ember.Component.extend(ResizeMixin, {
    * @property _height
    * @default 0
    */
-  _height: Ember.computed('_resizeCounter', function () {
-    return this.get('element.clientHeight') || 0;
+  _height: Ember.computed('aspectRatio', '_resizeCounter', '_width', function () {
+    let newHeight = this.get('element.clientHeight') || 0;
+
+    if (this.get('aspectRatio')) {
+      newHeight = this.get('_width') / this.get('aspectRatio');
+    }
+
+    return Math.floor(newHeight);
   }),
 
   /**
