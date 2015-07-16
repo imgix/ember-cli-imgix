@@ -13,6 +13,8 @@ export default Ember.Mixin.create({
   crossorigin: null,
   aspectRatio: null,
 
+  pixelStep: 10,
+
   /**
    * @public
    * @property {string} The main entry point for our component. The final `src` will be set based on a manipulation of this property.
@@ -141,8 +143,10 @@ export default Ember.Mixin.create({
    * @property _width
    * @default 0
    */
-  _width: computed('_resizeCounter', function () {
-    return this.get('element.clientWidth') || 0;
+  _width: computed('_resizeCounter', 'pixelStep', function () {
+    let newWidth = this.get('element.clientWidth') || 0;
+    let pixelStep = this.get('pixelStep');
+    return Math.ceil(newWidth / pixelStep) * pixelStep;
   }),
 
   /**

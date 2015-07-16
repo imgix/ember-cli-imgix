@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { moduleForComponent, test } from 'ember-qunit';
 /* global URI */
 
@@ -48,4 +49,18 @@ test('it sets the source correctly', function(assert) {
   assert.ok(url.hasQuery("dpr", 1));
   assert.ok(url.hasQuery("crop", "faces"));
   assert.ok(url.hasQuery("fit", "crop"));
+});
+
+test('it respects the pixel step', function(assert) {
+  let component = this.subject(defaultOptions);
+  component.setProperties({
+    path: "/users/1.png",
+    pixelStep: 10,
+    element: Ember.Object.create({
+      clientWidth: 405
+    })
+  });
+
+  let url = URI(component.get('src'));
+  assert.equal(url.search(true).w, "410", "Expected a step up to 410, instead stepped to: ", url.search(true).w);
 });
