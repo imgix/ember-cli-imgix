@@ -3,6 +3,14 @@ import Client from 'imgix-core-js';
 import ResizeMixin from 'ember-resize-mixin/main';
 import layout from '../templates/components/imgix-image';
 
+const {
+  computed,
+  merge,
+  on
+} = Ember;
+
+/* global URI */
+
 export default Ember.Component.extend(ResizeMixin, {
   layout: layout,
   crossorigin: null,
@@ -15,6 +23,25 @@ export default Ember.Component.extend(ResizeMixin, {
    * @property {string} The main entry point for our component. The final `src` will be set based on a manipulation of this property.
    */
   path: null,
+
+  /**
+   * @private
+   * @property {string} The computed path from the input path. This should not include any query parameters passed in, e.g. "/users/1.png?sat=100"
+   */
+  _path: computed('path', function() {
+    console.log("sup");
+    let uri = URI(this.get('path'));
+    return uri.pathname();
+  }),
+
+  /**
+   * @private
+   * @property {Object} a hash of key-value pairs for parameters that were passed in via the `path` property
+   */
+  _query: computed('path', function() {
+    let uri = URI(this.get('path'));
+    return uri.search(true);
+  }),
 
   /**
    * @private
@@ -31,7 +58,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @property {string}
    * @return the fully built string
    */
-  src: Ember.computed('path', '_width', '_height', '_dpr', function () {
+  src: computed('_path', '_query', '_width', '_height', '_dpr', function () {
     let env = this.get('_config');
     let options = {
       w: this.get('_width'),
@@ -41,11 +68,15 @@ export default Ember.Component.extend(ResizeMixin, {
       fit: "crop"
     };
 
-    if (!!env && Ember.get(env, 'APP.imgix.debug')) {
-      Ember.merge(options, this.get('_debugParams'));
+    if (this.get('_query')) {
+      merge(options, this.get('_query'));
     }
 
-    return this.get('_client').path(this.get('path')).toUrl(options).toString();
+    if (!!env && Ember.get(env, 'APP.imgix.debug')) {
+      merge(options, this.get('_debugParams'));
+    }
+
+    return this.get('_client').path(this.get('_path')).toUrl(options).toString();
   }),
 
   /**
@@ -59,7 +90,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * Observer to trigger image resizes, but debounced.
    * @private
    */
-  _onResize: Ember.on('resize', function () {
+  _onResize: on('resize', function () {
     let debounceRate = 200;
     let env = this.get('_config');
     if (!!env && !!Ember.get(env, 'APP.imgix.debounceRate')) {
@@ -73,7 +104,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @throws {Ember.Error} Will throw an error if the imgix config information is not found in config/environment.js
    * @return {Imgix.Client} return an instantiated Imgix.Client instance.
    */
-  _client: Ember.computed(function () {
+  _client: computed(function () {
     let env = this.get('_config');
     if (!env || !Ember.get(env, 'APP.imgix.source')) {
       throw new Ember.Error("Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.");
@@ -97,7 +128,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @return {Object} a POJO with some extra imgix parameters to overlay debug data on our image.
    * @private
    */
-  _debugParams: Ember.computed('_width', '_height', '_dpr', function () {
+  _debugParams: computed('_width', '_height', '_dpr', function () {
     return {
       txt: `${this.get('_width')} x ${this.get('_height')} @ DPR ${this.get('_dpr')}`,
       txtalign: "center,bottom",
@@ -116,7 +147,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @property _width
    * @default 0
    */
-  _width: Ember.computed('_resizeCounter', function () {
+  _width: computed('_resizeCounter', function () {
     return this.get('element.clientWidth') || 0;
   }),
 
@@ -126,7 +157,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @property _height
    * @default 0
    */
-  _height: Ember.computed('aspectRatio', '_resizeCounter', '_width', function () {
+  _height: computed('aspectRatio', '_resizeCounter', '_width', function () {
     let newHeight = this.get('element.clientHeight') || 0;
 
     if (this.get('aspectRatio')) {
@@ -143,7 +174,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * @return {Number} devicePixelRatio for the client
    * @default 1
    */
-  _dpr: Ember.computed('_resizeCounter', function () {
+  _dpr: computed('_resizeCounter', function () {
     return window.devicePixelRatio || 1;
   }),
 
@@ -151,7 +182,7 @@ export default Ember.Component.extend(ResizeMixin, {
    * Simple abstraction for reading the app's configuration. Useful for testing.
    * @private
    */
-  _config: Ember.computed(function () {
+  _config: computed(function () {
     return this.container.lookupFactory('config:environment');
   })
 });
