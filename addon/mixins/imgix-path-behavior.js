@@ -66,7 +66,13 @@ export default Ember.Mixin.create({
    */
   src: computed('_path', '_query', '_width', '_height', '_dpr', function () {
     let env = this.get('_config');
-    let options = {};
+
+    // These operations are defaults and should be overidden by any incoming
+    // query parameters
+    let options = {
+      crop: "faces",
+      fit: "crop"
+    };
 
     if (this.get('_query')) {
       merge(options, this.get('_query'));
@@ -76,12 +82,12 @@ export default Ember.Mixin.create({
       merge(options, this.get('_debugParams'));
     }
 
+    // This is where the magic happens. These are the parameters that force the
+    // responsiveness that we're looking for.
     merge(options, {
       w: this.get('_width'),
       h: this.get('_height'),
-      dpr: this.get('_dpr'),
-      crop: "faces",
-      fit: "crop"
+      dpr: this.get('_dpr')
     });
 
     return this.get('_client').path(this.get('_path')).toUrl(options).toString();

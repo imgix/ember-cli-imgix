@@ -49,3 +49,12 @@ test('it renders with an aspect ratio', function(assert) {
   assert.equal(url.search(true).w, "1280");
   assert.equal(url.search(true).h, "960");
 });
+
+test('it respects passed in `crop` and `fit` values', function(assert) {
+  assert.expect(2);
+  this.render(hbs`{{imgix-image path="/users/1.png?sat=100&fit=min&crop=top,left"}}`);
+
+  let url = URI(this.$('img').attr('src'));
+  assert.equal(url.search(true).fit, "min");
+  assert.equal(url.search(true).crop, "top,left");
+});
