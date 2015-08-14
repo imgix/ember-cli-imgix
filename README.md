@@ -4,8 +4,6 @@
 
 An Ember addon for easily adding responsive imagery via imgix to your application.
 
-**Note: This is an exteremely experimental addon at this point. Please expect the public APIs to change often and quickly until 0.1.0.**
-
 **Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with imgix Web Folder or S3 Sources.
 
 ## Installation
