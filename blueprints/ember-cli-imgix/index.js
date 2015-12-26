@@ -3,8 +3,8 @@ module.exports = {
 
   afterInstall: function() {
     return this.addBowerPackagesToProject([
-      'ember-cli-imgix-core-js-shim',
-      'imgix-core-js'
+      { name: 'ember-cli-imgix-core-js-shim', target: '0.02' },
+      { name: 'imgix-core-js', target: '0.1.1' }
     ]);
   }
 };
