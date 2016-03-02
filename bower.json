@@ -13,8 +13,5 @@
     "qunit": "~1.18.0",
     "imgix-core-js": "1.0.3",
     "uri.js": "~1.15.1"
-  },
-  "resolutions": {
-    "ember": "release"
   }
 }
