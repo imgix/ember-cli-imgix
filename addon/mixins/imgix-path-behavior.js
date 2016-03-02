@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import Client from 'imgix-core-js';
 
 const {
   computed,
@@ -7,7 +6,7 @@ const {
   on
 } = Ember;
 
-/* global URI */
+/* global URI, ImgixClient */
 
 export default Ember.Mixin.create({
   crossorigin: null,
@@ -57,7 +56,7 @@ export default Ember.Mixin.create({
   _resizeCounter: 0,
 
   /**
-   * The main meat of our responsive imaging. We use an instance of {Imgix.Client} to build up a new image
+   * The main meat of our responsive imaging. We use an instance of ImgixClient to build up a new image
    * URL based on `path` and apply the correct sizing parameters as we go.
    *
    * @public
@@ -90,7 +89,7 @@ export default Ember.Mixin.create({
       dpr: this.get('_dpr')
     });
 
-    return this.get('_client').path(this.get('_path')).toUrl(options).toString();
+    return this.get('_client').buildURL(this.get('_path'), options);
   }),
 
   /**
@@ -114,9 +113,9 @@ export default Ember.Mixin.create({
   }),
 
   /**
-   * @property {Imgix.Client} instantiated Imgix.Client
+   * @property ImgixClient instantiated ImgixClient
    * @throws {Ember.Error} Will throw an error if the imgix config information is not found in config/environment.js
-   * @return {Imgix.Client} return an instantiated Imgix.Client instance.
+   * @return ImgixClient return an instantiated ImgixClient instance.
    */
   _client: computed(function () {
     let env = this.get('_config');
@@ -124,7 +123,7 @@ export default Ember.Mixin.create({
       throw new Ember.Error("Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.");
     }
 
-    return new Client(env.APP.imgix.source);
+    return new ImgixClient({ host: env.APP.imgix.source });
   }),
 
   /**
@@ -144,7 +143,7 @@ export default Ember.Mixin.create({
    */
   _debugParams: computed('_width', '_height', '_dpr', function () {
     return {
-      txt: `${this.get('_width')} x ${this.get('_height')} @ DPR ${this.get('_dpr')}`,
+      txt64: `${this.get('_width')} x ${this.get('_height')} @ DPR ${this.get('_dpr')}`,
       txtalign: "center,bottom",
       txtsize: 20,
       txtfont: "Helvetica Neue",
