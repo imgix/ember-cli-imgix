@@ -1,7 +1,7 @@
 {
   "name": "ember-cli-imgix",
   "dependencies": {
-    "ember": "1.13.8",
+    "ember": "1.13.13",
     "ember-cli-shims": "ember-cli/ember-cli-shims#0.0.3",
     "ember-cli-test-loader": "ember-cli-test-loader#0.1.3",
     "ember-load-initializers": "ember-cli/ember-load-initializers#0.1.4",
@@ -11,7 +11,7 @@
     "jquery": "^1.11.3",
     "loader.js": "ember-cli/loader.js#3.2.1",
     "qunit": "~1.18.0",
-    "ember-cli-imgix-core-js-shim": "imgix/ember-cli-imgix-core-js-shim#0.0.2",
-    "imgix-core-js": "0.2.4"
+    "imgix-core-js": "1.0.3",
+    "uri.js": "~1.15.1"
   }
 }
