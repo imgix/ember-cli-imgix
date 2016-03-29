@@ -12,6 +12,6 @@
     "loader.js": "ember-cli/loader.js#3.2.1",
     "qunit": "~1.18.0",
     "imgix-core-js": "1.0.3",
-    "uri.js": "~1.15.1"
+    "urijs": "~1.16.1"
   }
 }
