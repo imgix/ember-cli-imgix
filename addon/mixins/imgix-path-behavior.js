@@ -12,6 +12,10 @@ export default Ember.Mixin.create({
   crossorigin: null,
   aspectRatio: null,
 
+  auto: null,
+  crop: null,
+  fit: null,
+
   pixelStep: 10,
 
   useParentWidth: false,
@@ -63,15 +67,19 @@ export default Ember.Mixin.create({
    * @property {string}
    * @return the fully built string
    */
-  src: computed('_path', '_query', '_width', '_height', '_dpr', function () {
+  src: computed('_path', '_query', '_width', '_height', '_dpr', 'crop', 'fit', function () {
     let env = this.get('_config');
 
     // These operations are defaults and should be overidden by any incoming
     // query parameters
     let options = {
-      crop: "faces",
-      fit: "crop"
+      crop: this.get('crop') || "faces",
+      fit: this.get('fit') || "crop"
     };
+
+    if (this.get('auto')) {
+      merge(options, { auto: this.get('auto') });
+    }
 
     if (this.get('_query')) {
       merge(options, this.get('_query'));
