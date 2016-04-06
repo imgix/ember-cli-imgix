@@ -11,6 +11,8 @@ const {
 export default Ember.Mixin.create({
   crossorigin: null,
   aspectRatio: null,
+
+  auto: null,
   crop: null,
   fit: null,
 
@@ -74,6 +76,10 @@ export default Ember.Mixin.create({
       crop: this.get('crop') || "faces",
       fit: this.get('fit') || "crop"
     };
+
+    if (this.get('auto')) {
+      merge(options, { auto: this.get('auto') });
+    }
 
     if (this.get('_query')) {
       merge(options, this.get('_query'));

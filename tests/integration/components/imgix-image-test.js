@@ -67,3 +67,11 @@ test('it respects `crop` and `fit` values passed as attributes', function(assert
   assert.equal(url.search(true).crop, "top,left");
   assert.equal(url.search(true).fit, "min");
 });
+
+test('it respects `auto` values passed as attributes', function(assert) {
+  assert.expect(1);
+  this.render(hbs`{{imgix-image path="/users/1.png" auto="compress,enhance"}}`);
+
+  let url = URI(this.$('img').attr('src'));
+  assert.equal(url.search(true).auto, "compress,enhance");
+});
