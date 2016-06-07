@@ -75,3 +75,11 @@ test('it respects `auto` values passed as attributes', function(assert) {
   let url = URI(this.$('img').attr('src'));
   assert.equal(url.search(true).auto, "compress,enhance");
 });
+
+test('it allows setting the alt attribute', function(assert) {
+
+  this.render(hbs`{{imgix-image path="/users/1.png" alt="User 1"}}`);
+
+  let alt = this.$('img').attr('alt');
+  assert.equal(alt, 'User 1');
+});

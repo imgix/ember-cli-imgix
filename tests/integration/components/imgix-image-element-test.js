@@ -16,3 +16,11 @@ test('it renders', function(assert) {
   assert.equal(this.$().text().trim(), '');
   assert.equal(url.pathname(), '/users/1.png');
 });
+
+test('it allows setting the alt attribute', function(assert) {
+
+  this.render(hbs`{{imgix-image-element path="/users/1.png" alt="User 1"}}`);
+
+  let alt = this.$('img').attr('alt');
+  assert.equal(alt, 'User 1');
+});
