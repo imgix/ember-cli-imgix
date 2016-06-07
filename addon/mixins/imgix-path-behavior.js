@@ -68,6 +68,8 @@ export default Ember.Mixin.create({
    * @return the fully built string
    */
   src: computed('_path', '_query', '_width', '_height', '_dpr', 'crop', 'fit', function () {
+    if (!this.get('_width')) { return; }
+
     let env = this.get('_config');
 
     // These operations are defaults and should be overidden by any incoming
