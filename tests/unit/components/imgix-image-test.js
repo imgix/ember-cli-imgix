@@ -51,6 +51,16 @@ test('it sets the source correctly', function(assert) {
   assert.ok(url.hasQuery("fit", "crop"));
 });
 
+test('it does not generate a source without a width', function(assert) {
+  var component = this.subject(defaultOptions);
+  component.setProperties({
+    path: "/users/1.png",
+    _width: null
+  });
+
+  assert.equal(null, component.get('src'));
+});
+
 test('it respects the pixel step', function(assert) {
   let component = this.subject(defaultOptions);
   component.setProperties({
