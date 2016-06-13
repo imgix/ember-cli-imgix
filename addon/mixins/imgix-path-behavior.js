@@ -143,6 +143,9 @@ export default Ember.Mixin.create({
    * @method _incrementResizeCounter
    */
   _incrementResizeCounter: function () {
+    if( this.get('isDestroyed') || this.get('isDestroying') ) {
+      return;
+    }
     this.incrementProperty('_resizeCounter');
   },
 
