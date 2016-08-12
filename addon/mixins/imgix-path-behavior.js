@@ -107,7 +107,7 @@ export default Ember.Mixin.create({
    * Fire off a resize after our element has been added to the DOM.
    */
   didInsertElement: function () {
-    Ember.run.once(this, this._incrementResizeCounter);
+    Ember.run.schedule('afterRender', this, this._incrementResizeCounter);
   },
 
   /**
