@@ -177,7 +177,7 @@ export default Ember.Mixin.create({
   _width: computed('_resizeCounter', 'pixelStep', 'useParentWidth', function () {
     let newWidth = 0;
 
-    if (this.get('useParentWidth') && this.get('element')) {
+    if (this.$() && this.get('useParentWidth') && this.get('element')) {
       newWidth = this.$().parent().outerWidth();
     }
 
