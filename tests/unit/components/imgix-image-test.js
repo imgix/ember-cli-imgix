@@ -32,6 +32,13 @@ test('it renders', function(assert) {
   assert.equal(component._state, 'inDOM');
 });
 
+test('it does not throw an exception when given an undefined path', function(assert) {
+  var component = this.subject(defaultOptions);
+  component.set('path', undefined);
+  this.render();
+  assert.equal(component._state, 'inDOM');
+});
+
 test('it sets the source correctly', function(assert) {
   var component = this.subject(defaultOptions);
   component.setProperties({
