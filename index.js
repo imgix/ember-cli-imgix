@@ -4,14 +4,27 @@
 module.exports = {
   name: 'ember-cli-imgix',
 
-  isDevelopingAddon: function() {
+  isDevelopingAddon() {
     return true;
   },
 
-  included: function(app) {
-    this.app.import(app.bowerDirectory + '/md5/build/md5.min.js');
-    this.app.import(app.bowerDirectory + '/urijs/src/URI.js');
-    this.app.import(app.bowerDirectory + '/js-base64/base64.js');
-    this.app.import(app.bowerDirectory + '/imgix-core-js/dist/imgix-core-js.js');
-  }
+  options: {
+    nodeAssets: {
+      'blueimp-md5': {
+        srcDir: 'js',
+        import: ['md5.min.js'],
+      },
+      urijs: {
+        srcDir: 'src',
+        import: ['URI.min.js'],
+      },
+      'js-base64': {
+        import: ['base64.min.js'],
+      },
+      'imgix-core-js': {
+        srcDir: 'dist',
+        import: ['imgix-core-js.js'],
+      }
+    }
+  },
 };
