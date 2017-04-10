@@ -4,7 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 
 moduleForComponent('imgix-image', 'Unit | Component | imgix image', {
   // Specify the other units that are required for this test
-  // needs: ['component:foo', 'helper:bar'],
+  needs: ['service:resize'],
   unit: true
 });
 

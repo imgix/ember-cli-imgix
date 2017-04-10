@@ -1,15 +1,21 @@
 import Ember from 'ember';
+import ResizeAware from 'ember-resize/mixins/resize-aware';
 import getOwner from 'ember-getowner-polyfill';
 
 const {
   computed,
   merge,
-  on
+  inject: {
+    service,
+  },
 } = Ember;
 
 /* global URI, ImgixClient */
 
-export default Ember.Mixin.create({
+export default Ember.Mixin.create(ResizeAware, {
+  resizeWidthSensitive: true,
+  resizeHeightSensitive: true,
+
   crossorigin: null,
   aspectRatio: null,
 
@@ -20,6 +26,8 @@ export default Ember.Mixin.create({
   pixelStep: 10,
 
   useParentWidth: false,
+
+  resizeService: service('resize'),
 
   /**
    * @public
@@ -106,7 +114,8 @@ export default Ember.Mixin.create({
   /**
    * Fire off a resize after our element has been added to the DOM.
    */
-  didInsertElement: function () {
+  didInsertElement: function (...args) {
+    this._super(...args);
     Ember.run.schedule('afterRender', this, this._incrementResizeCounter);
   },
 
@@ -114,14 +123,16 @@ export default Ember.Mixin.create({
    * Observer to trigger image resizes, but debounced.
    * @private
    */
-  _onResize: on('resize', function () {
+  didResize: function () {
     let debounceRate = 200;
     let env = this.get('_config');
     if (!!env && !!Ember.get(env, 'APP.imgix.debounceRate')) {
       debounceRate = Ember.get(env, 'APP.imgix.debounceRate');
     }
+
+    console.log(')(*$)(*$)(*$)(*$)(*$)(*$)(*$)');
     Ember.run.debounce(this, this._incrementResizeCounter, debounceRate);
-  }),
+  },
 
   /**
    * @property ImgixClient instantiated ImgixClient
