@@ -45,7 +45,7 @@
     "ember-cli-babel": "^5.1.3",
     "ember-cli-htmlbars": "^1.0.0",
     "ember-getowner-polyfill": "1.0.1",
-    "ember-resize-mixin": "kellysutton/ember-resize-mixin#master"
+    "ember-resize": "0.0.17"
   },
   "ember-addon": {
     "configPath": "tests/dummy/config"
