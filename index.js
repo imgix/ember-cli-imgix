@@ -4,7 +4,7 @@
 module.exports = {
   name: 'ember-cli-imgix',
 
-  isDevelopingAddon() {
+  isDevelopingAddon: function() {
     return true;
   },
 
