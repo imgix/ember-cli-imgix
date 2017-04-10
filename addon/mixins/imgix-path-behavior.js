@@ -130,7 +130,6 @@ export default Ember.Mixin.create(ResizeAware, {
       debounceRate = Ember.get(env, 'APP.imgix.debounceRate');
     }
 
-    console.log(')(*$)(*$)(*$)(*$)(*$)(*$)(*$)');
     Ember.run.debounce(this, this._incrementResizeCounter, debounceRate);
   },
 
