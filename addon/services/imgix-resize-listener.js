@@ -42,6 +42,6 @@ export default Service.extend({
 
   notifySubscribers() {
     get(this, 'subscribers')
-      .forEach(function(subscriber) { console.log('yeah'); subscriber(); });
+      .forEach(function(subscriber) { subscriber(); });
   }
 });
