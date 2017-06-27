@@ -4,12 +4,16 @@ import getOwner from 'ember-getowner-polyfill';
 const {
   computed,
   merge,
-  on
+  inject: {
+    service,
+  }
 } = Ember;
 
 /* global URI, ImgixClient */
 
 export default Ember.Mixin.create({
+  imgixResizeListener: service(),
+
   crossorigin: null,
   aspectRatio: null,
 
@@ -20,6 +24,10 @@ export default Ember.Mixin.create({
   pixelStep: 10,
 
   useParentWidth: false,
+
+  useLQIP: false,
+
+  resizeService: service('resize'),
 
   /**
    * @public
@@ -53,6 +61,8 @@ export default Ember.Mixin.create({
     return this.get('_query.h');
   }),
 
+  _hasLoadedLowQualityVersion: false,
+
   /**
    * @private
    * @default 0
@@ -68,7 +78,7 @@ export default Ember.Mixin.create({
    * @property {string}
    * @return the fully built string
    */
-  src: computed('_path', '_query', '_width', '_height', '_dpr', 'crop', 'fit', function () {
+  src: computed('_path', '_query', '_width', '_height', '_dpr', 'crop', 'fit', 'useLQIP', '_hasLoadedLowQualityVersion', function () {
     if (!this.get('_width')) { return; }
 
     let env = this.get('_config');
@@ -92,6 +102,14 @@ export default Ember.Mixin.create({
       merge(options, this.get('_debugParams'));
     }
 
+    if(this.get('LQIP') && !this.get('_hasLoadedLowQualityVersion')) {
+      merge(options, {
+        blur: 200,
+        px: 16,
+        auto: 'format',
+      });
+    }
+
     // This is where the magic happens. These are the parameters that force the
     // responsiveness that we're looking for.
     merge(options, {
@@ -104,24 +122,29 @@ export default Ember.Mixin.create({
   }),
 
   /**
+   * Listen for resize events on the window
    * Fire off a resize after our element has been added to the DOM.
    */
-  didInsertElement: function () {
+  didInsertElement: function (...args) {
+    this._incrementResizeCounter = this._incrementResizeCounter.bind(this);
+    this._handleImageLoad = this._handleImageLoad.bind(this);
+
+    this.get('imgixResizeListener').subscribe(this._incrementResizeCounter);
     Ember.run.schedule('afterRender', this, this._incrementResizeCounter);
+
+    this.$('img').on('load', this._handleImageLoad);
+
+    this._super(...args);
   },
 
   /**
-   * Observer to trigger image resizes, but debounced.
-   * @private
+   * Remove resize event listener
    */
-  _onResize: on('resize', function () {
-    let debounceRate = 200;
-    let env = this.get('_config');
-    if (!!env && !!Ember.get(env, 'APP.imgix.debounceRate')) {
-      debounceRate = Ember.get(env, 'APP.imgix.debounceRate');
-    }
-    Ember.run.debounce(this, this._incrementResizeCounter, debounceRate);
-  }),
+  willDestroyElement: function(...args) {
+    this.get('imgixResizeListener').unsubscribe(this.handleResizeEvent);
+    this.$('img').off('load', this._handleImageLoad);
+    this._super(...args);
+  },
 
   /**
    * @property ImgixClient instantiated ImgixClient
@@ -221,5 +244,9 @@ export default Ember.Mixin.create({
    */
   _config: computed(function () {
     return getOwner(this).resolveRegistration('config:environment');
-  })
+  }),
+
+  _handleImageLoad() {
+    this.set('_hasLoadedLowQualityVersion', true);
+  },
 });
