@@ -32,8 +32,8 @@ export default Ember.Mixin.create({
    * @property {string} The computed path from the input path. This should not include any query parameters passed in, e.g. "/users/1.png?sat=100"
    */
   _path: computed('path', function() {
-    let uri = URI(this.get('path'));
-    return uri.pathname();
+    let path = this.get('path');
+    return path ? URI(path).pathname() : '';
   }),
 
   /**
@@ -41,8 +41,8 @@ export default Ember.Mixin.create({
    * @property {Object} a hash of key-value pairs for parameters that were passed in via the `path` property
    */
   _query: computed('path', function() {
-    let uri = URI(this.get('path'));
-    return Ember.Object.create(uri.search(true));
+    let path = this.get('path');
+    return path ? Ember.Object.create(URI(path).search(true)) : {};
   }),
 
   _widthFromPath: computed('_query', function() {
