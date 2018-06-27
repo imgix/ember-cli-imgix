@@ -56,6 +56,7 @@
     "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
     "ember-resize-aware": "1.0.3",
+    "ember-resize-mixin": "kellysutton/ember-resize-mixin#master",
     "fastboot-transform": "^0.1.2",
     "imgix-core-js": "1.1.1",
     "js-base64": "2.4.4"
