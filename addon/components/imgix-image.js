@@ -7,5 +7,5 @@ export default Ember.Component.extend(ImgixPathBehavior, ResizeMixin, {
   layout: null,
   attributeBindings: ['src', 'crossorigin', 'style', 'alt'],
 
-  useParentWidth: true,
+  useParentWidth: true
 });
