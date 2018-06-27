@@ -1,19 +1,6 @@
+{{demo-app-header }}
+{{demo-app-navbar }}
 
-<div class="container">
-  {{imgix-image path="/examples/puffins.jpg" class="header-img"}}
-
-  {{imgix-image path="/examples/jellyfish.jpg" class="feature-img"}}
-  {{imgix-image path="/examples/lionfish.jpg" class="feature-img"}}
-  {{imgix-image path="/examples/clownfish.jpg" class="feature-img"}}
-  {{imgix-image path="/examples/fin.jpg" class="feature-img"}}
-</div>
-
-<div class="container">
-  <a href="#" style="height: 400px; width: 400px;">
-    {{imgix-image-element
-      path="/examples/fin.jpg"
-      class="feature-unwrapped-image"
-      style="height: 100%; width: 100%;" aspectRatio=1.333
-    }}
-  </a>
+<div class='sub-pages'>
+  {{outlet}}
 </div>

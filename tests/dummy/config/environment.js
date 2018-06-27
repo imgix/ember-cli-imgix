@@ -1,14 +1,20 @@
-/* jshint node: true */
+/* eslint-env node */
+'use strict';
 
 module.exports = function(environment) {
-  var ENV = {
+  let ENV = {
     modulePrefix: 'dummy',
-    environment: environment,
-    baseURL: '/',
+    environment,
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
-      FEATURES: { }
+      FEATURES: {},
+      EXTEND_PROTOTYPES: {
+        Date: false
+      }
     },
+
+    googleFonts: ['Open+Sans:300,400,700'],
 
     APP: {
       imgix: {
@@ -16,15 +22,21 @@ module.exports = function(environment) {
         debug: true
       }
     },
-
     contentSecurityPolicy: {
       'img-src': "'self' assets.imgix.net"
     }
   };
 
+  if (environment === 'development') {
+    // ENV.APP.LOG_RESOLVER = true;
+    // ENV.APP.LOG_ACTIVE_GENERATION = true;
+    // ENV.APP.LOG_TRANSITIONS = true;
+    // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
+    // ENV.APP.LOG_VIEW_LOOKUPS = true;
+  }
+
   if (environment === 'test') {
     // Testem prefers this...
-    ENV.baseURL = '/';
     ENV.locationType = 'none';
 
     // keep test console output quieter
@@ -32,11 +44,12 @@ module.exports = function(environment) {
     ENV.APP.LOG_VIEW_LOOKUPS = false;
 
     ENV.APP.rootElement = '#ember-testing';
-    ENV.APP.imgix.debug = false;
   }
 
   if (environment === 'production') {
-    ENV.baseURL = '/ember-cli-imgix';
+    ENV.locationType = 'hash';
+    ENV.rootURL = '/ember-imgix/';
+    // here you can enable a production-specific feature
   }
 
   return ENV;

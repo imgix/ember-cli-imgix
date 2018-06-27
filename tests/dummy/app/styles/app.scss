@@ -1,0 +1,70 @@
+@import 'reset';
+
+html, body {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+}
+
+@import 'pod-styles';
+
+.sub-pages {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+///// MOVE ALL THIS STUFF BELOW HERE... INTO COMPONENTS OR SOMETHING
+
+img {
+  max-width: 100%;
+}
+
+.container {
+  width:100%;
+  margin:0 auto;
+  overflow: hidden;
+  max-width: 1800px;
+}
+
+.header-img {
+  width:98%;
+  height:500px;
+  clear:both;
+  margin: 0 1% .5em;
+  text-align: center;
+  overflow:hidden;
+}
+
+.feature-img {
+  width:23%;
+  margin:0 1% .5em;
+  height:320px;
+  float:left;
+  overflow: hidden;
+  text-align: center;
+  overflow:hidden;
+}
+
+@media (max-width:1024px) {
+  .feature-img {
+    width:48%;
+    margin:0 1% .5em;
+  }
+}
+
+@media (max-width:480px){
+  .header-img{
+    width:100%;
+    margin:0 0 .5em 0;
+  }
+
+  .feature-img {
+    width:100%;
+    margin:0 0 .5em;
+    height:200px;
+  }
+}
