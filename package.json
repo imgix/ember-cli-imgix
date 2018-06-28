@@ -7,9 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "start": "ember server",
     "build": "ember build",
-    "test": "ember try:testall"
+    "start": "ember server",
+    "test": "ember try:each",
+    "gh-pages": "ember build && ember github-pages:commit --message \"Deploy gh-pages from commit $(git rev-parse HEAD)\" && git push origin gh-pages:gh-pages"
   },
   "repository": "https://github.com/imgix/ember-cli-imgix",
   "engines": {
