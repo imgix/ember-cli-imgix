@@ -46,7 +46,7 @@ test('it sets the source correctly', function(assert) {
   assert.equal('/users/1.png', url.pathname);
   assert.equal(url.searchParams.get('w'), 400);
   assert.equal(url.searchParams.get('h'), 300);
-  assert.equal(url.searchParams.get('dpr'), 1);
+  assert.ok(url.searchParams.get('dpr'));
   assert.equal(url.searchParams.get('crop'), 'faces');
   assert.equal(url.searchParams.get('fit'), 'crop');
 });
