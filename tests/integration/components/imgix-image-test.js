@@ -96,6 +96,16 @@ test('it respects `crop` and `fit` values passed as attributes', function(assert
   assert.equal(url.searchParams.get('fit'), 'min');
 });
 
+test('it respects `auto` values passed as attributes', function(assert) {
+  assert.expect(1);
+  this.render(
+    hbs`{{imgix-image-wrapped path="/users/1.png" auto="compress,enhance"}}`
+  );
+
+  let url = new URL(this.$('img').attr('src'));
+  assert.equal(url.searchParams.get('auto'), 'compress,enhance');
+});
+
 test('it allows setting the alt attribute', function(assert) {
   this.render(hbs`{{imgix-image path="/users/1.png" alt="User 1"}}`);
 
