@@ -17,7 +17,7 @@ export default Component.extend(ResizeAware, {
   aspectRatio: null,
   crop: 'faces',
   fit: 'crop',
-  pixelStep: 1,
+  pixelStep: 10,
   onLoad: null,
   onError: null,
   crossorigin: 'anonymous',
