@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/imgix/ember-cli-imgix.png?branch=master)](https://travis-ci.org/imgix/ember-cli-imgix)
 
-An Ember addon for easily adding responsive imagery via [imgix](https://www.imgix.com) to your application.
+An Ember addon for easily adding responsive imagery via [imgix](https://www.imgix.com) to your application. This addons supports FastBoot.
 
 **Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with imgix Web Folder or S3 Sources.
 
