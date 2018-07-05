@@ -1,18 +1,22 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 
-moduleForComponent('imgix-image', 'Integration | Component | imgix image', {
-  integration: true
-});
+moduleForComponent(
+  'imgix-image-wrapped',
+  'Integration | Component | imgix image wrapped',
+  {
+    integration: true
+  }
+);
 
 test('it renders', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png"}}`);
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
   assert.ok(this.$());
 });
 
 test('it renders event more better', function(assert) {
   this.render(
-    hbs`<div style='width:200px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+    hbs`<div style='width:200px;height:200px;'>{{imgix-image-wrapped path='/users/1.png' }}</div>`
   );
 
   let url = new URL(this.$('img').attr('src'));
@@ -26,7 +30,7 @@ test('it renders event more better', function(assert) {
 });
 
 test('it renders the correct path', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png"}}`);
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
 
   assert.ok(
     this.$('img')
@@ -41,7 +45,7 @@ test('it renders the correct path', function(assert) {
 });
 
 test('it builds the default URL', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png"}}`);
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
   let url = new URL(this.$('img').attr('src'));
 
   assert.equal(url.searchParams.get('w'), '1250');
@@ -52,7 +56,7 @@ test('it builds the default URL', function(assert) {
 
 test('it maintains any query parameters passed in', function(assert) {
   assert.expect(2);
-  this.render(hbs`{{imgix-image path="/users/1.png?sat=100"}}`);
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png?sat=100"}}`);
 
   let url = new URL(this.$('img').attr('src'));
   assert.equal(url.searchParams.get('sat'), '100');
@@ -60,7 +64,9 @@ test('it maintains any query parameters passed in', function(assert) {
 });
 
 test('it renders with an aspect ratio', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png" aspectRatio=1.3333}}`);
+  this.render(
+    hbs`{{imgix-image-wrapped path="/users/1.png" aspectRatio=1.3333}}`
+  );
 
   assert.equal(
     this.$()
@@ -77,7 +83,7 @@ test('it renders with an aspect ratio', function(assert) {
 test('it respects passed in `crop` and `fit` values', function(assert) {
   assert.expect(2);
   this.render(
-    hbs`{{imgix-image path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
+    hbs`{{imgix-image-wrapped path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
   );
 
   let url = new URL(this.$('img').attr('src'));
@@ -88,7 +94,7 @@ test('it respects passed in `crop` and `fit` values', function(assert) {
 test('it respects `crop` and `fit` values passed as attributes', function(assert) {
   assert.expect(2);
   this.render(
-    hbs`{{imgix-image path="/users/1.png" crop="top,left" fit="min"}}`
+    hbs`{{imgix-image-wrapped path="/users/1.png" crop="top,left" fit="min"}}`
   );
 
   let url = new URL(this.$('img').attr('src'));
@@ -107,20 +113,8 @@ test('it respects `auto` values passed as attributes', function(assert) {
 });
 
 test('it allows setting the alt attribute', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png" alt="User 1"}}`);
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png" alt="User 1"}}`);
 
   let alt = this.$('img').attr('alt');
   assert.equal(alt, 'User 1');
-});
-
-test('it allows passing ANY imgix parameter as an option hash', function(assert) {
-  assert.expect(2);
-  this.render(
-    hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' options=(hash exp=20 invert=true)}}</div>`
-  );
-
-  let url = new URL(this.$('img').attr('src'));
-
-  assert.equal(url.searchParams.get('exp'), 20);
-  assert.equal(url.searchParams.get('invert'), 'true');
 });

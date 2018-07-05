@@ -1,0 +1,32 @@
+& {
+  background-color: #25364e;
+
+  color: white;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding-top: 40px;
+  padding-bottom: 40px;
+
+  width: 100%;
+
+  .title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+
+    margin-bottom: 1rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+
+    a {
+      color: white;
+      text-decoration: underline;
+    }
+  }
+}

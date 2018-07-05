@@ -2,14 +2,18 @@
   "name": "ember-cli-imgix",
   "version": "0.3.8",
   "description": "An Ember addon for easily adding responsive imagery via imgix to your application.",
+  "contributors": [
+    "Frederick Fogerty <frederick.fogerty@gmail.com>"
+  ],
   "directories": {
     "doc": "doc",
     "test": "tests"
   },
   "scripts": {
-    "start": "ember server",
     "build": "ember build",
-    "test": "ember try:testall"
+    "start": "ember server",
+    "test": "ember try:each",
+    "gh-pages": "ember build && ember github-pages:commit --message \"Deploy gh-pages from commit $(git rev-parse HEAD)\" && git push origin gh-pages:gh-pages"
   },
   "repository": "https://github.com/imgix/ember-cli-imgix",
   "engines": {
@@ -18,22 +22,29 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "broccoli-asset-rev": "^2.1.2",
-    "ember-cli": "1.13.8",
-    "ember-cli-app-version": "0.5.0",
-    "ember-cli-content-security-policy": "0.4.0",
-    "ember-cli-dependency-checker": "^1.0.1",
-    "ember-cli-htmlbars-inline-precompile": "^0.3.0",
-    "ember-cli-ic-ajax": "0.2.1",
-    "ember-cli-inject-live-reload": "^1.3.1",
-    "ember-cli-qunit": "0.3.15",
-    "ember-cli-release": "0.2.3",
-    "ember-cli-sri": "^1.0.3",
-    "ember-cli-uglify": "^1.2.0",
-    "ember-disable-prototype-extensions": "^1.0.0",
-    "ember-disable-proxy-controllers": "^1.0.0",
-    "ember-export-application-global": "^1.0.3",
-    "ember-try": "0.0.6"
+    "broccoli-asset-rev": "^2.4.5",
+    "ember-ajax": "^3.0.0",
+    "ember-cli": "~3.1.2",
+    "ember-cli-babel": "^6.6.0",
+    "ember-cli-dependency-checker": "^2.0.0",
+    "ember-cli-eslint": "^4.0.0",
+    "ember-cli-github-pages": "^0.2.0",
+    "ember-cli-google-fonts": "^2.16.2",
+    "ember-cli-inject-live-reload": "^1.4.1",
+    "ember-cli-qunit": "^4.0.0",
+    "ember-cli-sass": "^7.1.7",
+    "ember-cli-shims": "^1.1.0",
+    "ember-cli-sri": "^2.1.0",
+    "ember-cli-uglify": "^2.0.0",
+    "ember-code-snippet": "^2.0.1",
+    "ember-component-css": "^0.6.3",
+    "ember-disable-prototype-extensions": "^1.1.2",
+    "ember-export-application-global": "^2.0.0",
+    "ember-load-initializers": "^1.0.0",
+    "ember-resolver": "^4.0.0",
+    "ember-source": "~3.2.0",
+    "ember-try": "^1.0.0-beta.3",
+    "loader.js": "^4.2.3"
   },
   "keywords": [
     "ember-addon",
@@ -42,12 +53,22 @@
     "responsive"
   ],
   "dependencies": {
-    "ember-cli-babel": "^5.1.3",
-    "ember-cli-htmlbars": "^1.0.0",
-    "ember-getowner-polyfill": "1.0.1",
-    "ember-resize-mixin": "kellysutton/ember-resize-mixin#master"
+    "broccoli-funnel": "^2.0.1",
+    "broccoli-merge-trees": "^2.0.0",
+    "ember-cli-babel": "^6.6.0",
+    "ember-cli-htmlbars": "^2.0.1",
+    "ember-cli-htmlbars-inline-precompile": "^1.0.0",
+    "ember-get-config": "0.2.4",
+    "ember-resize-aware": "1.0.3",
+    "ember-resize-mixin": "kellysutton/ember-resize-mixin#master",
+    "fastboot-transform": "^0.1.2",
+    "imgix-core-js": "1.1.1",
+    "js-base64": "2.4.4"
   },
   "ember-addon": {
-    "configPath": "tests/dummy/config"
+    "configPath": "tests/dummy/config",
+    "versionCompatibility": {
+      "ember": ">2.15.0"
+    }
   }
 }
