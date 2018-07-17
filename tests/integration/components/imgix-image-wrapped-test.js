@@ -1,5 +1,6 @@
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
+import config from 'ember-get-config';
 
 moduleForComponent(
   'imgix-image-wrapped',
@@ -117,4 +118,32 @@ test('it allows setting the alt attribute', function(assert) {
 
   let alt = this.$('img').attr('alt');
   assert.equal(alt, 'User 1');
+});
+
+test('the generated src url has an ixlib parameter', function(assert) {
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
+
+  const src = this.$('img').attr('src');
+  const url = new window.URL(src);
+  assert.ok(src.includes('ixlib=ember-'));
+  assert.ok(/^ember-\d\.\d\.\d$/.test(url.searchParams.get('ixlib')));
+});
+test('setting disableLibraryParam should cause the url not to contain an ixlib parameter', function(assert) {
+  this.render(
+    hbs`{{imgix-image-wrapped path="/users/1.png" disableLibraryParam=true}}`
+  );
+
+  const src = this.$('img').attr('src');
+  assert.ok(src.includes('ixlib=ember-') === false);
+});
+test('setting disableLibraryParam in the global config should cause the url not to contain an ixlib parameter', function(assert) {
+  const oldDisableLibraryParam = config.APP.imgix.disableLibraryParam;
+
+  config.APP.imgix.disableLibraryParam = true;
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
+
+  const src = this.$('img').attr('src');
+  assert.ok(src.includes('ixlib=ember-') === false);
+
+  config.APP.imgix.disableLibraryParam = oldDisableLibraryParam;
 });

@@ -51,6 +51,45 @@ test('it sets the source correctly', function(assert) {
   assert.equal(url.searchParams.get('fit'), 'crop');
 });
 
+test('the generated src url has an ixlib parameter', function(assert) {
+  const component = this.subject();
+  setProperties(component, {
+    path: '/users/1.png'
+  });
+  component.didResize(400, 300);
+
+  const src = component.get('src');
+  const url = new window.URL(src);
+  assert.ok(src.includes('ixlib=ember-'));
+  assert.ok(/^ember-\d\.\d\.\d$/.test(url.searchParams.get('ixlib')));
+});
+test('setting disableLibraryParam should cause the url not to contain an ixlib parameter', function(assert) {
+  const component = this.subject();
+  setProperties(component, {
+    path: '/users/1.png',
+    disableLibraryParam: true
+  });
+  component.didResize(400, 300);
+
+  const src = component.get('src');
+  assert.ok(src.includes('ixlib=ember-') === false);
+});
+test('setting disableLibraryParam in the global config should cause the url not to contain an ixlib parameter', function(assert) {
+  const oldDisableLibraryParam = config.APP.imgix.disableLibraryParam;
+
+  config.APP.imgix.disableLibraryParam = true;
+  const component = this.subject();
+  setProperties(component, {
+    path: '/users/1.png'
+  });
+  component.didResize(400, 300);
+
+  const src = component.get('src');
+  assert.ok(src.includes('ixlib=ember-') === false);
+
+  config.APP.imgix.disableLibraryParam = oldDisableLibraryParam;
+});
+
 test('it does not generate a source without a width', function(assert) {
   const component = this.subject();
 
