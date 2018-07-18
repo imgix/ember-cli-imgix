@@ -115,6 +115,37 @@ This will maintain the same aspect ratio as the image is resized.
 
 Please see the [dummy app](./tests/dummy) for insight into setting this up and configuring this.
 
+#### ixlib param
+
+This library adds an `ixlib` parameter to generated image urls for two reasons: a) it helps Imgix support see what versions of libraries that customers are using, and b) it help Imgix to see how many people overall are using the ember library, and the specific versions.
+
+If this behaviour is not desired, it can be turned off in two ways:
+
+1.  Environment config
+
+```js
+// config/environment.js
+
+module.exports = function(environment) {
+  var ENV = {
+    // snip
+    APP: {
+      imgix: {
+        // snip
+        disableLibraryParam: true
+      }
+    }
+    // snip
+  };
+};
+```
+
+2.  Component parameter
+
+```hbs
+{{imgix-image path="/test.png" disableLibraryParam={true} }}
+```
+
 ### imgix-image-wrapped - DEPRECATED
 
 This component is included to help migration from version 0.x. **This component will be deprecated in version 2. Please use `imgix-image` instead.**
