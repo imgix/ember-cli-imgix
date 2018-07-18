@@ -6,6 +6,7 @@ import { getOwner } from '@ember/application';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import config from 'ember-get-config';
+import constants from '../common/constants';
 
 export default Mixin.create({
   crossorigin: null,
@@ -155,7 +156,17 @@ export default Mixin.create({
       );
     }
 
-    return new ImgixClient({ host: env.APP.imgix.source });
+    const disableLibraryParam =
+      get(config, 'APP.imgix.disableLibraryParam') ||
+      get(this, 'disableLibraryParam');
+
+    return new ImgixClient({
+      host: env.APP.imgix.source,
+      includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
+      libraryParam: disableLibraryParam
+        ? undefined
+        : `ember-${constants.APP_VERSION}`
+    });
   }),
 
   /**

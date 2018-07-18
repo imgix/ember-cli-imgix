@@ -7,6 +7,7 @@ import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import { debounce } from '@ember/runloop';
+import constants from '../common/constants';
 
 export default Component.extend(ResizeAware, {
   tagName: 'img',
@@ -23,6 +24,7 @@ export default Component.extend(ResizeAware, {
   crossorigin: 'anonymous',
   alt: '', // image alt
   options: {}, // arbitrary imgix options
+  disableLibraryParam: false,
 
   width: null, // passed in
   height: null, // passed in
@@ -117,15 +119,23 @@ export default Component.extend(ResizeAware, {
     );
   }),
 
-  _client: computed(function() {
+  _client: computed('disableLibraryParam', function() {
     if (!config || !get(config, 'APP.imgix.source')) {
       throw new EmberError(
-        'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-imgix for more information.'
+        'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }
 
+    const disableLibraryParam =
+      get(config, 'APP.imgix.disableLibraryParam') ||
+      get(this, 'disableLibraryParam');
+
     return new ImgixClient({
-      host: config.APP.imgix.source
+      host: config.APP.imgix.source,
+      includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
+      libraryParam: disableLibraryParam
+        ? undefined
+        : `ember-${constants.APP_VERSION}`
     });
   }),
 
