@@ -13,6 +13,8 @@
     "build": "ember build",
     "start": "ember server",
     "test": "ember try:each",
+    "test:once": "ember test",
+    "test:watch": "ember test --server",
     "gh-pages": "ember build && ember github-pages:commit --message \"Deploy gh-pages from commit $(git rev-parse HEAD)\" && git push origin gh-pages:gh-pages"
   },
   "repository": "https://github.com/imgix/ember-cli-imgix",
