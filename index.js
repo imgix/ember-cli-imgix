@@ -9,6 +9,12 @@ const FastbootTransform = require('fastboot-transform');
 module.exports = {
   name: 'ember-cli-imgix',
 
+  options: {
+    babel: {
+      plugins: ['inline-package-json']
+    }
+  },
+
   treeForVendor(vendorTree) {
     let trees = [];
 
