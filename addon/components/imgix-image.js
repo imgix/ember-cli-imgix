@@ -161,8 +161,11 @@ export default Component.extend(ResizeAware, {
         w: get(this, '_width'),
         h: get(this, '_height'),
         dpr: get(this, '_dpr'),
-        crop: get(this, 'crop'),
       };
+
+      if (get(this, 'crop')) {
+        theseOptions.crop = get(this, 'crop');
+      }
 
       const options = {
         ...get(this, 'options'),

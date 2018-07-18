@@ -48,7 +48,7 @@ test('it sets the source correctly', function(assert) {
   assert.equal(url.getQueryParamValue('w'), 400);
   assert.equal(url.getQueryParamValue('h'), 300);
   assert.ok(url.getQueryParamValue('dpr'));
-  assert.equal(url.getQueryParamValue('crop'), false);
+  assert.equal(url.hasQueryParam('crop'), false);
   assert.equal(url.getQueryParamValue('fit'), 'crop');
 });
 

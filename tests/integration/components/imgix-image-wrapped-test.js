@@ -53,7 +53,7 @@ test('it builds the default URL', function(assert) {
   assert.equal(url.getQueryParamValue('w'), '1250');
   assert.equal(url.path(), '/users/1.png');
   assert.equal(url.getQueryParamValue('fit'), 'crop');
-  assert.equal(url.getQueryParamValue('crop'), false);
+  assert.equal(url.hasQueryParam('crop'), false);
 });
 
 test('it maintains any query parameters passed in', function(assert) {
