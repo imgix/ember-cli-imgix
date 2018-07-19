@@ -82,3 +82,20 @@ test('it respects the pixel step', function(assert) {
     )}`
   );
 });
+
+test('the dpr is constrained to a precision of 3', function(assert) {
+  const oldDpr = window.devicePixelRatio;
+  window.devicePixelRatio = 1.33333;
+
+  const component = this.subject();
+
+  setProperties(component, {
+    path: 'test.png'
+  });
+  component.didResize(100, 100);
+  const url = new window.URL(component.get('src'));
+
+  assert.equal(url.searchParams.get('dpr'), '1.33');
+
+  window.devicePixelRatio = oldDpr;
+});
