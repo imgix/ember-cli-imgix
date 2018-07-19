@@ -6,6 +6,7 @@ import { getOwner } from '@ember/application';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import config from 'ember-get-config';
+import { toFixed } from '../common';
 
 export default Mixin.create({
   crossorigin: null,
@@ -239,7 +240,7 @@ export default Mixin.create({
    * @default 1
    */
   _dpr: computed('_resizeCounter', function() {
-    return window.devicePixelRatio || 1;
+    return toFixed(2, window.devicePixelRatio || 1);
   }),
 
   /**
