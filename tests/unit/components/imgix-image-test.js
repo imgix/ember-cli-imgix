@@ -63,6 +63,7 @@ test('the generated src url has an ixlib parameter', function(assert) {
   assert.ok(src.includes('ixlib=ember-'));
   assert.ok(/^ember-\d\.\d\.\d$/.test(url.searchParams.get('ixlib')));
 });
+
 test('setting disableLibraryParam should cause the url not to contain an ixlib parameter', function(assert) {
   const component = this.subject();
   setProperties(component, {
@@ -74,6 +75,7 @@ test('setting disableLibraryParam should cause the url not to contain an ixlib p
   const src = component.get('src');
   assert.ok(src.includes('ixlib=ember-') === false);
 });
+
 test('setting disableLibraryParam in the global config should cause the url not to contain an ixlib parameter', function(assert) {
   const oldDisableLibraryParam = config.APP.imgix.disableLibraryParam;
 

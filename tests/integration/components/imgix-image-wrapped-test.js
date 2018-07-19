@@ -31,7 +31,7 @@ test('it renders event more better', function(assert) {
 });
 
 test('it renders the correct path', function(assert) {
-  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
+  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`);
 
   assert.ok(
     this.$('img')
@@ -46,7 +46,7 @@ test('it renders the correct path', function(assert) {
 });
 
 test('it builds the default URL', function(assert) {
-  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
+  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`);
   let url = new URL(this.$('img').attr('src'));
 
   assert.equal(url.searchParams.get('w'), '1250');
@@ -57,7 +57,7 @@ test('it builds the default URL', function(assert) {
 
 test('it maintains any query parameters passed in', function(assert) {
   assert.expect(2);
-  this.render(hbs`{{imgix-image-wrapped path="/users/1.png?sat=100"}}`);
+  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png?sat=100"}}</div>`);
 
   let url = new URL(this.$('img').attr('src'));
   assert.equal(url.searchParams.get('sat'), '100');
@@ -66,7 +66,7 @@ test('it maintains any query parameters passed in', function(assert) {
 
 test('it renders with an aspect ratio', function(assert) {
   this.render(
-    hbs`{{imgix-image-wrapped path="/users/1.png" aspectRatio=1.3333}}`
+    hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png" aspectRatio=1.3333}}</div>`
   );
 
   assert.equal(
@@ -128,6 +128,7 @@ test('the generated src url has an ixlib parameter', function(assert) {
   assert.ok(src.includes('ixlib=ember-'));
   assert.ok(/^ember-\d\.\d\.\d$/.test(url.searchParams.get('ixlib')));
 });
+
 test('setting disableLibraryParam should cause the url not to contain an ixlib parameter', function(assert) {
   this.render(
     hbs`{{imgix-image-wrapped path="/users/1.png" disableLibraryParam=true}}`
@@ -136,6 +137,7 @@ test('setting disableLibraryParam should cause the url not to contain an ixlib p
   const src = this.$('img').attr('src');
   assert.ok(src.includes('ixlib=ember-') === false);
 });
+
 test('setting disableLibraryParam in the global config should cause the url not to contain an ixlib parameter', function(assert) {
   const oldDisableLibraryParam = config.APP.imgix.disableLibraryParam;
 
