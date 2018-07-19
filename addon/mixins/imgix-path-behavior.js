@@ -6,7 +6,7 @@ import { getOwner } from '@ember/application';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import config from 'ember-get-config';
-import { toFixed } from '../common';
+import { toFixed, constants } from '../common';
 
 export default Mixin.create({
   crossorigin: null,
@@ -95,9 +95,12 @@ export default Mixin.create({
       // These operations are defaults and should be overidden by any incoming
       // query parameters
       let options = {
-        crop: get(this, 'crop') || 'faces',
         fit: get(this, 'fit') || 'crop'
       };
+
+      if (get(this, 'crop')) {
+        merge(options, { crop: get(this, 'crop') });
+      }
 
       if (get(this, 'auto')) {
         merge(options, { auto: get(this, 'auto') });
@@ -156,7 +159,17 @@ export default Mixin.create({
       );
     }
 
-    return new ImgixClient({ host: env.APP.imgix.source });
+    const disableLibraryParam =
+      get(config, 'APP.imgix.disableLibraryParam') ||
+      get(this, 'disableLibraryParam');
+
+    return new ImgixClient({
+      host: env.APP.imgix.source,
+      includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
+      libraryParam: disableLibraryParam
+        ? undefined
+        : `ember-${constants.APP_VERSION}`
+    });
   }),
 
   /**
