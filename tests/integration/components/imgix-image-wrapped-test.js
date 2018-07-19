@@ -118,3 +118,16 @@ test('it allows setting the alt attribute', function(assert) {
   let alt = this.$('img').attr('alt');
   assert.equal(alt, 'User 1');
 });
+
+test('the dpr is constrained to a precision of 3', function(assert) {
+  const oldDpr = window.devicePixelRatio;
+  window.devicePixelRatio = 1.33333;
+
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
+
+  const url = new window.URL(this.$('img').attr('src'));
+
+  assert.equal(url.searchParams.get('dpr'), '1.33');
+
+  window.devicePixelRatio = oldDpr;
+});
