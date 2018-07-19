@@ -48,7 +48,7 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     ENV.locationType = 'hash';
-    ENV.rootURL = '/ember-imgix/';
+    ENV.rootURL = '/ember-cli-imgix/';
     // here you can enable a production-specific feature
   }
 
