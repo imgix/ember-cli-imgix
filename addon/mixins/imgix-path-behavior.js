@@ -94,9 +94,12 @@ export default Mixin.create({
       // These operations are defaults and should be overidden by any incoming
       // query parameters
       let options = {
-        crop: get(this, 'crop') || 'faces',
         fit: get(this, 'fit') || 'crop'
       };
+
+      if (get(this, 'crop')) {
+        merge(options, { crop: get(this, 'crop') });
+      }
 
       if (get(this, 'auto')) {
         merge(options, { auto: get(this, 'auto') });

@@ -64,7 +64,7 @@ Some of the defaults are:
 ```javascript
 path: null, // The path to your image
 aspectRatio: null,
-crop: 'faces',
+crop: null,
 fit: 'crop',
 pixelStep: 10, // round to the nearest pixelStep
 onLoad: null,
