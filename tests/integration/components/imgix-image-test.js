@@ -26,7 +26,7 @@ test('it renders event more better', function(assert) {
 });
 
 test('it renders the correct path', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png"}}`);
+  this.render(hbs`<div style='width:1250px;height:200px;'>{{imgix-image path="/users/1.png"}}</div>`);
 
   assert.ok(
     this.$('img')
@@ -41,7 +41,7 @@ test('it renders the correct path', function(assert) {
 });
 
 test('it builds the default URL', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png"}}`);
+  this.render(hbs`<div style='width:1250px;height:200px;'>{{imgix-image path="/users/1.png"}}</div>`);
   let url = new URL(this.$('img').attr('src'));
 
   assert.equal(url.searchParams.get('w'), '1250');
@@ -52,7 +52,7 @@ test('it builds the default URL', function(assert) {
 
 test('it maintains any query parameters passed in', function(assert) {
   assert.expect(2);
-  this.render(hbs`{{imgix-image path="/users/1.png?sat=100"}}`);
+  this.render(hbs`<div style='width:1250px;height:200px;'>{{imgix-image path="/users/1.png?sat=100"}}</div>`);
 
   let url = new URL(this.$('img').attr('src'));
   assert.equal(url.searchParams.get('sat'), '100');
@@ -60,7 +60,7 @@ test('it maintains any query parameters passed in', function(assert) {
 });
 
 test('it renders with an aspect ratio', function(assert) {
-  this.render(hbs`{{imgix-image path="/users/1.png" aspectRatio=1.3333}}`);
+  this.render(hbs`<div style='width:1250px;'>{{imgix-image path="/users/1.png" aspectRatio=1.3333}}</div>`);
 
   assert.equal(
     this.$()
