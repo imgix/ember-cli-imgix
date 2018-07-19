@@ -1,4 +1,5 @@
 import { moduleForComponent, test } from 'ember-qunit';
+import uri from 'jsuri';
 import hbs from 'htmlbars-inline-precompile';
 import config from 'ember-get-config';
 
@@ -15,19 +16,19 @@ test('it renders', function(assert) {
   assert.ok(this.$());
 });
 
-test('it renders event more better', function(assert) {
+test('it renders even more better', function(assert) {
   this.render(
     hbs`<div style='width:200px;height:200px;'>{{imgix-image-wrapped path='/users/1.png' }}</div>`
   );
 
-  let url = new URL(this.$('img').attr('src'));
+  let url = new uri(this.$('img').attr('src'));
   assert.equal(
     this.$()
       .text()
       .trim(),
     ''
   );
-  assert.equal(url.pathname, '/users/1.png');
+  assert.equal(url.path(), '/users/1.png');
 });
 
 test('it renders the correct path', function(assert) {
@@ -46,22 +47,22 @@ test('it renders the correct path', function(assert) {
 });
 
 test('it builds the default URL', function(assert) {
-  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`);
-  let url = new URL(this.$('img').attr('src'));
+  this.render(hbs`<div style='width:1250px;height:400px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`);
+  let url = new uri(this.$('img').attr('src'));
 
-  assert.equal(url.searchParams.get('w'), '1250');
-  assert.equal(url.pathname, '/users/1.png');
-  assert.equal(url.searchParams.get('fit'), 'crop');
-  assert.equal(url.searchParams.has('crop'), false);
+  assert.equal(url.getQueryParamValue('w'), '1250');
+  assert.equal(url.path(), '/users/1.png');
+  assert.equal(url.getQueryParamValue('fit'), 'crop');
+  assert.equal(url.hasQueryParam('crop'), false);
 });
 
 test('it maintains any query parameters passed in', function(assert) {
   assert.expect(2);
   this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png?sat=100"}}</div>`);
 
-  let url = new URL(this.$('img').attr('src'));
-  assert.equal(url.searchParams.get('sat'), '100');
-  assert.equal(url.searchParams.get('w'), '1250');
+  let url = new uri(this.$('img').attr('src'));
+  assert.equal(url.getQueryParamValue('sat'), '100');
+  assert.equal(url.getQueryParamValue('w'), '1250');
 });
 
 test('it renders with an aspect ratio', function(assert) {
@@ -75,10 +76,10 @@ test('it renders with an aspect ratio', function(assert) {
       .trim(),
     ''
   );
-  let url = new URL(this.$('img').attr('src'));
+  let url = new uri(this.$('img').attr('src'));
 
-  assert.equal(url.searchParams.get('w'), '1250');
-  assert.equal(url.searchParams.get('h'), '937');
+  assert.equal(url.getQueryParamValue('w'), '1250');
+  assert.equal(url.getQueryParamValue('h'), '937');
 });
 
 test('it respects passed in `crop` and `fit` values', function(assert) {
@@ -87,9 +88,9 @@ test('it respects passed in `crop` and `fit` values', function(assert) {
     hbs`{{imgix-image-wrapped path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
   );
 
-  let url = new URL(this.$('img').attr('src'));
-  assert.equal(url.searchParams.get('fit'), 'min');
-  assert.equal(url.searchParams.get('crop'), 'top,left');
+  let url = new uri(this.$('img').attr('src'));
+  assert.equal(url.getQueryParamValue('fit'), 'min');
+  assert.equal(url.getQueryParamValue('crop'), 'top,left');
 });
 
 test('it respects `crop` and `fit` values passed as attributes', function(assert) {
@@ -98,9 +99,9 @@ test('it respects `crop` and `fit` values passed as attributes', function(assert
     hbs`{{imgix-image-wrapped path="/users/1.png" crop="top,left" fit="min"}}`
   );
 
-  let url = new URL(this.$('img').attr('src'));
-  assert.equal(url.searchParams.get('crop'), 'top,left');
-  assert.equal(url.searchParams.get('fit'), 'min');
+  let url = new uri(this.$('img').attr('src'));
+  assert.equal(url.getQueryParamValue('crop'), 'top,left');
+  assert.equal(url.getQueryParamValue('fit'), 'min');
 });
 
 test('it respects `auto` values passed as attributes', function(assert) {
@@ -109,8 +110,8 @@ test('it respects `auto` values passed as attributes', function(assert) {
     hbs`{{imgix-image-wrapped path="/users/1.png" auto="compress,enhance"}}`
   );
 
-  let url = new URL(this.$('img').attr('src'));
-  assert.equal(url.searchParams.get('auto'), 'compress,enhance');
+  let url = new uri(this.$('img').attr('src'));
+  assert.equal(url.getQueryParamValue('auto'), 'compress,enhance');
 });
 
 test('it allows setting the alt attribute', function(assert) {

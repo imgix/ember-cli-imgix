@@ -5,6 +5,7 @@ import { schedule, debounce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
+import uri from 'jsuri';
 import config from 'ember-get-config';
 import constants from '../common/constants';
 
@@ -33,7 +34,7 @@ export default Mixin.create({
   _path: computed('path', function() {
     let path = get(this, 'path');
     return path
-      ? new window.URL(path, `https://${config.APP.imgix.source}`).pathname
+      ? new uri(path, `https://${config.APP.imgix.source}`).path()
       : '';
   }),
 
@@ -44,13 +45,13 @@ export default Mixin.create({
   _query: computed('path', function() {
     let path = get(this, 'path');
     let query = {};
-    const searchParams = new window.URL(
-      path,
-      `https://${config.APP.imgix.source}`
-    ).searchParams;
-    for (let item of searchParams.entries()) {
+
+    const searchParams = new uri(path).queryPairs;
+
+    for (let item of searchParams) {
       query[item[0]] = item[1];
     }
+
     return path ? EmberObject.create(query) : {};
   }),
 

@@ -1,5 +1,6 @@
 import { get, setProperties } from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
+import uri from 'jsuri';
 import config from 'ember-get-config';
 
 moduleForComponent('imgix-image', 'Unit | Component | imgix image', {
@@ -39,16 +40,16 @@ test('it sets the source correctly', function(assert) {
 
   assert.ok(component.get('src'));
 
-  const url = new window.URL(component.get('src'));
+  const url = new uri(component.get('src'));
 
-  assert.equal(config.APP.imgix.source, url.host);
-  assert.equal('https:', url.protocol);
-  assert.equal('/users/1.png', url.pathname);
-  assert.equal(url.searchParams.get('w'), 400);
-  assert.equal(url.searchParams.get('h'), 300);
-  assert.ok(url.searchParams.get('dpr'));
-  assert.equal(url.searchParams.has('crop'), false);
-  assert.equal(url.searchParams.get('fit'), 'crop');
+  assert.equal(config.APP.imgix.source, url.host());
+  assert.equal('https', url.protocol());
+  assert.equal('/users/1.png', url.path());
+  assert.equal(url.getQueryParamValue('w'), 400);
+  assert.equal(url.getQueryParamValue('h'), 300);
+  assert.ok(url.getQueryParamValue('dpr'));
+  assert.equal(url.hasQueryParam('crop'), false);
+  assert.equal(url.getQueryParamValue('fit'), 'crop');
 });
 
 test('the generated src url has an ixlib parameter', function(assert) {
@@ -113,12 +114,12 @@ test('it respects the pixel step', function(assert) {
 
   component.didResize(405, 300);
 
-  const url = new window.URL(component.get('src'));
+  const url = new uri(component.get('src'));
 
   assert.equal(
-    url.searchParams.get('w'),
+    url.getQueryParamValue('w'),
     '410',
-    `Expected a step up to 410, instead stepped to: ${url.searchParams.get(
+    `Expected a step up to 410, instead stepped to: ${url.getQueryParamValue(
       'w'
     )}`
   );
