@@ -13,6 +13,10 @@ From within an existing ember-cli project:
 ```bash
 $ ember install ember-cli-imgix
 ```
+or
+```bash
+$ yarn add ember-cli-imgix
+```
 
 Next, set up some configuration flags:
 
