@@ -16,7 +16,7 @@ export default Component.extend(ResizeAware, {
 
   path: null, // The path to your image
   aspectRatio: null,
-  crop: 'faces',
+  crop: null,
   fit: 'crop',
   pixelStep: 10,
   onLoad: null,
@@ -156,12 +156,15 @@ export default Component.extend(ResizeAware, {
       }
 
       let theseOptions = {
-        crop: get(this, 'crop'),
         fit: get(this, 'fit'),
         w: get(this, '_width'),
         h: get(this, '_height'),
         dpr: get(this, '_dpr')
       };
+
+      if (get(this, 'crop')) {
+        merge(theseOptions, { crop: get(this, 'crop') });
+      }
 
       merge(theseOptions, get(this, 'options'));
 
