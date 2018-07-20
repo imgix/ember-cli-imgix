@@ -1,5 +1,6 @@
 import { get, setProperties } from '@ember/object';
 import { moduleForComponent, test } from 'ember-qunit';
+import URI from 'jsuri';
 import config from 'ember-get-config';
 
 moduleForComponent('imgix-image', 'Unit | Component | imgix image', {
@@ -39,16 +40,16 @@ test('it sets the source correctly', function(assert) {
 
   assert.ok(component.get('src'));
 
-  const url = new window.URL(component.get('src'));
+  const uri = new URI(component.get('src'));
 
-  assert.equal(config.APP.imgix.source, url.host);
-  assert.equal('https:', url.protocol);
-  assert.equal('/users/1.png', url.pathname);
-  assert.equal(url.searchParams.get('w'), 400);
-  assert.equal(url.searchParams.get('h'), 300);
-  assert.ok(url.searchParams.get('dpr'));
-  assert.equal(url.searchParams.has('crop'), false);
-  assert.equal(url.searchParams.get('fit'), 'crop');
+  assert.equal(config.APP.imgix.source, uri.host());
+  assert.equal('https', uri.protocol());
+  assert.equal('/users/1.png', uri.path());
+  assert.equal(uri.getQueryParamValue('w'), 400);
+  assert.equal(uri.getQueryParamValue('h'), 300);
+  assert.ok(uri.getQueryParamValue('dpr'));
+  assert.equal(uri.hasQueryParam('crop'), false);
+  assert.equal(uri.getQueryParamValue('fit'), 'crop');
 });
 
 test('the generated src url has an ixlib parameter', function(assert) {
@@ -59,9 +60,9 @@ test('the generated src url has an ixlib parameter', function(assert) {
   component.didResize(400, 300);
 
   const src = component.get('src');
-  const url = new window.URL(src);
+  const url = new URI(src);
   assert.ok(src.includes('ixlib=ember-'));
-  assert.ok(/^ember-\d\.\d\.\d$/.test(url.searchParams.get('ixlib')));
+  assert.ok(/^ember-\d\.\d\.\d$/.test(url.getQueryParamValue('ixlib')));
 });
 
 test('setting disableLibraryParam should cause the url not to contain an ixlib parameter', function(assert) {
@@ -113,12 +114,12 @@ test('it respects the pixel step', function(assert) {
 
   component.didResize(405, 300);
 
-  const url = new window.URL(component.get('src'));
+  const uri = new URI(component.get('src'));
 
   assert.equal(
-    url.searchParams.get('w'),
+    uri.getQueryParamValue('w'),
     '410',
-    `Expected a step up to 410, instead stepped to: ${url.searchParams.get(
+    `Expected a step up to 410, instead stepped to: ${uri.getQueryParamValue(
       'w'
     )}`
   );
@@ -134,9 +135,9 @@ test('the dpr is constrained to a precision of 3', function(assert) {
     path: 'test.png'
   });
   component.didResize(100, 100);
-  const url = new window.URL(component.get('src'));
+  const uri = new URI(component.get('src'));
 
-  assert.equal(url.searchParams.get('dpr'), '1.33');
+  assert.equal(uri.getQueryParamValue('dpr'), '1.33');
 
   window.devicePixelRatio = oldDpr;
 });
