@@ -3,7 +3,8 @@
   "version": "0.3.8",
   "description": "An Ember addon for easily adding responsive imagery via imgix to your application.",
   "contributors": [
-    "Frederick Fogerty <frederick.fogerty@gmail.com>"
+    "Frederick Fogerty <frederick.fogerty@gmail.com>",
+    "Greg Larrenaga <greglarrenaga@gmail.com>"
   ],
   "directories": {
     "doc": "doc",
