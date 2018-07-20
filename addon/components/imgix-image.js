@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { computed, get, set } from '@ember/object';
 import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
-import { merge } from '@ember/polyfills';
 import { tryInvoke } from '@ember/utils';
 import config from 'ember-get-config';
 import EmberError from '@ember/error';
@@ -147,6 +146,9 @@ export default Component.extend(ResizeAware, {
     'crop',
     'fit',
     function() {
+      const pathAsUri = get(this, '_pathAsUri');
+      const debugParams = get(config, 'APP.imgix.debug') ? get(this, '_debugParams') : {};
+
       if (!get(this, '_width')) {
         return;
       }
@@ -162,22 +164,22 @@ export default Component.extend(ResizeAware, {
       };
 
       if (get(this, 'crop')) {
-        merge(theseOptions, { crop: get(this, 'crop') });
+        theseOptions.crop = get(this, 'crop');
       }
 
-      merge(theseOptions, get(this, 'options'));
-
-      get(this, '_pathAsUri').queryPairs.forEach((queryPair) => {
-        set(theseOptions, queryPair[0], queryPair[1]);
-      });
-
-      if (get(config, 'APP.imgix.debug')) {
-        merge(theseOptions, get(this, '_debugParams'));
-      }
+      const options = {
+        ...get(this, 'options'),
+        ...debugParams,
+        ...theseOptions,
+        ...pathAsUri.queryPairs.reduce((memo, param) => {
+          memo[param[0]] = param[1];
+          return memo;
+        }, {}),
+      };
 
       return get(this, '_client').buildURL(
         get(this, '_pathAsUri').path(),
-        theseOptions
+        options
       );
     }
   ),

@@ -11,7 +11,10 @@ module.exports = {
 
   options: {
     babel: {
-      plugins: ['inline-package-json']
+      plugins: [
+        'inline-package-json',
+        'transform-object-rest-spread',
+      ],
     }
   },
 
