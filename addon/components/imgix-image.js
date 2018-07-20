@@ -7,7 +7,7 @@ import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import { debounce } from '@ember/runloop';
-import constants from '../common/constants';
+import { toFixed, constants } from '../common';
 
 export default Component.extend(ResizeAware, {
   tagName: 'img',
@@ -47,7 +47,7 @@ export default Component.extend(ResizeAware, {
           ? newWidth / get(this, 'aspectRatio')
           : get(this, '_pathAsUrl.searchParams').get('h') || height
       );
-      const newDpr = window.devicePixelRatio || 1;
+      const newDpr = toFixed(2, window.devicePixelRatio || 1);
 
       set(this, '_width', newWidth);
       set(this, '_height', newHeight);

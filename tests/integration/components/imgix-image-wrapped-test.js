@@ -31,7 +31,9 @@ test('it renders event more better', function(assert) {
 });
 
 test('it renders the correct path', function(assert) {
-  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`);
+  this.render(
+    hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`
+  );
 
   assert.ok(
     this.$('img')
@@ -46,7 +48,9 @@ test('it renders the correct path', function(assert) {
 });
 
 test('it builds the default URL', function(assert) {
-  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`);
+  this.render(
+    hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`
+  );
   let url = new URL(this.$('img').attr('src'));
 
   assert.equal(url.searchParams.get('w'), '1250');
@@ -57,7 +61,9 @@ test('it builds the default URL', function(assert) {
 
 test('it maintains any query parameters passed in', function(assert) {
   assert.expect(2);
-  this.render(hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png?sat=100"}}</div>`);
+  this.render(
+    hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png?sat=100"}}</div>`
+  );
 
   let url = new URL(this.$('img').attr('src'));
   assert.equal(url.searchParams.get('sat'), '100');
@@ -118,6 +124,19 @@ test('it allows setting the alt attribute', function(assert) {
 
   let alt = this.$('img').attr('alt');
   assert.equal(alt, 'User 1');
+});
+
+test('the dpr is constrained to a precision of 3', function(assert) {
+  const oldDpr = window.devicePixelRatio;
+  window.devicePixelRatio = 1.33333;
+
+  this.render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
+
+  const url = new window.URL(this.$('img').attr('src'));
+
+  assert.equal(url.searchParams.get('dpr'), '1.33');
+
+  window.devicePixelRatio = oldDpr;
 });
 
 test('the generated src url has an ixlib parameter', function(assert) {
