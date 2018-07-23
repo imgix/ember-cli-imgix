@@ -1,11 +1,11 @@
 import Component from '@ember/component';
 import { computed, get, set } from '@ember/object';
 import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
-import { merge } from '@ember/polyfills';
 import { tryInvoke } from '@ember/utils';
 import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
+import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
 import { toFixed, constants } from '../common';
 
@@ -39,13 +39,13 @@ export default Component.extend(ResizeAware, {
     if (get(this, 'path')) {
       const newWidth =
         Math.ceil(
-          get(this, '_pathAsUrl.searchParams').get('w') ||
+          get(this, '_pathAsUri').getQueryParamValue('w') ||
             width / get(this, 'pixelStep')
         ) * get(this, 'pixelStep');
       const newHeight = Math.floor(
         get(this, 'aspectRatio')
           ? newWidth / get(this, 'aspectRatio')
-          : get(this, '_pathAsUrl.searchParams').get('h') || height
+          : get(this, '_pathAsUri').getQueryParamValue('h') || height
       );
       const newDpr = toFixed(2, window.devicePixelRatio || 1);
 
@@ -109,14 +109,12 @@ export default Component.extend(ResizeAware, {
     this._super(...args);
   },
 
-  _pathAsUrl: computed('path', function() {
+  _pathAsUri: computed('path', function() {
     if (!get(this, 'path')) {
       return false;
     }
-    return new window.URL(
-      get(this, 'path'),
-      `https://${config.APP.imgix.source}`
-    );
+
+    return new URI(get(this, 'path'));
   }),
 
   _client: computed('disableLibraryParam', function() {
@@ -141,13 +139,16 @@ export default Component.extend(ResizeAware, {
 
   src: computed(
     'path',
-    '_pathAsUrl',
+    '_pathAsUri',
     '_width',
     '_height',
     '_dpr',
     'crop',
     'fit',
     function() {
+      const pathAsUri = get(this, '_pathAsUri');
+      const debugParams = get(config, 'APP.imgix.debug') ? get(this, '_debugParams') : {};
+
       if (!get(this, '_width')) {
         return;
       }
@@ -156,29 +157,29 @@ export default Component.extend(ResizeAware, {
       }
 
       let theseOptions = {
+        dpr: get(this, '_dpr'),
         fit: get(this, 'fit'),
-        w: get(this, '_width'),
         h: get(this, '_height'),
-        dpr: get(this, '_dpr')
+        w: get(this, '_width'),
       };
 
       if (get(this, 'crop')) {
-        merge(theseOptions, { crop: get(this, 'crop') });
+        theseOptions.crop = get(this, 'crop');
       }
 
-      merge(theseOptions, get(this, 'options'));
-
-      for (let param of get(this, '_pathAsUrl.searchParams')) {
-        set(theseOptions, param[0], param[1]);
-      }
-
-      if (get(config, 'APP.imgix.debug')) {
-        merge(theseOptions, get(this, '_debugParams'));
-      }
+      const options = {
+        ...get(this, 'options'),
+        ...debugParams,
+        ...theseOptions,
+        ...pathAsUri.queryPairs.reduce((memo, param) => {
+          memo[param[0]] = param[1];
+          return memo;
+        }, {}),
+      };
 
       return get(this, '_client').buildURL(
-        get(this, '_pathAsUrl.pathname'),
-        theseOptions
+        get(this, '_pathAsUri').path(),
+        options
       );
     }
   ),

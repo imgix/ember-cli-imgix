@@ -11,7 +11,10 @@ module.exports = {
 
   options: {
     babel: {
-      plugins: ['inline-package-json']
+      plugins: [
+        'inline-package-json',
+        'transform-object-rest-spread',
+      ],
     }
   },
 
@@ -22,23 +25,26 @@ module.exports = {
       trees.push(vendorTree);
     }
 
-    const imgixJs = FastbootTransform(
+    trees.push(FastbootTransform(
       new Funnel(path.dirname(require.resolve('imgix-core-js')), {
         files: ['imgix-core-js.js'],
-        destDir: 'imgix-core-js'
+        destDir: 'imgix-core-js',
       })
-    );
+    ));
 
-    const jsBase64 = FastbootTransform(
+    trees.push(FastbootTransform(
       new Funnel(path.dirname(require.resolve('js-base64')), {
         files: ['base64.js'],
-        destDir: 'js-base64'
+        destDir: 'js-base64',
       })
-    );
+    ));
 
-    trees.push(imgixJs);
-
-    trees.push(jsBase64);
+    trees.push(FastbootTransform(
+      new Funnel(path.dirname(require.resolve('jsuri')), {
+        files: ['Uri.js'],
+        destDir: 'jsuri',
+      })
+    ));
 
     return MergeTrees(trees);
   },
@@ -49,5 +55,14 @@ module.exports = {
     this.import('vendor/js-base64/base64.js');
     this.import('vendor/imgix-core-js/imgix-core-js.js');
     this.import('vendor/imgix-core-js-shim.js');
+
+    this.import('vendor/jsuri/Uri.js', {
+      using: [
+        {
+          transformation: 'amd',
+          as: 'jsuri',
+        },
+      ],
+    });
   }
 };
