@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "ember build",
+    "release": "standard-version -a",
     "start": "ember server",
     "test": "ember try:each",
     "test:once": "ember test",
@@ -49,7 +50,8 @@
     "ember-resolver": "^4.0.0",
     "ember-source": "~3.2.0",
     "ember-try": "^1.0.0-beta.3",
-    "loader.js": "^4.2.3"
+    "loader.js": "^4.2.3",
+    "standard-version": "^4.4.0"
   },
   "keywords": [
     "ember-addon",
