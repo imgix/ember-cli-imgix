@@ -35,7 +35,7 @@ module.exports = function(environment) {
 
 ## Usage
 
-**NOTE:** These docs are for the upcoming release of version 1. For the old docs, please go [here](https://github.com/imgix/ember-cli-imgix/blob/f9b5cd724e92270cfba96f3def977177c647cb00/README.md)
+**NOTE:** These docs are for the latest version of ember-cli-imgix (version 1). For the old docs, please go [here](https://github.com/imgix/ember-cli-imgix/blob/f9b5cd724e92270cfba96f3def977177c647cb00/README.md)
 
 ### imgix-image
 
