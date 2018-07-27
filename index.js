@@ -39,12 +39,10 @@ module.exports = {
       })
     ));
 
-    trees.push(FastbootTransform(
-      new Funnel(path.dirname(require.resolve('jsuri')), {
-        files: ['Uri.js'],
-        destDir: 'jsuri',
-      })
-    ));
+    trees.push(new Funnel(path.dirname(require.resolve('jsuri')), {
+      files: ['Uri.js'],
+      destDir: 'jsuri',
+    }));
 
     return MergeTrees(trees);
   },
