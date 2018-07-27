@@ -1,10 +1,10 @@
 import Component from '@ember/component';
 import { deprecate } from '@ember/application/deprecations';
-import ResizeMixin from 'ember-resize-mixin/main';
+import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
 import layout from '../templates/components/imgix-image-wrapped';
 import ImgixPathBehavior from '../mixins/imgix-path-behavior';
 
-export default Component.extend(ResizeMixin, ImgixPathBehavior, {
+export default Component.extend(ResizeAware, ImgixPathBehavior, {
   layout: layout,
   classNames: ['imgix-image-wrap'],
   init() {
