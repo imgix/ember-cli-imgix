@@ -69,8 +69,9 @@ fit: 'crop',
 pixelStep: 10, // round to the nearest pixelStep
 onLoad: null,
 onError: null,
-crossorigin: 'anonymous',
-alt: '', // image alt
+crossorigin: 'anonymous', // img element crossorigin attr
+alt: '', // img element alt attr
+draggable: true, // img element draggable attr
 options: {}, // arbitrary imgix options
 auto: null, // https://docs.imgix.com/apis/url/auto
 
