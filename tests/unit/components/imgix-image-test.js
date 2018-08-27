@@ -8,45 +8,11 @@ moduleForComponent('imgix-image', 'Unit | Component | imgix image', {
   needs: ['service:unifiedEventHandler']
 });
 
-test('it renders', function(assert) {
-  assert.expect(2);
-
-  // Creates the component instance
-  var component = this.subject();
-  setProperties(component, { path: '/users/1.png' });
-  assert.equal(component._state, 'preRender');
-
-  // Renders the component to the page
-  this.render();
-  assert.equal(component._state, 'inDOM');
-});
-
 test('it does not throw an exception when given an undefined path', function(assert) {
   var component = this.subject();
   setProperties(component, { path: undefined });
   this.render();
   assert.equal(component._state, 'inDOM');
-});
-
-test('it sets the source correctly', function(assert) {
-  const component = this.subject();
-
-  setProperties(component, {
-    path: '/users/1.png',
-    _dpr: 1
-  });
-
-  assert.ok(component.get('src'));
-
-  const uri = new URI(component.get('src'));
-  const srcSet = component.get('srcSet');
-
-  assert.equal(config.APP.imgix.source, uri.host());
-  assert.equal('https', uri.protocol());
-  assert.equal('/users/1.png', uri.path());
-  assert.equal(uri.hasQueryParam('crop'), false);
-  assert.equal(uri.getQueryParamValue('fit'), 'crop');
-  assert.ok(srcSet.indexOf('/users/1.png') > -1);
 });
 
 test('the generated img has the correct number of srcSets', function(assert) {
@@ -121,3 +87,19 @@ test('setting disableLibraryParam in the global config should cause the url not 
 
   config.APP.imgix.disableLibraryParam = oldDisableLibraryParam;
 });
+
+// matcher should be in the form (url: string, uri: URI) => boolean
+function expectSrcsTo(component, matcher) {
+  const src = component.get('src');
+  matcher(src, new URI(src));
+
+  const srcSet = component.get('srcset');
+  if (!srcSet) {
+    throw new Error("srcSet doesn't exist");
+  }
+  const srcSets = srcSet.split(',').map(v => v.trim());
+  const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
+  srcSetUrls.forEach(srcSetUrl => {
+    matcher(srcSetUrl, new URI(srcSetUrl));
+  });
+}

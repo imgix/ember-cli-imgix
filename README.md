@@ -95,7 +95,6 @@ crossorigin: 'anonymous', // img element crossorigin attr
 alt: '', // img element alt attr
 draggable: true, // img element draggable attr
 options: {}, // arbitrary imgix options
-auto: null, // https://docs.imgix.com/apis/url/auto
 
 width: null, // override if you want to hardcode a width into the image
 height: null, // override if you want to hardcode a height into the image
