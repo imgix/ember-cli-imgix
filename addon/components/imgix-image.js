@@ -11,7 +11,7 @@ import { constants, targetWidths } from '../common';
 export default Component.extend({
   tagName: 'img',
   classNames: 'imgix-image',
-  attributeBindings: ['src', 'srcSet', 'crossorigin', 'alt'],
+  attributeBindings: ['src', 'srcSet', 'crossorigin', 'alt', 'sizes'],
 
   path: null, // The path to your image
   aspectRatio: null,
