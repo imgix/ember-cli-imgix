@@ -1,3 +1,5 @@
+/* global QUnit */
+
 import { moduleForComponent, test } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import URI from 'jsuri';
@@ -27,41 +29,35 @@ test('it renders event more better', function(assert) {
 });
 
 test('it renders the correct path', function(assert) {
-  this.render(hbs`<div style='width:1250px;height:200px;'>{{imgix-image path="/users/1.png"}}</div>`);
+  this.render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
   assert.ok(
     this.$('img')
       .attr('src')
       .indexOf('https://assets.imgix.net/users/1.png') > -1
   );
-  assert.ok(
-    this.$('img')
-      .attr('src')
-      .indexOf('w=1250') > -1
-  );
 });
 
 test('it builds the default URL', function(assert) {
-  this.render(hbs`<div style='width:1250px;height:200px;'>{{imgix-image path="/users/1.png"}}</div>`);
+  this.render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
   let uri = new URI(this.$('img').attr('src'));
 
-  assert.equal(uri.getQueryParamValue('w'), '1250');
   assert.equal(uri.path(), '/users/1.png');
   assert.equal(uri.getQueryParamValue('fit'), 'crop');
   assert.equal(uri.hasQueryParam('crop'), false);
 });
 
 test('it maintains any query parameters passed in', function(assert) {
-  assert.expect(2);
-  this.render(hbs`<div style='width:1250px;height:200px;'>{{imgix-image path="/users/1.png?sat=100"}}</div>`);
+  this.render(hbs`<div>{{imgix-image path="/users/1.png?sat=100"}}</div>`);
 
   let uri = new URI(this.$('img').attr('src'));
   assert.equal(uri.getQueryParamValue('sat'), '100');
-  assert.equal(uri.getQueryParamValue('w'), '1250');
 });
 
-test('it renders with an aspect ratio', function(assert) {
-  this.render(hbs`<div style='width:1250px;'>{{imgix-image path="/users/1.png" aspectRatio=1.3333}}</div>`);
+QUnit.skip('it renders with an aspect ratio', function(assert) {
+  this.render(
+    hbs`<div>{{imgix-image path="/users/1.png" aspectRatio=1.3333}}</div>`
+  );
 
   assert.equal(
     this.$()
@@ -118,7 +114,7 @@ test('it allows setting the alt attribute', function(assert) {
 test('it allows passing ANY imgix parameter as an option hash', function(assert) {
   assert.expect(2);
   this.render(
-    hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' options=(hash exp=20 invert=true)}}</div>`
+    hbs`<div>{{imgix-image path='/users/1.png' options=(hash exp=20 invert=true)}}</div>`
   );
 
   let uri = new URI(this.$('img').attr('src'));
