@@ -11,7 +11,14 @@ import { constants, targetWidths } from '../common';
 export default Component.extend({
   tagName: 'img',
   classNames: 'imgix-image',
-  attributeBindings: ['src', 'srcSet', 'crossorigin', 'alt', 'sizes'],
+  attributeBindings: [
+    'alt',
+    'crossorigin',
+    'draggable',
+    'src',
+    'srcSet',
+    'sizes'
+  ],
 
   path: null, // The path to your image
   aspectRatio: null,
@@ -19,8 +26,9 @@ export default Component.extend({
   fit: 'crop',
   onLoad: null,
   onError: null,
-  crossorigin: 'anonymous',
-  alt: '', // image alt
+  crossorigin: 'anonymous', // img element crossorigin attr
+  alt: '', // img element alt attr
+  draggable: true, // img element draggable attr
   options: {}, // arbitrary imgix options
   disableLibraryParam: false,
 

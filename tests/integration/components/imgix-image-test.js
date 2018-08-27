@@ -122,3 +122,33 @@ test('it allows passing ANY imgix parameter as an option hash', function(assert)
   assert.equal(uri.getQueryParamValue('exp'), 20);
   assert.equal(uri.getQueryParamValue('invert'), 'true');
 });
+
+test('attribute bindings: the draggable argument will set the draggable attribute on the image element', function(assert) {
+  assert.expect(1);
+
+  this.render(
+    hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' draggable=false}}</div>`
+  );
+
+  assert.equal(this.$('img').attr('draggable'), 'false');
+});
+
+test('attribute bindings: the crossorigin argument will set the crossorigin attribute on the image element', function(assert) {
+  assert.expect(1);
+
+  this.render(
+    hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' crossorigin='imgix-is-rad'}}</div>`
+  );
+
+  assert.equal(this.$('img').attr('crossorigin'), 'imgix-is-rad');
+});
+
+test('attribute bindings: the alt argument will set the alt attribute on the image element', function(assert) {
+  assert.expect(1);
+
+  this.render(
+    hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' alt='Photo of User 1'}}</div>`
+  );
+
+  assert.equal(this.$('img').attr('alt'), 'Photo of User 1');
+});
