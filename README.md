@@ -8,7 +8,7 @@ An Ember addon for easily adding responsive imagery via [imgix](https://www.imgi
 
 ## Overview / Resources
 
-**Before you get started with ember-cli-imgix**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of react-imgix is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your ember-cli-imgix experience.
+**Before you get started with ember-cli-imgix**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of ember-cli-imgix is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your ember-cli-imgix experience.
 
 Below are some other articles that help explain responsive imagery, and how it can work alongside imgix:
 
@@ -68,7 +68,7 @@ The src attribute will have imgix URL API parameters added to it to perform the 
 
 **Please note:** `100vw` is an appropriate `sizes` value for a full-bleed image. If your image is not full-bleed, you should use a different value for `sizes`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
 
-Since imgix can generate as many derivative resolutions as needed, react-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
+Since imgix can generate as many derivative resolutions as needed, ember-cli-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
 
 **Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
 
@@ -213,7 +213,7 @@ The largest change in this major version bump is the move to width-based `srcSet
 
 ## Browser Support
 
-- By default, browsers that don't support [`srcset`](http://caniuse.com/#feat=srcset), [`sizes`](http://caniuse.com/#feat=srcset), or [`picture`](http://caniuse.com/#feat=picture) will gracefully fall back to the default `img` `src` when appropriate. If you want to provide a fully-responsive experience for these browsers, react-imgix works great alongside [Picturefill](https://github.com/scottjehl/picturefill)!
+- By default, browsers that don't support [`srcset`](http://caniuse.com/#feat=srcset), [`sizes`](http://caniuse.com/#feat=srcset), or [`picture`](http://caniuse.com/#feat=picture) will gracefully fall back to the default `img` `src` when appropriate. If you want to provide a fully-responsive experience for these browsers, ember-cli-imgix works great alongside [Picturefill](https://github.com/scottjehl/picturefill)!
 - We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
 
 ## Running a test app
