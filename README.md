@@ -210,7 +210,7 @@ import ImgixCoreJs from 'imgix-core-js';
 
 The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements.
 
-- A `sizes` prop should be added to all usages of ember-cli-imgix. If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- A `sizes` prop should be added to all usages of ember-cli-imgix, unless the width or height of the image are known beforehand (see above). If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
 
 ## Browser Support
 
