@@ -15,7 +15,7 @@ test('it does not throw an exception when given an undefined path', function(ass
   assert.equal(component._state, 'inDOM');
 });
 
-test('the generated img has a srcSet in the format of 2x, 3x when passing a fixed width', function(assert) {
+test('the generated img has a srcSet in the format of 2x, 3x, 4x, 5x when passing a fixed width', function(assert) {
   const component = this.subject();
   setProperties(component, {
     path: '/users/1.png',
@@ -24,13 +24,13 @@ test('the generated img has a srcSet in the format of 2x, 3x when passing a fixe
 
   const srcSet = component.get('srcSet');
   const actualNumberOfSrcSets = srcSet.split(', ').length;
-  assert.equal(actualNumberOfSrcSets, 2);
+  assert.equal(actualNumberOfSrcSets, 4);
   srcSet.split(', ').forEach(srcSet => {
     assert.ok(srcSet.split(' ')[1].match(/^\dx$/));
   });
 });
 
-test('the generated img has a srcSet in the format of 2x, 3x when passing a fixed height', function(assert) {
+test('the generated img has a srcSet in the format of 2x, 3x, 4x, 5x when passing a fixed height', function(assert) {
   const component = this.subject();
   setProperties(component, {
     path: '/users/1.png',
@@ -39,7 +39,7 @@ test('the generated img has a srcSet in the format of 2x, 3x when passing a fixe
 
   const srcSet = component.get('srcSet');
   const actualNumberOfSrcSets = srcSet.split(', ').length;
-  assert.equal(actualNumberOfSrcSets, 2);
+  assert.equal(actualNumberOfSrcSets, 4);
   srcSet.split(', ').forEach(srcSet => {
     assert.ok(srcSet.split(' ')[1].match(/^\dx$/));
   });

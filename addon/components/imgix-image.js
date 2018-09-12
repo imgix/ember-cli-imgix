@@ -153,7 +153,8 @@ export default Component.extend({
               ...options,
               dpr
             });
-          srcSet = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x`;
+          // prettier-ignore
+          srcSet = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
           const buildSrcSetPair = targetWidth => {
             const url = buildWithOptions({
