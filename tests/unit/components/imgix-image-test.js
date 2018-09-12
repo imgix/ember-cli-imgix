@@ -15,6 +15,36 @@ test('it does not throw an exception when given an undefined path', function(ass
   assert.equal(component._state, 'inDOM');
 });
 
+test('the generated img has a srcSet in the format of 2x, 3x when passing a fixed width', function(assert) {
+  const component = this.subject();
+  setProperties(component, {
+    path: '/users/1.png',
+    width: 100
+  });
+
+  const srcSet = component.get('srcSet');
+  const actualNumberOfSrcSets = srcSet.split(', ').length;
+  assert.equal(actualNumberOfSrcSets, 2);
+  srcSet.split(', ').forEach(srcSet => {
+    assert.ok(srcSet.split(' ')[1].match(/^\dx$/));
+  });
+});
+
+test('the generated img has a srcSet in the format of 2x, 3x when passing a fixed height', function(assert) {
+  const component = this.subject();
+  setProperties(component, {
+    path: '/users/1.png',
+    height: 100
+  });
+
+  const srcSet = component.get('srcSet');
+  const actualNumberOfSrcSets = srcSet.split(', ').length;
+  assert.equal(actualNumberOfSrcSets, 2);
+  srcSet.split(', ').forEach(srcSet => {
+    assert.ok(srcSet.split(' ')[1].match(/^\dx$/));
+  });
+});
+
 test('the generated img has the correct number of srcSets', function(assert) {
   const expectedNumberOfSrcSets = 32;
 
@@ -48,6 +78,17 @@ test('the generated img has srcSets in the correct format', function(assert) {
   const fallbackSrcSet = srcSets[srcSets.length - 1];
   assert.equal(fallbackSrcSet.split(' ').length, 1);
   assert.notOk(fallbackSrcSet.match(/^\d+w$/));
+});
+
+test('the generated img should not contain a srcSet when disableSrcSet is set', function(assert) {
+  const component = this.subject();
+  setProperties(component, {
+    path: '/users/1.png',
+    disableSrcSet: true
+  });
+
+  const srcSet = component.get('srcSet');
+  assert.notOk(srcSet);
 });
 
 test('the generated src url has an ixlib parameter', function(assert) {
@@ -87,19 +128,3 @@ test('setting disableLibraryParam in the global config should cause the url not 
 
   config.APP.imgix.disableLibraryParam = oldDisableLibraryParam;
 });
-
-// matcher should be in the form (url: string, uri: URI) => boolean
-function expectSrcsTo(component, matcher) {
-  const src = component.get('src');
-  matcher(src, new URI(src));
-
-  const srcSet = component.get('srcset');
-  if (!srcSet) {
-    throw new Error("srcSet doesn't exist");
-  }
-  const srcSets = srcSet.split(',').map(v => v.trim());
-  const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
-  srcSetUrls.forEach(srcSetUrl => {
-    matcher(srcSetUrl, new URI(srcSetUrl));
-  });
-}

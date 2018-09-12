@@ -65,7 +65,16 @@ QUnit.skip('it renders with an aspect ratio', function(assert) {
   assert.equal(uri.getQueryParamValue('h'), '937');
 });
 
-test('it respects passed in `crop` and `fit` values', function(assert) {
+test(`it respects the width and height passed in`, function(assert) {
+  this.render(hbs`{{imgix-image path="/users/1.png" width=100 height=200}}`);
+
+  expectSrcsTo(this.$, (_, uri) => {
+    assert.equal(uri.getQueryParamValue('w'), '100');
+    assert.equal(uri.getQueryParamValue('h'), '200');
+  });
+});
+
+test(`it respects passed in 'crop' and 'fit' values`, function(assert) {
   this.render(
     hbs`{{imgix-image path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
   );
