@@ -73,7 +73,7 @@ Since imgix can generate as many derivative resolutions as needed, ember-cli-img
 **Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
 
 ```hbs
-{{imgix-image path='/users/1.png' sizes='100vw' width=100 height=100}}
+{{imgix-image path='/users/1.png' width=100 height=100}}
 ```
 
 NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
