@@ -1,29 +1,29 @@
 import Component from '@ember/component';
-import { computed, get, set } from '@ember/object';
-import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
+import { computed, get } from '@ember/object';
 import { tryInvoke } from '@ember/utils';
 import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
 import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
-import { toFixed, constants } from '../common';
+import { constants, targetWidths } from '../common';
 
-export default Component.extend(ResizeAware, {
+export default Component.extend({
   tagName: 'img',
   classNames: 'imgix-image',
   attributeBindings: [
     'alt',
     'crossorigin',
     'draggable',
-    'src', 
+    'src',
+    'srcSet',
+    'sizes'
   ],
 
   path: null, // The path to your image
   aspectRatio: null,
   crop: null,
   fit: 'crop',
-  pixelStep: 10,
   onLoad: null,
   onError: null,
   crossorigin: 'anonymous', // img element crossorigin attr
@@ -32,34 +32,12 @@ export default Component.extend(ResizeAware, {
   options: {}, // arbitrary imgix options
   disableLibraryParam: false,
 
-  width: null, // passed in
-  height: null, // passed in
-
-  _width: null,
-  _height: null,
-  _dpr: null,
+  width: null,
+  height: null,
+  sizes: null,
+  disableSrcSet: false,
 
   debounceRate: 400,
-
-  didResize(width, height) {
-    if (get(this, 'path')) {
-      const newWidth =
-        Math.ceil(
-          get(this, '_pathAsUri').getQueryParamValue('w') ||
-            width / get(this, 'pixelStep')
-        ) * get(this, 'pixelStep');
-      const newHeight = Math.floor(
-        get(this, 'aspectRatio')
-          ? newWidth / get(this, 'aspectRatio')
-          : get(this, '_pathAsUri').getQueryParamValue('h') || height
-      );
-      const newDpr = toFixed(2, window.devicePixelRatio || 1);
-
-      set(this, '_width', newWidth);
-      set(this, '_height', newHeight);
-      set(this, '_dpr', newDpr);
-    }
-  },
 
   didInsertElement(...args) {
     this._super(...args);
@@ -72,34 +50,6 @@ export default Component.extend(ResizeAware, {
     if (get(this, 'onError')) {
       this._handleImageError = this._handleImageError.bind(this);
       this.element.addEventListener('error', this._handleImageError);
-    }
-
-    this.didResize(
-      get(this, 'width') ||
-        get(this, '_width') ||
-        this.element.clientWidth ||
-        this.element.parentElement.clientWidth,
-      get(this, 'height') ||
-        get(this, '_height') ||
-        this.element.clientHeight ||
-        this.element.parentElement.clientHeight
-    );
-  },
-
-  didUpdateAttrs(...args) {
-    this._super(...args);
-
-    if (typeof FastBoot === 'undefined') {
-      this.didResize(
-        get(this, 'width') ||
-          get(this, '_width') ||
-          this.element.clientWidth ||
-          this.element.parentElement.clientWidth,
-        get(this, 'height') ||
-          get(this, '_height') ||
-          this.element.clientHeight ||
-          this.element.parentElement.clientHeight
-      );
     }
   },
 
@@ -143,31 +93,37 @@ export default Component.extend(ResizeAware, {
     });
   }),
 
-  src: computed(
+  _srcAndSrcSet: computed(
     'path',
     '_pathAsUri',
-    '_width',
-    '_height',
-    '_dpr',
+    'width',
+    'height',
     'crop',
     'fit',
+    'disableSrcSet',
     function() {
       const pathAsUri = get(this, '_pathAsUri');
-      const debugParams = get(config, 'APP.imgix.debug') ? get(this, '_debugParams') : {};
+      const debugParams = get(config, 'APP.imgix.debug')
+        ? get(this, '_debugParams')
+        : {};
 
-      if (!get(this, '_width')) {
-        return;
-      }
       if (!get(this, 'path')) {
         return;
       }
 
       let theseOptions = {
-        dpr: get(this, '_dpr'),
-        fit: get(this, 'fit'),
-        h: get(this, '_height'),
-        w: get(this, '_width'),
+        fit: get(this, 'fit')
       };
+      const width = get(this, 'width');
+      if (width != null) {
+        theseOptions.w = width;
+      }
+      const height = get(this, 'height');
+      if (height != null) {
+        theseOptions.h = height;
+      }
+
+      const fixedDimensions = width != null || height != null;
 
       if (get(this, 'crop')) {
         theseOptions.crop = get(this, 'crop');
@@ -180,15 +136,48 @@ export default Component.extend(ResizeAware, {
         ...pathAsUri.queryPairs.reduce((memo, param) => {
           memo[param[0]] = param[1];
           return memo;
-        }, {}),
+        }, {})
       };
 
-      return get(this, '_client').buildURL(
-        get(this, '_pathAsUri').path(),
-        options
-      );
+      const client = get(this, '_client');
+      const buildWithOptions = options =>
+        client.buildURL(pathAsUri.path(), options);
+      const src = buildWithOptions(options);
+
+      let srcSet = undefined;
+      const disableSrcSet = get(this, 'disableSrcSet');
+      if (!disableSrcSet) {
+        if (fixedDimensions) {
+          const buildWithDpr = dpr =>
+            buildWithOptions({
+              ...options,
+              dpr
+            });
+          // prettier-ignore
+          srcSet = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
+        } else {
+          const buildSrcSetPair = targetWidth => {
+            const url = buildWithOptions({
+              ...options,
+              w: targetWidth
+            });
+            return `${url} ${targetWidth}w`;
+          };
+          const addFallbackSrc = srcSet => srcSet.concat(src);
+          srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
+        }
+      }
+
+      return { src, srcSet };
     }
   ),
+
+  src: computed('_srcAndSrcSet', function() {
+    return get(this, '_srcAndSrcSet.src');
+  }),
+  srcSet: computed('_srcAndSrcSet', function() {
+    return get(this, '_srcAndSrcSet.srcSet');
+  }),
 
   _handleImageLoad(event) {
     debounce(
@@ -206,12 +195,14 @@ export default Component.extend(ResizeAware, {
     );
   },
 
-  _debugParams: computed('_width', '_height', '_dpr', function() {
+  _debugParams: computed('width', 'height', function() {
+    const width = get(this, 'width');
+    const height = get(this, 'height');
+
     return {
-      txt64: `${get(this, '_width')} x ${get(this, '_height')} @ DPR ${get(
-        this,
-        '_dpr'
-      )}`,
+      txt64: `${width != null ? width : 'auto'} x ${
+        height != null ? height : 'auto'
+      }`,
       txtalign: 'center,bottom',
       txtsize: 20,
       txtfont: 'Helvetica Neue',

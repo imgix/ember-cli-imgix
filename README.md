@@ -6,6 +6,14 @@ An Ember addon for easily adding responsive imagery via [imgix](https://www.imgi
 
 **Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with imgix Web Folder or S3 Sources.
 
+## Overview / Resources
+
+**Before you get started with ember-cli-imgix**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of ember-cli-imgix is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your ember-cli-imgix experience.
+
+Below are some other articles that help explain responsive imagery, and how it can work alongside imgix:
+
+- [Responsive Images with `srcset` and imgix](https://docs.imgix.com/tutorials/responsive-images-srcset-imgix). A look into how imgix can work with `srcset` and `sizes` to serve the right image.
+
 ## Installation
 
 From within an existing ember-cli project:
@@ -42,18 +50,33 @@ module.exports = function(environment) {
 `ember-cli-imgix` exposes a `img` element with expanded functionality. It simply renders an `img`, but has some extra parameters
 
 ```hbs
-{{imgix-image path='/users/1.png'}}
+{{imgix-image path='/users/1.png' sizes='100vw'}}
 ```
 
 Which will generate some HTML similar to this:
 
 ```html
-<img class="imgix-image" src="https://my-social-network.com/users/1.png?w=400&h=300&dpr=1" >
+<img
+  class="imgix-image"
+  src="https://my-social-network.com/users/1.png"
+  sizes="100vw"
+  srcset="https://my-social-network.com/users/1.png?w=100 100w, https://my-social-network.com/users/1.png?w=200 200w, ..."
+/>
 ```
 
 The src attribute will have imgix URL API parameters added to it to perform the resize.
 
-**Note:** This element works by calculating the width/height from its parent. If its parent has no width/height, then this component will do nothing.
+**Please note:** `100vw` is an appropriate `sizes` value for a full-bleed image. If your image is not full-bleed, you should use a different value for `sizes`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
+
+Since imgix can generate as many derivative resolutions as needed, ember-cli-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
+
+**Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
+
+```hbs
+{{imgix-image path='/users/1.png' width=100 height=100}}
+```
+
+NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
 
 #### Parameters
 
@@ -66,14 +89,13 @@ path: null, // The path to your image
 aspectRatio: null,
 crop: null,
 fit: 'crop',
-pixelStep: 10, // round to the nearest pixelStep
 onLoad: null,
 onError: null,
 crossorigin: 'anonymous', // img element crossorigin attr
 alt: '', // img element alt attr
 draggable: true, // img element draggable attr
+disableSrcSet: false, // disable srcSet generation
 options: {}, // arbitrary imgix options
-auto: null, // https://docs.imgix.com/apis/url/auto
 
 width: null, // override if you want to hardcode a width into the image
 height: null, // override if you want to hardcode a height into the image
@@ -183,6 +205,17 @@ import ImgixCoreJs from 'imgix-core-js';
 `imgix-image` has been replaced by a new implementation of `imgix-image-element`. All usage of `imgix-image-element` can be replaced with `imgix-image`. No parameter changes are necessary.
 
 `imgix-image` has been renamed to `imgix-image-wrapped` and has been deprecated. All usage of `imgix-image` can be replaced with `imgix-image-wrapped` for the duration of version 2. No parameter changes are necessary. After version 2, `imgix-image-wrapped` will not exist.
+
+## version 1.x to version 2.x
+
+The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements.
+
+- A `sizes` prop should be added to all usages of ember-cli-imgix, unless the width or height of the image are known beforehand (see above). If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+
+## Browser Support
+
+- By default, browsers that don't support [`srcset`](http://caniuse.com/#feat=srcset), [`sizes`](http://caniuse.com/#feat=srcset), or [`picture`](http://caniuse.com/#feat=picture) will gracefully fall back to the default `img` `src` when appropriate. If you want to provide a fully-responsive experience for these browsers, ember-cli-imgix works great alongside [Picturefill](https://github.com/scottjehl/picturefill)!
+- We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
 
 ## Running a test app
 
