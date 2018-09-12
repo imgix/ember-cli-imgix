@@ -53,10 +53,6 @@ export default Component.extend({
     }
   },
 
-  didUpdateAttrs(...args) {
-    this._super(...args);
-  },
-
   willDestroyElement(...args) {
     if (get(this, 'onLoad') && typeof FastBoot === 'undefined') {
       this.element.removeEventListener('load', this._handleImageLoad);
