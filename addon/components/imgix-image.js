@@ -123,6 +123,8 @@ export default Component.extend({
         theseOptions.h = height;
       }
 
+      const fixedDimensions = width != null || height != null;
+
       if (get(this, 'crop')) {
         theseOptions.crop = get(this, 'crop');
       }
@@ -145,15 +147,24 @@ export default Component.extend({
       let srcSet = undefined;
       const disableSrcSet = get(this, 'disableSrcSet');
       if (!disableSrcSet) {
-        const buildSrcSetPair = targetWidth => {
-          const url = buildWithOptions({
-            ...options,
-            w: targetWidth
-          });
-          return `${url} ${targetWidth}w`;
-        };
-        const addFallbackSrc = srcSet => srcSet.concat(src);
-        srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
+        if (fixedDimensions) {
+          const buildWithDpr = dpr =>
+            buildWithOptions({
+              ...options,
+              dpr
+            });
+          srcSet = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x`;
+        } else {
+          const buildSrcSetPair = targetWidth => {
+            const url = buildWithOptions({
+              ...options,
+              w: targetWidth
+            });
+            return `${url} ${targetWidth}w`;
+          };
+          const addFallbackSrc = srcSet => srcSet.concat(src);
+          srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
+        }
       }
 
       return { src, srcSet };
