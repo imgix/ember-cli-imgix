@@ -26,6 +26,7 @@ export default Component.extend({
   fit: 'crop',
   onLoad: null,
   onError: null,
+  onInsert: null,
   crossorigin: 'anonymous', // img element crossorigin attr
   alt: '', // img element alt attr
   draggable: true, // img element draggable attr
@@ -41,6 +42,10 @@ export default Component.extend({
 
   didInsertElement(...args) {
     this._super(...args);
+
+    if (get(this, 'onInsert')) {
+      tryInvoke(this, 'onInsert', [this.element]);
+    }
 
     if (get(this, 'onLoad')) {
       this._handleImageLoad = this._handleImageLoad.bind(this);
