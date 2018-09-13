@@ -1,0 +1,23 @@
+{{!-- Hi {{_width}} x {{_height}} --}}
+{{imgix-image
+path=path
+aspectRatio=aspectRatio
+crop=crop
+fit=fit
+onLoad=onLoad
+onError=onError
+crossorigin=crossorigin
+alt=alt
+draggable=draggable
+options=options
+disableLibraryParam=disableLibraryParam
+
+width=_width
+height=_height
+sizes=sizes
+disableSrcSet=disableSrcSet
+
+debounceRate=debounceRate
+
+onInsert=(action 'handleChildInsert')
+}}
