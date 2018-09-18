@@ -153,7 +153,7 @@ export default Component.extend({
         client.buildURL(pathAsUri.path(), options);
       const src = buildWithOptions(options);
 
-      let srcSet = undefined;
+      let srcset = undefined;
       const disableSrcSet = get(this, 'disableSrcSet');
       if (!disableSrcSet) {
         if (fixedDimensions) {
@@ -163,7 +163,7 @@ export default Component.extend({
               dpr
             });
           // prettier-ignore
-          srcSet = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
+          srcset = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
           const buildSrcSetPair = targetWidth => {
             const url = buildWithOptions({
@@ -172,20 +172,20 @@ export default Component.extend({
             });
             return `${url} ${targetWidth}w`;
           };
-          const addFallbackSrc = srcSet => srcSet.concat(src);
-          srcSet = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
+          const addFallbackSrc = srcset => srcset.concat(src);
+          srcset = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
         }
       }
 
-      return { src, srcSet };
+      return { src, srcset };
     }
   ),
 
   src: computed('_srcAndSrcSet', function() {
     return get(this, '_srcAndSrcSet.src');
   }),
-  srcSet: computed('_srcAndSrcSet', function() {
-    return get(this, '_srcAndSrcSet.srcSet');
+  srcset: computed('_srcAndSrcSet', function() {
+    return get(this, '_srcAndSrcSet.srcset');
   }),
   placeholderSrc: computed('placeholderPath', function() {
     if (attributeMap.src === 'src') {
