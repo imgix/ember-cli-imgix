@@ -15,37 +15,37 @@ test('it does not throw an exception when given an undefined path', function(ass
   assert.equal(component._state, 'inDOM');
 });
 
-test('the generated img has a srcSet in the format of 2x, 3x, 4x, 5x when passing a fixed width', function(assert) {
+test('the generated img has a srcset in the format of 2x, 3x, 4x, 5x when passing a fixed width', function(assert) {
   const component = this.subject();
   setProperties(component, {
     path: '/users/1.png',
     width: 100
   });
 
-  const srcSet = component.get('srcSet');
-  const actualNumberOfSrcSets = srcSet.split(', ').length;
+  const srcset = component.get('srcset');
+  const actualNumberOfSrcSets = srcset.split(', ').length;
   assert.equal(actualNumberOfSrcSets, 4);
-  srcSet.split(', ').forEach(srcSet => {
-    assert.ok(srcSet.split(' ')[1].match(/^\dx$/));
+  srcset.split(', ').forEach(srcset => {
+    assert.ok(srcset.split(' ')[1].match(/^\dx$/));
   });
 });
 
-test('the generated img has a srcSet in the format of 2x, 3x, 4x, 5x when passing a fixed height', function(assert) {
+test('the generated img has a srcset in the format of 2x, 3x, 4x, 5x when passing a fixed height', function(assert) {
   const component = this.subject();
   setProperties(component, {
     path: '/users/1.png',
     height: 100
   });
 
-  const srcSet = component.get('srcSet');
-  const actualNumberOfSrcSets = srcSet.split(', ').length;
+  const srcset = component.get('srcset');
+  const actualNumberOfSrcSets = srcset.split(', ').length;
   assert.equal(actualNumberOfSrcSets, 4);
-  srcSet.split(', ').forEach(srcSet => {
-    assert.ok(srcSet.split(' ')[1].match(/^\dx$/));
+  srcset.split(', ').forEach(srcset => {
+    assert.ok(srcset.split(' ')[1].match(/^\dx$/));
   });
 });
 
-test('the generated img has the correct number of srcSets', function(assert) {
+test('the generated img has the correct number of srcsets', function(assert) {
   const expectedNumberOfSrcSets = 32;
 
   const component = this.subject();
@@ -53,42 +53,42 @@ test('the generated img has the correct number of srcSets', function(assert) {
     path: '/users/1.png'
   });
 
-  const srcSet = component.get('srcSet');
-  const actualNumberOfSrcSets = srcSet.split(',').length;
+  const srcset = component.get('srcset');
+  const actualNumberOfSrcSets = srcset.split(',').length;
   assert.equal(actualNumberOfSrcSets, expectedNumberOfSrcSets);
 });
-test('the generated img has srcSets in the correct format', function(assert) {
+test('the generated img has srcsets in the correct format', function(assert) {
   const component = this.subject();
   setProperties(component, {
     path: '/users/1.png'
   });
 
-  const srcSet = component.get('srcSet');
-  const srcSets = srcSet.split(',').map(v => v.trim());
+  const srcset = component.get('srcset');
+  const srcsets = srcset.split(',').map(v => v.trim());
 
-  const srcSetsWithoutFallback = srcSets.slice(0, -1);
+  const srcsetsWithoutFallback = srcsets.slice(0, -1);
 
-  srcSetsWithoutFallback.forEach(srcSet => {
-    assert.equal(srcSet.split(' ').length, 2);
-    const [url, width] = srcSet.split(' ');
+  srcsetsWithoutFallback.forEach(srcset => {
+    assert.equal(srcset.split(' ').length, 2);
+    const [url, width] = srcset.split(' ');
     assert.ok(url);
     assert.ok(width.match(/^\d+w$/));
   });
 
-  const fallbackSrcSet = srcSets[srcSets.length - 1];
+  const fallbackSrcSet = srcsets[srcsets.length - 1];
   assert.equal(fallbackSrcSet.split(' ').length, 1);
   assert.notOk(fallbackSrcSet.match(/^\d+w$/));
 });
 
-test('the generated img should not contain a srcSet when disableSrcSet is set', function(assert) {
+test('the generated img should not contain a srcset when disableSrcSet is set', function(assert) {
   const component = this.subject();
   setProperties(component, {
     path: '/users/1.png',
     disableSrcSet: true
   });
 
-  const srcSet = component.get('srcSet');
-  assert.notOk(srcSet);
+  const srcset = component.get('srcset');
+  assert.notOk(srcset);
 });
 
 test('the generated src url has an ixlib parameter', function(assert) {
