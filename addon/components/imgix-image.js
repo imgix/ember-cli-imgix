@@ -23,7 +23,7 @@ export default Component.extend({
     'crossorigin',
     'draggable',
     `src:${attributeMap.src}`,
-    `_placeholderSrc:${attributeMap.src === 'src' ? '_src' : 'src'}`,
+    `placeholderSrc:${attributeMap.src === 'src' ? '_src' : 'src'}`,
     `srcset:${attributeMap.srcset}`,
     `sizes:${attributeMap.sizes}`
   ],
@@ -44,7 +44,7 @@ export default Component.extend({
   height: null,
   sizes: null,
   disableSrcSet: false,
-  placeholderSrc: null,
+  placeholderPath: null,
 
   debounceRate: 400,
 
@@ -187,14 +187,14 @@ export default Component.extend({
   srcSet: computed('_srcAndSrcSet', function() {
     return get(this, '_srcAndSrcSet.srcSet');
   }),
-  _placeholderSrc: computed('placeholderSrc', function() {
+  placeholderSrc: computed('placeholderPath', function() {
     if (attributeMap.src === 'src') {
       return null;
     }
     const client = get(this, '_client');
-    const placeholderSrcURI = new URI(get(this, 'placeholderSrc'));
-    const placeholderURL = client.buildURL(placeholderSrcURI.path(), {
-      ...placeholderSrcURI.queryPairs.reduce((memo, param) => {
+    const placeholderPathURI = new URI(get(this, 'placeholderPath'));
+    const placeholderURL = client.buildURL(placeholderPathURI.path(), {
+      ...placeholderPathURI.queryPairs.reduce((memo, param) => {
         memo[param[0]] = param[1];
         return memo;
       }, {})
