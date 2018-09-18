@@ -107,7 +107,7 @@ Otherwise, you can use the component as normal.
 
 #### Low Quality Image Placeholder Technique (LQIP)
 
-If you'd like to use LQIP images, like before, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use ember-cli-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset` by changing some configuration settings, and providing a fallback image to `placeholderSrc`.
+If you'd like to use LQIP images we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use ember-cli-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset` by changing some configuration settings, and providing a fallback image to `placeholderPath`.
 
 ```jsx
 // config/environment.js
@@ -131,10 +131,10 @@ module.exports = function(environment) {
 ```hbs
 // usage
 
-{{imgix-image path='/abc.png' placeholderSrc='/abc.png?w=80&h=50' }}
+{{imgix-image path='/abc.png' placeholderPath='/abc.png?w=80&h=50' }}
 ```
 
-**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the library maintainers, so use at your own risk.
+**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the maintainers of ember-cli-imgix, so use at your own risk.
 
 #### Parameters
 
@@ -285,7 +285,19 @@ module.exports = function(environment) {
 
 #### attributeNameMap
 
-`attributeNameMap` should be used if it is required to set the src of the image desired to another HTML attribute, rather than to
+`attributeNameMap` should be used if it is required to remap the HTML attribute to be used to set the src of the image. For example, if `data-src` should be used rather than `src`, `attributeNameMap` helps with this.
+
+In the global config, `attributeNameMap` allows the following to be remapped: `src`, `srcset`, and `sizes`.
+
+For example, to remap `srcset` to `data-srcset`:
+
+```
+attributeNameMap: {
+  srcset: `data-srcset`
+}
+```
+
+The equivalent works for `src` and `sizes`.
 
 ### Imgix Core JS
 
