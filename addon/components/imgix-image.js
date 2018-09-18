@@ -199,7 +199,6 @@ export default Component.extend({
         return memo;
       }, {})
     });
-    console.log('placeholderURL', placeholderURL);
     return placeholderURL;
   }),
 
