@@ -8,16 +8,24 @@ import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
 import { constants, targetWidths } from '../common';
 
+const attributeMap = {
+  src: 'src',
+  srcset: 'srcset',
+  sizes: 'sizes',
+  ...(get(config, 'APP.imgix.attributeNameMap') || {})
+};
+
 export default Component.extend({
   tagName: 'img',
-  classNames: 'imgix-image',
+  classNames: get(config, 'APP.imgix.classNames') || 'imgix-image',
   attributeBindings: [
     'alt',
     'crossorigin',
     'draggable',
-    'src',
-    'srcSet',
-    'sizes'
+    `src:${attributeMap.src}`,
+    `_placeholderSrc:${attributeMap.src === 'src' ? '_src' : 'src'}`,
+    `srcset:${attributeMap.srcset}`,
+    `sizes:${attributeMap.sizes}`
   ],
 
   path: null, // The path to your image
@@ -36,6 +44,7 @@ export default Component.extend({
   height: null,
   sizes: null,
   disableSrcSet: false,
+  placeholderSrc: null,
 
   debounceRate: 400,
 
@@ -177,6 +186,21 @@ export default Component.extend({
   }),
   srcSet: computed('_srcAndSrcSet', function() {
     return get(this, '_srcAndSrcSet.srcSet');
+  }),
+  _placeholderSrc: computed('placeholderSrc', function() {
+    if (attributeMap.src === 'src') {
+      return null;
+    }
+    const client = get(this, '_client');
+    const placeholderSrcURI = new URI(get(this, 'placeholderSrc'));
+    const placeholderURL = client.buildURL(placeholderSrcURI.path(), {
+      ...placeholderSrcURI.queryPairs.reduce((memo, param) => {
+        memo[param[0]] = param[1];
+        return memo;
+      }, {})
+    });
+    console.log('placeholderURL', placeholderURL);
+    return placeholderURL;
   }),
 
   _handleImageLoad(event) {
