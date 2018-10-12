@@ -1,5 +1,4 @@
-import { module, test } from 'qunit';
-/* global QUnit */
+import { module, test, skip } from 'qunit';
 
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
@@ -53,7 +52,9 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  QUnit.skip('it renders with an aspect ratio', function(assert) {
+  // TODO: Upgrade AR from decimal to ratio
+
+  test('it renders with an aspect ratio', function(assert) {
     this.render(
       hbs`<div>{{imgix-image path="/users/1.png" aspectRatio=1.3333}}</div>`
     );
@@ -69,6 +70,19 @@ module('Integration | Component | imgix image', function(hooks) {
 
     assert.equal(uri.getQueryParamValue('w'), '1250');
     assert.equal(uri.getQueryParamValue('h'), '937');
+  });
+
+  module('aspect ratio', function() {
+    module(`valid ARs`, function() {
+      const testValidAR = ({ ar, arDecimal }) => {
+        test(`it generates the correct srcset heights for a valid AR ()`, function(assert) {});
+      };
+
+      testValidAR('1:1', 1);
+      test(`it generates the correct srcset heights for a valid AR ()`, function(assert) {
+        assert.ok(true);
+      });
+    });
   });
 
   test(`it respects the width and height passed in`, async function(assert) {
