@@ -7,6 +7,24 @@ import ImgixClient from 'imgix-core-js';
 import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
 import { constants, targetWidths } from '../common';
+import { deprecate } from '@ember/application/deprecations';
+
+/**
+ * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
+ */
+function parseAspectRatio(aspectRatio) {
+  if (typeof aspectRatio !== 'string') {
+    return false;
+  }
+  const isValidFormat = str => /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(str);
+  if (!isValidFormat(aspectRatio)) {
+    return false;
+  }
+
+  const [width, height] = aspectRatio.split(':');
+
+  return parseFloat(width) / parseFloat(height);
+}
 
 const attributeMap = {
   src: 'src',
@@ -110,6 +128,7 @@ export default Component.extend({
     'crop',
     'fit',
     'disableSrcSet',
+    'aspectRatio',
     function() {
       const pathAsUri = get(this, '_pathAsUri');
       const debugParams = get(config, 'APP.imgix.debug')
@@ -138,8 +157,28 @@ export default Component.extend({
         theseOptions.crop = get(this, 'crop');
       }
 
+      const imgixOptions = {
+        ...get(this, 'options')
+      };
+      let aspectRatio = get(this, 'aspectRatio');
+      if (imgixOptions.ar) {
+        aspectRatio = imgixOptions.ar;
+        delete imgixOptions.ar;
+      }
+
+      if (get(this, 'aspectRatio')) {
+        deprecate(
+          'aspectRatio as a option is deprecated in favour of passing `ar` as a direct parameter to imgix. aspectRadio will be removed in ember-cli-imgix@3.',
+          false,
+          {
+            id: 'ember-cli-imgix/aspectRatio-deprecation',
+            until: '3.0.0'
+          }
+        );
+      }
+
       const options = {
-        ...get(this, 'options'),
+        ...imgixOptions,
         ...debugParams,
         ...theseOptions,
         ...pathAsUri.queryPairs.reduce((memo, param) => {
@@ -165,15 +204,31 @@ export default Component.extend({
           // prettier-ignore
           srcset = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
+          let showARWrongFormatWarning = false;
           const buildSrcSetPair = targetWidth => {
-            const url = buildWithOptions({
+            const urlOptions = {
               ...options,
               w: targetWidth
-            });
+            };
+            const aspectRatioDecimal = parseAspectRatio(aspectRatio);
+            if (aspectRatio != null && aspectRatioDecimal === false) {
+              // false indicates invalid
+              showARWrongFormatWarning = true;
+            }
+            if (!options.h && aspectRatioDecimal && aspectRatioDecimal > 0) {
+              urlOptions.h = Math.ceil(targetWidth / aspectRatioDecimal);
+            }
+            const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
           };
           const addFallbackSrc = srcset => srcset.concat(src);
           srcset = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
+          if (showARWrongFormatWarning) {
+            // eslint-disable-next-line no-console
+            console.warn(
+              `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+            );
+          }
         }
       }
 
