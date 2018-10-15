@@ -7,13 +7,6 @@ import config from 'ember-get-config';
 module('Unit | Component | imgix image', function(hooks) {
   setupTest(hooks);
 
-  test('it does not throw an exception when given an undefined path', async function(assert) {
-    var component = this.owner.factoryFor('component:imgix-image').create();
-    setProperties(component, { path: undefined });
-    await this.render();
-    assert.equal(component._state, 'inDOM');
-  });
-
   test('the generated img has a srcset in the format of 2x, 3x, 4x, 5x when passing a fixed width', function(assert) {
     const component = this.owner.factoryFor('component:imgix-image').create();
     setProperties(component, {

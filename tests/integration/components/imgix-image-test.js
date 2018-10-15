@@ -15,6 +15,11 @@ module('Integration | Component | imgix image', function(hooks) {
     assert.ok(this.$('img'));
   });
 
+  test('it does not throw an exception when given an undefined path', async function(assert) {
+    await render(hbs`{{imgix-image}}`);
+    assert.notEqual(this.element.querySelector('img'), null);
+  });
+
   test(`the rendered image's srcs have the correct path`, async function(assert) {
     await render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
@@ -76,7 +81,9 @@ module('Integration | Component | imgix image', function(hooks) {
   });
 
   test(`it respects passed in 'crop' and 'fit' values`, async function(assert) {
-    await render(hbs`{{imgix-image path="/users/1.png?sat=100&fit=min&crop=top,left"}}`);
+    await render(
+      hbs`{{imgix-image path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
+    );
 
     expectSrcsTo(this.$, (_, uri) => {
       assert.equal(uri.getQueryParamValue('fit'), 'min');
@@ -85,7 +92,9 @@ module('Integration | Component | imgix image', function(hooks) {
   });
 
   test(`it respects 'crop' and 'fit' values passed as attributes`, async function(assert) {
-    await render(hbs`{{imgix-image path="/users/1.png" crop="top,left" fit="min"}}`);
+    await render(
+      hbs`{{imgix-image path="/users/1.png" crop="top,left" fit="min"}}`
+    );
 
     expectSrcsTo(this.$, (_, uri) => {
       assert.equal(uri.getQueryParamValue('fit'), 'min');
@@ -101,7 +110,9 @@ module('Integration | Component | imgix image', function(hooks) {
   });
 
   test('it allows passing ANY imgix parameter as an option hash', async function(assert) {
-    await render(hbs`<div>{{imgix-image path='/users/1.png' options=(hash exp=20 invert=true)}}</div>`);
+    await render(
+      hbs`<div>{{imgix-image path='/users/1.png' options=(hash exp=20 invert=true)}}</div>`
+    );
 
     expectSrcsTo(this.$, (_, uri) => {
       assert.equal(uri.getQueryParamValue('exp'), 20);
