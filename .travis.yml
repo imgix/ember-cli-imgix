@@ -12,6 +12,7 @@ cache:
 branches:
   only:
     - master
+    - version-2
 
 env:
   global:
