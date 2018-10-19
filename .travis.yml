@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "8"
+  - '8'
 
 sudo: required
 dist: trusty
@@ -9,10 +9,14 @@ addons:
 cache:
   yarn: true
 
+branches:
+  only:
+    - master
+
 env:
   global:
-  - JOBS=1
-  - secure: jdfwWkawHI6Pxbkq64ihtdu0NnQbvLQrZXpaGDaavOn03ZA5sj1JCMKaw46Fg/q84sQl0VPUWDVXKBiGDvYTWFI84h3UZEtLZl6I0x6j5sV/6g1zzLI6AZ/v2VE/ELRytTTQ4FdPcKlxi9Gn5v7vi3lpWYvMaU8IAWVoZvSPj0R7jwolR44/O2nLzcqH98Dzw5LKMPT9PMgoz7f4C/8YewjVtZgHzQXEZkipkWHDmt9LzulU4Im5s7UJGPPGK/BWBDgxrpScetbxO5hOZS1dFZz0v5WBAwWxYRd1tD+SCXkKNHrJi7+QMnAw68NxyGzDRN7YD+AWNMhjPEGt2fXUkX+sBRTOUoJ+BuCsVBpiROvN3glv8WUc0IaYPLS4xnalN1/e4ArHXVgLYockYTNlOpo4Oo0S3R2u4reYvQxCjTVaFERXRm1Q+RQe+3sfLPmO/uswMtkIGZ7n9Xd8ER3y+z0cxZS2S5aghF3lmATsmrU3CP8HvkRsr9fy/DDGNr2BEvoK64oGc7kHdc4EqPOauPYKZNXH4DdAaSpTmDmYGG5bkkAQ+pRE+h9VhBd5xvZMQmG6aH+xSIvpOCkBzF5U8OVJr0/qhWg9BzUl6kgua+Ri9MDFcwqKv9bR20kYv3krDSkV4zYvvG0fDbllrW76fDF7l3I4ysGWxspLfik2qu0=
+    - JOBS=1
+    - secure: jdfwWkawHI6Pxbkq64ihtdu0NnQbvLQrZXpaGDaavOn03ZA5sj1JCMKaw46Fg/q84sQl0VPUWDVXKBiGDvYTWFI84h3UZEtLZl6I0x6j5sV/6g1zzLI6AZ/v2VE/ELRytTTQ4FdPcKlxi9Gn5v7vi3lpWYvMaU8IAWVoZvSPj0R7jwolR44/O2nLzcqH98Dzw5LKMPT9PMgoz7f4C/8YewjVtZgHzQXEZkipkWHDmt9LzulU4Im5s7UJGPPGK/BWBDgxrpScetbxO5hOZS1dFZz0v5WBAwWxYRd1tD+SCXkKNHrJi7+QMnAw68NxyGzDRN7YD+AWNMhjPEGt2fXUkX+sBRTOUoJ+BuCsVBpiROvN3glv8WUc0IaYPLS4xnalN1/e4ArHXVgLYockYTNlOpo4Oo0S3R2u4reYvQxCjTVaFERXRm1Q+RQe+3sfLPmO/uswMtkIGZ7n9Xd8ER3y+z0cxZS2S5aghF3lmATsmrU3CP8HvkRsr9fy/DDGNr2BEvoK64oGc7kHdc4EqPOauPYKZNXH4DdAaSpTmDmYGG5bkkAQ+pRE+h9VhBd5xvZMQmG6aH+xSIvpOCkBzF5U8OVJr0/qhWg9BzUl6kgua+Ri9MDFcwqKv9bR20kYv3krDSkV4zYvvG0fDbllrW76fDF7l3I4ysGWxspLfik2qu0=
   matrix:
     - SCRIPT=test
     # - SCRIPT=test:fastboot
@@ -21,7 +25,7 @@ env:
 matrix:
   fast_finish: true
   allow_failures:
-  - env: EMBER_TRY_SCENARIO=ember-canary
+    - env: EMBER_TRY_SCENARIO=ember-canary
 before_install:
   - sudo chown root /opt/google/chrome/chrome-sandbox
   - sudo chmod 4755 /opt/google/chrome/chrome-sandbox
