@@ -143,15 +143,9 @@ module('Integration | Component | imgix image', function(hooks) {
         });
       };
 
-      [
-        '4x3',
-        '4:',
-        'blah:1:1',
-        'blah1:1',
-        '1x1',
-        '1:1blah',
-        '1:blah1'
-      ].forEach(invalidAR => testInvalidAR(invalidAR));
+      ['4x3', '4:', 'blah:1:1', 'blah1:1', '1x1', '1:1blah', '1:blah1'].forEach(
+        invalidAR => testInvalidAR(invalidAR)
+      );
     });
 
     test('srcsets should not have a height set when aspectRatio is not set', async function(assert) {

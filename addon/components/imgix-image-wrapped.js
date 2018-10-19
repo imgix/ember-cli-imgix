@@ -10,11 +10,11 @@ export default Component.extend(ResizeAware, ImgixPathBehavior, {
   init() {
     this._super(...arguments);
     deprecate(
-      'imgix-image-wrapped is deprecated and will be removed in ember-cli-imgix@2. Please migrate to using imgix-image instead.',
+      'imgix-image-wrapped is deprecated and will be removed in ember-cli-imgix@3. Please migrate to using imgix-image instead.',
       false,
       {
         id: 'ember-cli-imgix/imgix-image-wrapper-deprecation',
-        until: '2.0.0'
+        until: '3.0.0'
       }
     );
   }
