@@ -226,7 +226,7 @@ export default Component.extend({
           if (showARWrongFormatWarning) {
             // eslint-disable-next-line no-console
             console.warn(
-              `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+              `[imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
             );
           }
         }
