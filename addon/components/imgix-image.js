@@ -168,7 +168,7 @@ export default Component.extend({
 
       if (get(this, 'aspectRatio')) {
         deprecate(
-          'aspectRatio as a option is deprecated in favour of passing `ar` as a direct parameter to imgix. aspectRadio will be removed in ember-cli-imgix@3.',
+          'aspectRatio as a option is deprecated in favour of passing `ar` as a direct parameter to imgix. aspectRatio will be removed in ember-cli-imgix@3.',
           false,
           {
             id: 'ember-cli-imgix/aspectRatio-deprecation',
@@ -226,7 +226,7 @@ export default Component.extend({
           if (showARWrongFormatWarning) {
             // eslint-disable-next-line no-console
             console.warn(
-              `[Imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+              `[imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
             );
           }
         }
