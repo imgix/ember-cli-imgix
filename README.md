@@ -144,7 +144,6 @@ Some of the defaults are:
 
 ```javascript
 path: null, // The path to your image
-aspectRatio: null,
 crop: null,
 fit: 'crop',
 onLoad: null,
@@ -172,12 +171,12 @@ If you want to pass in any other arbitrary imgix options, use the hash helper
 }}
 ```
 
-#### aspectRatio
+#### options.ar
 
-This component can also accept an `aspectRatio` parameter:
+This component can also accept an `ar` parameter to constrain the aspect ratio of the returned image. The aspect ratio is specified in the format width:height. Either dimension can be an integer or a float. All of the following are valid: 16:9, 5:1, 1.92:1, 1:1.67.
 
 ```hbs
-{{imgix-image-element path="/users/1.png" crossorigin="anonymous" aspectRatio=1.33}}
+{{imgix-image path="/users/1.png" crossorigin="anonymous" options=(hash ar="1.33:1"}}
 ```
 
 #### Lifecycle hooks
