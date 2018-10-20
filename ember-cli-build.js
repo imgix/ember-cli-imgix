@@ -11,5 +11,9 @@ module.exports = function(defaults) {
     }
   });
 
+  if (app.env === 'test') {
+    app.import('vendor/ember/ember-template-compiler.js');
+  }
+
   return app.toTree();
 };
