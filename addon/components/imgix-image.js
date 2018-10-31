@@ -246,7 +246,7 @@ export default Component.extend({
               ...options,
               ...debugParams,
               w: targetWidth,
-              h: targetHeight
+              ...(targetHeight ? { h: targetHeight } : {})
             };
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
