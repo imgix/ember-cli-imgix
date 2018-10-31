@@ -33,6 +33,20 @@ const attributeMap = {
   ...(get(config, 'APP.imgix.attributeNameMap') || {})
 };
 
+const buildDebugParams = ({ width, height }) => {
+  return {
+    txt64: `${width != null ? width : 'auto'} x ${
+      height != null ? height : 'auto'
+    }`,
+    txtalign: 'center,bottom',
+    txtsize: 40,
+    txtfont: 'Helvetica Neue',
+    txtclr: 'ffffff',
+    txtpad: 40,
+    txtfit: 'max'
+  };
+};
+
 export default Component.extend({
   tagName: 'img',
   classNames: get(config, 'APP.imgix.classNames') || 'imgix-image',
@@ -131,7 +145,8 @@ export default Component.extend({
     'aspectRatio',
     function() {
       const pathAsUri = get(this, '_pathAsUri');
-      const debugParams = get(config, 'APP.imgix.debug')
+      const shouldShowDebugParams = get(config, 'APP.imgix.debug');
+      const debugParams = shouldShowDebugParams
         ? get(this, '_debugParams')
         : {};
 
@@ -206,18 +221,33 @@ export default Component.extend({
         } else {
           let showARWrongFormatWarning = false;
           const buildSrcSetPair = targetWidth => {
+            const targetHeight = (() => {
+              if (options.h) {
+                return options.h;
+              }
+
+              const aspectRatioDecimal = parseAspectRatio(aspectRatio);
+              if (aspectRatio != null && aspectRatioDecimal === false) {
+                // false indicates invalid
+                showARWrongFormatWarning = true;
+              }
+              if (aspectRatioDecimal && aspectRatioDecimal > 0) {
+                return Math.ceil(targetWidth / aspectRatioDecimal);
+              }
+
+              return options.h;
+            })();
+
+            const debugParams = shouldShowDebugParams
+              ? buildDebugParams({ width: targetWidth, height: targetHeight })
+              : {};
+
             const urlOptions = {
               ...options,
-              w: targetWidth
+              ...debugParams,
+              w: targetWidth,
+              h: targetHeight
             };
-            const aspectRatioDecimal = parseAspectRatio(aspectRatio);
-            if (aspectRatio != null && aspectRatioDecimal === false) {
-              // false indicates invalid
-              showARWrongFormatWarning = true;
-            }
-            if (!options.h && aspectRatioDecimal && aspectRatioDecimal > 0) {
-              urlOptions.h = Math.ceil(targetWidth / aspectRatioDecimal);
-            }
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
           };
@@ -277,16 +307,6 @@ export default Component.extend({
     const width = get(this, 'width');
     const height = get(this, 'height');
 
-    return {
-      txt64: `${width != null ? width : 'auto'} x ${
-        height != null ? height : 'auto'
-      }`,
-      txtalign: 'center,bottom',
-      txtsize: 20,
-      txtfont: 'Helvetica Neue',
-      txtclr: 'ffffff',
-      txtpad: 20,
-      txtfit: 'max'
-    };
+    return buildDebugParams({ width, height });
   })
 });
