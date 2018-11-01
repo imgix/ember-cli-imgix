@@ -158,10 +158,16 @@ export default Component.extend({
           }
         );
       }
-
-      // Setup
       const widthProp = get(this, 'width');
       const heightProp = get(this, 'height');
+      if (isDimensionInvalid(widthProp) || isDimensionInvalid(heightProp)) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[imgix] Either the width or height passed to this component (w: ${widthProp}, h: ${heightProp}) was invalid. Both width and height need to be a number greater than 0, or undefined.`
+        );
+      }
+
+      // Setup
       const pathAsUri = get(this, '_pathAsUri');
       const disableSrcSet = get(this, 'disableSrcSet');
       const client = get(this, '_client');
@@ -348,3 +354,7 @@ export default Component.extend({
     );
   }
 });
+
+function isDimensionInvalid(widthProp) {
+  return widthProp != null && (typeof widthProp !== 'number' || widthProp <= 0);
+}
