@@ -170,6 +170,27 @@ module('Integration | Component | imgix image', function(hooks) {
         assert.notOk(uri.getQueryParamValue('ar'));
       });
     });
+
+    module('fixed dimensions', function() {
+      test(`it generates the correct image height when a width and ar are passed`, async function(assert) {
+        await render(
+          hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") width=200 }}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, urlURI) => {
+          assert.equal(urlURI.getQueryParamValue('h'), 100);
+        });
+      });
+      test(`it generates the correct image width when a height and ar are passed`, async function(assert) {
+        await render(
+          hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") height=200 }}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, urlURI) => {
+          assert.equal(urlURI.getQueryParamValue('w'), 400);
+        });
+      });
+    });
   });
 
   test(`it respects the width and height passed in`, async function(assert) {
@@ -240,6 +261,7 @@ module('Integration | Component | imgix image', function(hooks) {
   });
 
   // matcher should be in the form (url: string, uri: URI) => boolean
+  // Should work for both w-type srcsets and dpr srcsets
   function expectSrcsTo($, matcher) {
     const src = $('img').attr('src');
     matcher(src, new URI(src));
