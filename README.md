@@ -171,7 +171,7 @@ If you want to pass in any other arbitrary imgix options, use the hash helper
 }}
 ```
 
-#### options.ar
+#### Aspect Ratio
 
 This component can also accept an `ar` parameter to constrain the aspect ratio of the returned image. The aspect ratio is specified in the format width:height. Either dimension can be an integer or a float. All of the following are valid: 16:9, 5:1, 1.92:1, 1:1.67.
 
@@ -319,6 +319,7 @@ import ImgixCoreJs from 'imgix-core-js';
 The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements.
 
 - A `sizes` prop should be added to all usages of ember-cli-imgix, unless the width or height of the image are known beforehand (see above). If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
+- `aspectRatio` has been moved to `options.ar`. Thus, `aspectRatio` has been deprecated. It will be supported until the v3 release. The format of the new `options.ar` attribute is `w:h`.
 
 ## Browser Support
 
