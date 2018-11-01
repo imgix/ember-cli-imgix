@@ -1,90 +1,113 @@
-
-
 Simple use case:
 {{code-snippet name='simple-use.hbs'}}
 
 <div class='container'>
   {{imgix-image
-    path='/examples/puffins.jpg'
-    class='header-img'
-    fit='crop'
+  path='/examples/puffins.jpg'
+  class='header-img'
+  fit='crop'
+  sizes="(min-width: 1800px) 1800px, 98vw"
   }}
 
   {{imgix-image
-    path='/examples/jellyfish.jpg'
-    class='feature-img'
-    fit='crop'
+  path='/examples/jellyfish.jpg'
+  class='feature-img'
+  fit='crop'
+  sizes="
+  (max-width: 480px) 100vw,
+  (max-width: 1024px) 48vw,
+  (min-width: 1800px) 23vw,
+  414px"
+  options=(hash ar="1:1")
   }}
 
-  {{imgix-image path='/examples/lionfish.jpg' class='feature-img'}}
-  {{imgix-image path='/examples/clownfish.jpg' class='feature-img'}}
-  {{imgix-image path='/examples/fin.jpg' class='feature-img'}}
+  {{imgix-image
+  path='/examples/lionfish.jpg'
+  class='feature-img'
+  sizes="
+  (max-width: 480px) 100vw,
+  (max-width: 1024px) 48vw,
+  (min-width: 1800px) 23vw,
+  414px" options=(hash ar="1:1")}}
+  {{imgix-image path='/examples/clownfish.jpg' class='feature-img' sizes="
+  (max-width: 480px) 100vw,
+  (max-width: 1024px) 48vw,
+  (min-width: 1800px) 23vw,
+  414px" options=(hash ar="1:1")}}
+  {{imgix-image path='/examples/fin.jpg' class='feature-img' sizes="
+  (max-width: 480px) 100vw,
+  (max-width: 1024px) 48vw,
+  (min-width: 1800px) 23vw,
+  414px" options=(hash ar="1:1")}}
 </div>
 
 <div>Pass width and height in the path:</div>
 <div>/examples/jellyfish.jpg?h=400&w=1000</div>
 {{imgix-image
-  class='imgix-image'
-  path='/examples/jellyfish.jpg?h=400&w=1000'
-  fit='clip'
+class='imgix-image'
+path='/examples/jellyfish.jpg?h=400&w=1000'
+fit='clip'
 }}
 
 <div>Pass width and height as params to the component:</div>
 <div>/examples/jellyfish.jpg</div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
-  width=500
-  height=500
+path='/examples/jellyfish.jpg'
+width=500
+height=500
 }}
 
 <div>Just render full size.... like a normal image:</div>
 <div>/examples/jellyfish.jpg</div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
+path='/examples/jellyfish.jpg'
+disableSrcSet=true
 }}
 
 <div>Pass an image alt attribute to the component</div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
-  alt='Its a photo of a jellyfish'
+path='/examples/jellyfish.jpg'
+sizes="(min-width: 1800px) 1800px, 98vw"
+alt='Its a photo of a jellyfish'
 }}
 
 <div>Pass an aspect ratio</div>
 <div>Aspect ratio 1, width=200</div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
-  aspectRatio=1
-  width=200
+path='/examples/jellyfish.jpg'
+options=(hash ar="1:1")
+width=200
 }}
 
 <div>Aspect ratio 2, width=200</div>
 <div>twice as wide as tall</div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
-  aspectRatio=2
-  width=200
+path='/examples/jellyfish.jpg'
+options=(hash ar="2:1")
+width=200
 }}
 
 <div>Aspect ratio 3, width=200</div>
 <div>three times as wide as tall</div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
-  aspectRatio=3
-  width=200
+path='/examples/jellyfish.jpg'
+options=(hash ar="3:1")
+width=200
 }}
 
 <div>Pass arbitrary options using the hash helper</div>
 <div>/examples/jellyfish.jpg</div>
 <div>
   options=(hash
-    exp=20
-    invert=true
+  exp=20
+  invert=true
   )
 </div>
 {{imgix-image
-  path='/examples/jellyfish.jpg'
-  options=(hash
-    exp=20
-    invert=true
-  )
+path='/examples/jellyfish.jpg'
+options=(hash
+exp=20
+invert=true
+)
+sizes="(min-width: 1800px) 1800px, 98vw"
 }}

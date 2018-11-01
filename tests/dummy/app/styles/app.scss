@@ -1,6 +1,7 @@
 @import 'reset';
 
-html, body {
+html,
+body {
   font-family: 'Open Sans', sans-serif;
   font-size: 14px;
 }
@@ -24,47 +25,44 @@ img {
 }
 
 .container {
-  width:100%;
-  margin:0 auto;
+  width: 100%;
+  margin: 0 auto;
   overflow: hidden;
   max-width: 1800px;
 }
 
 .header-img {
-  width:98%;
-  height:500px;
-  clear:both;
-  margin: 0 1% .5em;
+  width: 98%;
+  clear: both;
+  margin: 0 1% 0.5em;
   text-align: center;
-  overflow:hidden;
+  overflow: hidden;
 }
 
 .feature-img {
-  width:23%;
-  margin:0 1% .5em;
-  height:320px;
-  float:left;
+  width: 23%;
+  margin: 0 1% 0.5em;
+  float: left;
   overflow: hidden;
   text-align: center;
-  overflow:hidden;
+  overflow: hidden;
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .feature-img {
-    width:48%;
-    margin:0 1% .5em;
+    width: 48%;
+    margin: 0 1% 0.5em;
   }
 }
 
-@media (max-width:480px){
-  .header-img{
-    width:100%;
-    margin:0 0 .5em 0;
+@media (max-width: 480px) {
+  .header-img {
+    width: 100%;
+    margin: 0 0 0.5em 0;
   }
 
   .feature-img {
-    width:100%;
-    margin:0 0 .5em;
-    height:200px;
+    width: 100%;
+    margin: 0 0 0.5em;
   }
 }
