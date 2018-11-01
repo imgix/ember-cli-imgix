@@ -200,21 +200,24 @@ export default Component.extend({
         if (widthProp && heightProp && aspectRatio) {
           // eslint-disable-next-line no-console
           console.warn(
-            `[imgix] All three of width, height, and aspect ratio were passed. The aspect ratio prop has not effect in this configuration.`
+            `[imgix] All three of width, height, and aspect ratio were passed. The aspect ratio prop has no effect in this configuration.`
           );
         }
         if (!widthProp && !heightProp && disableSrcSet && aspectRatio) {
           // eslint-disable-next-line no-console
           console.warn(
-            `[imgix] The aspect ratio prop has not effect when both width and height are not set, and when srcsets are disabled. To use aspect ratio, please either pass width or height values, or enable src sets.`
+            `[imgix] The aspect ratio prop has no effect when when srcsets are disabled and neither width nor height are set. To use aspect ratio, please either pass a width or height value, or enable src sets.`
           );
         }
 
-        if (
-          !(widthProp || heightProp) ||
-          (widthProp && heightProp) ||
-          !aspectRatioDecimal
-        ) {
+        const neitherWidthNorHeightPassed = !(widthProp || heightProp);
+        const bothWidthAndHeightPassed = widthProp && heightProp;
+        const shouldReturnOriginalDimensions =
+          neitherWidthNorHeightPassed || // we need at least one dimension to generate the other one
+          bothWidthAndHeightPassed || // if both dimensions are already passed, we don't need to generate one
+          !aspectRatioDecimal; // can't generate dimensions without an AR
+
+        if (shouldReturnOriginalDimensions) {
           return { width: widthProp, height: heightProp };
         }
 
