@@ -182,7 +182,8 @@ export default Component.extend({
         let imgixOptions = {
           ...get(this, 'options')
         };
-        let aspectRatio = get(this, 'aspectRatio');
+        const deprecatedAR = get(this, 'aspectRatio');
+        let aspectRatio = deprecatedAR ? deprecatedAR + ':1' : undefined;
         if (imgixOptions.ar) {
           aspectRatio = imgixOptions.ar;
           delete imgixOptions.ar;

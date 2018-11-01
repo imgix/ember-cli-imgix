@@ -93,11 +93,11 @@ module('Integration | Component | imgix image', function(hooks) {
       );
 
       test(`it generates the correct srcset heights for a valid AR using the deprecated aspectRatio option`, async function(assert) {
-        const ar = '1.1:1';
+        const ar = 1.1;
         const arDecimal = '1.1';
         const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
         const content = Ember.HTMLBars.compile(
-          `<div>{{imgix-image path="/users/1.png" aspectRatio="${ar}"}}</div>`
+          `<div>{{imgix-image path="/users/1.png" aspectRatio=${ar}}}</div>`
         );
         await render(content);
         const srcSet = this.$('img').attr('srcset');
