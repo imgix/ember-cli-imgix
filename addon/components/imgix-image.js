@@ -144,43 +144,10 @@ export default Component.extend({
     'disableSrcSet',
     'aspectRatio',
     function() {
-      const pathAsUri = get(this, '_pathAsUri');
-      const shouldShowDebugParams = get(config, 'APP.imgix.debug');
-      const debugParams = shouldShowDebugParams
-        ? get(this, '_debugParams')
-        : {};
-
+      // Warnings, checks
       if (!get(this, 'path')) {
         return;
       }
-
-      let theseOptions = {
-        fit: get(this, 'fit')
-      };
-      const width = get(this, 'width');
-      if (width != null) {
-        theseOptions.w = width;
-      }
-      const height = get(this, 'height');
-      if (height != null) {
-        theseOptions.h = height;
-      }
-
-      const fixedDimensions = width != null || height != null;
-
-      if (get(this, 'crop')) {
-        theseOptions.crop = get(this, 'crop');
-      }
-
-      const imgixOptions = {
-        ...get(this, 'options')
-      };
-      let aspectRatio = get(this, 'aspectRatio');
-      if (imgixOptions.ar) {
-        aspectRatio = imgixOptions.ar;
-        delete imgixOptions.ar;
-      }
-
       if (get(this, 'aspectRatio')) {
         deprecate(
           'aspectRatio as a option is deprecated in favour of passing `ar` as a direct parameter to imgix. aspectRatio will be removed in ember-cli-imgix@3.',
@@ -192,50 +159,125 @@ export default Component.extend({
         );
       }
 
+      // Setup
+      const widthProp = get(this, 'width');
+      const heightProp = get(this, 'height');
+      const pathAsUri = get(this, '_pathAsUri');
+      const disableSrcSet = get(this, 'disableSrcSet');
+      const client = get(this, '_client');
+      const buildWithOptions = options =>
+        client.buildURL(pathAsUri.path(), options);
+
+      const isFixedDimensionsMode = widthProp != null || heightProp != null;
+
+      const shouldShowDebugParams = get(config, 'APP.imgix.debug');
+
+      const { imgixOptions, aspectRatio } = (() => {
+        let imgixOptions = {
+          ...get(this, 'options')
+        };
+        let aspectRatio = get(this, 'aspectRatio');
+        if (imgixOptions.ar) {
+          aspectRatio = imgixOptions.ar;
+          delete imgixOptions.ar;
+        }
+
+        return { imgixOptions, aspectRatio };
+      })();
+
+      // Calculate AR
+      const aspectRatioDecimal = parseAspectRatio(aspectRatio);
+      if (aspectRatio != null && aspectRatioDecimal === false) {
+        // false return value from parseAspectRatio indicates invalid response
+        // eslint-disable-next-line no-console
+        console.warn(
+          `[imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
+        );
+      }
+
+      // Ensure width and height are set correctly according to aspect ratio
+      const { width, height } = (() => {
+        if (!aspectRatioDecimal) {
+          return { widthProp, heightProp };
+        }
+        if (widthProp && heightProp && aspectRatio) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `[imgix] All three of width, height, and aspect ratio were passed. The aspect ratio prop has not effect in this configuration.`
+          );
+        }
+        if (!widthProp && !heightProp && disableSrcSet && aspectRatio) {
+          // eslint-disable-next-line no-console
+          console.warn(
+            `[imgix] The aspect ratio prop has not effect when both width and height are not set, and when srcsets are disabled. To use aspect ratio, please either pass width or height values, or enable src sets.`
+          );
+        }
+
+        if (widthProp) {
+          const height = Math.ceil(widthProp / aspectRatioDecimal);
+          return { width: widthProp, height };
+        } else if (heightProp) {
+          const width = Math.ceil(heightProp * aspectRatioDecimal);
+          return { width, height: heightProp };
+        } else {
+          return { width: widthProp, height: heightProp };
+        }
+      })();
+
+      const debugParams = shouldShowDebugParams
+        ? buildDebugParams({ width, height })
+        : {};
+
+      // Build base options
       const options = {
+        // Add fit from 'fit' prop
+        fit: get(this, 'fit'),
+        // Add width from computed width, or width prop
+        ...(width != null ? { w: width } : {}),
+        // Add height from computed height, or height prop
+        ...(height != null ? { h: height } : {}),
+        // Add crop from 'crop' prop
+        ...(get(this, 'crop') != null ? { crop: get(this, 'crop') } : {}),
+        // Add imgix options from 'options' prop
         ...imgixOptions,
+        // Add debug params
         ...debugParams,
-        ...theseOptions,
+        // Add any parameters that were set in the 'path' prop
         ...pathAsUri.queryPairs.reduce((memo, param) => {
           memo[param[0]] = param[1];
           return memo;
         }, {})
       };
 
-      const client = get(this, '_client');
-      const buildWithOptions = options =>
-        client.buildURL(pathAsUri.path(), options);
+      // Build src from base options
       const src = buildWithOptions(options);
 
-      let srcset = undefined;
-      const disableSrcSet = get(this, 'disableSrcSet');
-      if (!disableSrcSet) {
-        if (fixedDimensions) {
+      // Calculate src set (if enabled)
+      const srcset = (() => {
+        if (disableSrcSet) {
+          return;
+        }
+
+        // w-type srcsets should not be used if one of the dimensions has been fixed as it will have no effect
+        if (isFixedDimensionsMode) {
           const buildWithDpr = dpr =>
             buildWithOptions({
               ...options,
               dpr
             });
           // prettier-ignore
-          srcset = `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
+          return `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
-          let showARWrongFormatWarning = false;
           const buildSrcSetPair = targetWidth => {
             const targetHeight = (() => {
-              if (options.h) {
+              const isARInvalid = !(
+                aspectRatioDecimal && aspectRatioDecimal > 0
+              );
+              if (options.h || isARInvalid) {
                 return options.h;
               }
 
-              const aspectRatioDecimal = parseAspectRatio(aspectRatio);
-              if (aspectRatio != null && aspectRatioDecimal === false) {
-                // false indicates invalid
-                showARWrongFormatWarning = true;
-              }
-              if (aspectRatioDecimal && aspectRatioDecimal > 0) {
-                return Math.ceil(targetWidth / aspectRatioDecimal);
-              }
-
-              return options.h;
+              return Math.ceil(targetWidth / aspectRatioDecimal);
             })();
 
             const debugParams = shouldShowDebugParams
@@ -252,15 +294,10 @@ export default Component.extend({
             return `${url} ${targetWidth}w`;
           };
           const addFallbackSrc = srcset => srcset.concat(src);
-          srcset = addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
-          if (showARWrongFormatWarning) {
-            // eslint-disable-next-line no-console
-            console.warn(
-              `[imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
-            );
-          }
+
+          return addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
         }
-      }
+      })();
 
       return { src, srcset };
     }
@@ -301,12 +338,5 @@ export default Component.extend({
       () => !get(this, 'isDestroyed') && tryInvoke(this, 'onError', [event]),
       500
     );
-  },
-
-  _debugParams: computed('width', 'height', function() {
-    const width = get(this, 'width');
-    const height = get(this, 'height');
-
-    return buildDebugParams({ width, height });
-  })
+  }
 });
