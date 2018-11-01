@@ -2,6 +2,32 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.0.0"></a>
+# [2.0.0](https://github.com/imgix/ember-cli-imgix/compare/v1.0.2...v2.0.0) (2018-11-01)
+
+The largest change in this major version bump is the move to width-based srcSet and sizes for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements. More information about this change and how to use it can be found in the readme, and the [upgrade guide](https://github.com/imgix/ember-cli-imgix#version-1x-to-version-2x).
+
+
+### Bug Fixes
+
+* ensure new ar implementation uses old format for deprecated attribute ([#68](https://github.com/imgix/ember-cli-imgix/issues/68)) ([c998471](https://github.com/imgix/ember-cli-imgix/commit/c998471))
+* generate height when width + ar is given, or vice versa ([#66](https://github.com/imgix/ember-cli-imgix/issues/66)) ([b106cac](https://github.com/imgix/ember-cli-imgix/commit/b106cac))
+* update debug params to work with srcset ([#65](https://github.com/imgix/ember-cli-imgix/issues/65)) ([67ef1ad](https://github.com/imgix/ember-cli-imgix/commit/67ef1ad))
+
+
+### Features
+
+* implement responsiveness with srcSet and sizes ([#56](https://github.com/imgix/ember-cli-imgix/issues/56)) ([ee875c8](https://github.com/imgix/ember-cli-imgix/commit/ee875c8))
+* **ar:** add aspect ratio support by calculating client-side ([#62](https://github.com/imgix/ember-cli-imgix/issues/62)) ([09068b0](https://github.com/imgix/ember-cli-imgix/commit/09068b0))
+* **attribute bindings:** add attribute bindings for draggable attribute (and tests for the other attribute bindings crossorigin & alt) ([#54](https://github.com/imgix/ember-cli-imgix/issues/54)) ([bf28645](https://github.com/imgix/ember-cli-imgix/commit/bf28645))
+
+
+### BREAKING CHANGES
+
+* This component no longer fits to the size of a container. Instead, a combination of aspect ratio, srcset, and sizes should be used to implement this behaviour. 
+
+
+
 <a name="1.0.2"></a>
 ## [1.0.2](https://github.com/imgix/ember-cli-imgix/compare/v1.0.1...v1.0.2) (2018-07-28)
 
