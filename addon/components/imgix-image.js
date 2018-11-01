@@ -197,9 +197,6 @@ export default Component.extend({
 
       // Ensure width and height are set correctly according to aspect ratio
       const { width, height } = (() => {
-        if (!aspectRatioDecimal) {
-          return { widthProp, heightProp };
-        }
         if (widthProp && heightProp && aspectRatio) {
           // eslint-disable-next-line no-console
           console.warn(
@@ -211,6 +208,14 @@ export default Component.extend({
           console.warn(
             `[imgix] The aspect ratio prop has not effect when both width and height are not set, and when srcsets are disabled. To use aspect ratio, please either pass width or height values, or enable src sets.`
           );
+        }
+
+        if (
+          !(widthProp || heightProp) ||
+          (widthProp && heightProp) ||
+          !aspectRatioDecimal
+        ) {
+          return { width: widthProp, height: heightProp };
         }
 
         if (widthProp) {
