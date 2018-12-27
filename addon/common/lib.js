@@ -1,1 +1,1 @@
-export const toFixed = (dp, value) => +value.toFixed(2);
+export const toFixed = (dp, value) => +value.toFixed(dp);

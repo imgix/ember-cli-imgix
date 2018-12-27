@@ -1,5 +1,5 @@
 /* global Ember Promise global */
-import { module, test, skip } from 'qunit';
+import { module, test } from 'qunit';
 
 import targetWidths from 'ember-cli-imgix/common/targetWidths';
 import ImgixBG from 'ember-cli-imgix/components/imgix-bg';
@@ -23,7 +23,6 @@ const findURI = () => {
   }
 
   const bgImageStyle = container.style;
-  console.log('bgImageStyle', bgImageStyle);
 
   if (!bgImageStyle.backgroundImage) {
     throw new Error(
@@ -51,45 +50,14 @@ const shouldHaveDimensions = async (
 ) => {
   await render(markup);
 
-  console.log(
-    "find('.imgix-bg').getBoundingClientRect()",
-    find('.imgix-bg').getBoundingClientRect()
-  );
-
   const bgImageSrcURL = findURI();
 
   assert.equal(bgImageSrcURL.getQueryParamValue('w'), '' + expectedWidth);
   assert.equal(bgImageSrcURL.getQueryParamValue('h'), '' + expectedHeight);
 };
 
-const renderBGAndWaitUntilLoaded = async markup => {
-  return new Promise(async (resolve, reject) => {
-    let waitUntilHasStyle = (maxTimes = 20, delay = 10, n = 0) => {
-      // Find the element which has the class "bg-img"
-      const bgImageEl = find('.imgix-bg');
-      // Check if the element has loaded, which is shown by a truthy `background-image`
-      console.log('bgImageEl', bgImageEl.getAttribute('style'));
-      console.log(
-        'bgImageEl.style.backgroundImage',
-        bgImageEl.style.backgroundImage
-      );
-      if (bgImageEl.style.backgroundImage) {
-        return resolve(find('.imgix-bg'));
-      }
-
-      if (n >= maxTimes) {
-        return reject('Tries exceeded to wait for component to be ready');
-      }
-      setTimeout(() => waitUntilHasStyle(maxTimes, delay, n + 1), delay);
-    };
-
-    await render(markup);
-    setTimeout(waitUntilHasStyle, 10);
-  });
-};
-
 const renderAndCallbackBeforeImageLoad = async function(markup) {
-  let resolve, reject;
+  let resolve;
 
   // Overriding didInsertElement to stop DOM measuring and subsequent rendering
   this.owner.register(
@@ -104,9 +72,8 @@ const renderAndCallbackBeforeImageLoad = async function(markup) {
 
   render(markup);
 
-  return new Promise((_resolve, _reject) => {
+  return new Promise(_resolve => {
     resolve = _resolve;
-    reject = _reject;
   });
 };
 
@@ -182,15 +149,13 @@ module('Integration | Component | imgix background', function(hooks) {
         {{/imgix-bg}}`
       );
 
-      console.log('ASSERT');
-
       const bgImageSrcURL = findURI();
 
       assert.equal(bgImageSrcURL.getQueryParamValue('w'), '300');
       assert.equal(bgImageSrcURL.getQueryParamValue('h'), '350');
     });
     test('sets width and height to values passed', async function(assert) {
-      const sut = await render(hbs`
+      await render(hbs`
           <div>
             <style>.imgix-bg { width: 200px; height: 250px; }</style>
             {{#imgix-bg
