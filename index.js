@@ -7,14 +7,11 @@ const path = require('path');
 const FastbootTransform = require('fastboot-transform');
 
 module.exports = {
-  name: 'ember-cli-imgix',
+  name: require('./package').name,
 
   options: {
     babel: {
-      plugins: [
-        'inline-package-json',
-        'transform-object-rest-spread',
-      ],
+      plugins: ['inline-package-json', 'transform-object-rest-spread']
     }
   },
 
@@ -25,24 +22,30 @@ module.exports = {
       trees.push(vendorTree);
     }
 
-    trees.push(FastbootTransform(
-      new Funnel(path.dirname(require.resolve('imgix-core-js')), {
-        files: ['imgix-core-js.js'],
-        destDir: 'imgix-core-js',
-      })
-    ));
+    trees.push(
+      FastbootTransform(
+        new Funnel(path.dirname(require.resolve('imgix-core-js')), {
+          files: ['imgix-core-js.js'],
+          destDir: 'imgix-core-js'
+        })
+      )
+    );
 
-    trees.push(FastbootTransform(
-      new Funnel(path.dirname(require.resolve('js-base64')), {
-        files: ['base64.js'],
-        destDir: 'js-base64',
-      })
-    ));
+    trees.push(
+      FastbootTransform(
+        new Funnel(path.dirname(require.resolve('js-base64')), {
+          files: ['base64.js'],
+          destDir: 'js-base64'
+        })
+      )
+    );
 
-    trees.push(new Funnel(path.dirname(require.resolve('jsuri')), {
-      files: ['Uri.js'],
-      destDir: 'jsuri',
-    }));
+    trees.push(
+      new Funnel(path.dirname(require.resolve('jsuri')), {
+        files: ['Uri.js'],
+        destDir: 'jsuri'
+      })
+    );
 
     return MergeTrees(trees);
   },
@@ -58,9 +61,9 @@ module.exports = {
       using: [
         {
           transformation: 'amd',
-          as: 'jsuri',
-        },
-      ],
+          as: 'jsuri'
+        }
+      ]
     });
   }
 };

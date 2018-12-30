@@ -156,9 +156,15 @@ npm install
 Once you're configured, building the JavaScript from the command line is easy:
 
 ```
-npm run build         # build ember-cli-imgix from source
-npm run test:watch    # watch for changes and test automatically
-npm run test:once     # run the test against local browsers only (Chrome, Safari, Firefox)
+npm run build             # build ember-cli-imgix from source
+npm run test:watch        # watch for changes and test automatically
+npm run test:once         # run the test against local browsers only (Chrome, Safari, Firefox)
+ember test                # runs the test suite on the current Ember version
+ember test --server       # runs the test suite in "watch mode"
+ember try:each            # runs the test suite against multiple Ember versions
+npm run lint:hbs          # lint the handlebars templates
+npm run lint:js           # lint source code
+npm run lint:js -- --fix  # link source code, and fix mistakes where possible
 ```
 
 Please note: in order to run tests in-browser (with `npm run test:local`), Chrome and Firefox should be installed locally.
