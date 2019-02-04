@@ -3,12 +3,21 @@ import { module, test } from 'qunit';
 
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import { assign } from '@ember/polyfills';
 import hbs from 'htmlbars-inline-precompile';
 import URI from 'jsuri';
 import config from 'ember-get-config';
 
 module('Integration | Component | imgix image', function(hooks) {
   setupRenderingTest(hooks);
+
+  hooks.before(function() {
+    this.initialAppConfig = assign({}, config.APP.imgix);
+  });
+
+  hooks.afterEach(function() {
+    config.APP.imgix = this.initialAppConfig;
+  });
 
   test('it renders an image', async function(assert) {
     await render(hbs`{{imgix-image path="/users/1.png"}}`);
@@ -258,6 +267,31 @@ module('Integration | Component | imgix image', function(hooks) {
     );
 
     assert.equal(this.$('img').attr('crossorigin'), 'imgix-is-rad');
+  });
+
+
+  module('default css class', function() {
+    test('it allows setting overriding the default class via config', async function(assert) {
+      assert.expect(1);
+
+      config.APP.imgix.classNames = 'imgix-is-rad';
+
+      await render(
+        hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+      );
+
+      assert.ok(this.$('img').hasClass('imgix-is-rad'));
+    });
+
+    test('the default class given to the rendered element is `imgix-image`', async function(assert) {
+      assert.expect(1);
+
+      await render(
+        hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png'}}</div>`
+      );
+
+      assert.ok(this.$('img').hasClass('imgix-image'));
+    });
   });
 
   // matcher should be in the form (url: string, uri: URI) => boolean
