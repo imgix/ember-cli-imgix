@@ -245,6 +245,8 @@ export default Component.extend({
 
       // Build base options
       const options = {
+        // default params from application config
+        ...(config.APP.imgix.defaultParams || {}),
         // Add fit from 'fit' prop
         fit: get(this, 'fit'),
         // Add width from computed width, or width prop

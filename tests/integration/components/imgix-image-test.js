@@ -353,6 +353,44 @@ module('Integration | Component | imgix image', function(hooks) {
         expectSrcsTo(this.$, (_, uri) => assert.notOk(uri.hasQueryParam('ixlib')));
       });
     });
+
+    module('default params from app config', function() {
+      test('are respected ', async function(assert) {
+        config.APP.imgix.defaultParams = {
+          'toBoop': 'the-snoot',
+        };
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png'}}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('toBoop'), 'the-snoot'));
+      });
+
+      test('`options` attr takes precedence', async function(assert) {
+        config.APP.imgix.defaultParams = {
+          auto: 'faces',
+        };
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' options=(hash
+            auto='format'
+          )}}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+      });
+
+      test('params on the path take precedence', async function(assert) {
+        config.APP.imgix.defaultParams = {
+          auto: 'faces',
+        };
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png?auto=format'}}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
       });
     });
   });
