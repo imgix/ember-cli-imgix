@@ -49,7 +49,7 @@ const buildDebugParams = ({ width, height }) => {
 
 export default Component.extend({
   tagName: 'img',
-  classNameBindings: ['elementClassName'],
+  classNameBindings: ['elementClassNames'],
   attributeBindings: [
     'alt',
     'crossorigin',

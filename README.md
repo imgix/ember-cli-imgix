@@ -275,6 +275,8 @@ module.exports = function(environment) {
       imgix: {
         source: 'my-social-network.imgix.net',
         debug: true // Prints out diagnostic information on the image itself. Turn off in production.
+        debug: true, // Prints out diagnostic information on the image itself. Turn off in production.
+        classNames: 'imgix-image', // default class used on the img element
       }
     }
     // snip
