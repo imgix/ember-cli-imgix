@@ -30,7 +30,7 @@ function isDimensionInvalid(widthProp) {
 
 export default Component.extend(ResizeAware, {
   tagName: 'div',
-  classNames: get(config, 'APP.imgix.classNames') || 'imgix-bg',
+  classNameBindings: ['elementClassNames'],
   attributeBindings: ['style', 'alt'],
 
   path: null, // The path to your image
@@ -92,7 +92,6 @@ export default Component.extend(ResizeAware, {
     'fit',
     'disableSrcSet',
     function() {
-      console.log('compute src');
       // Warnings, checks
       if (!get(this, 'path')) {
         return;
@@ -163,6 +162,8 @@ export default Component.extend(ResizeAware, {
 
       // Build base options
       const options = {
+        // default params from application config
+        ...(config.APP.imgix.defaultParams || {}),
         // Add fit from 'fit' prop
         fit: get(this, 'fit'),
         // Add width from computed width, or width prop
@@ -189,6 +190,10 @@ export default Component.extend(ResizeAware, {
       return src;
     }
   ),
+
+  elementClassNames: computed('config.APP.imgix.classNames', function() {
+    return config.APP.imgix.classNames || 'imgix-bg';
+  }),
 
   didResize(width, height) {
     if (get(this, 'path')) {
