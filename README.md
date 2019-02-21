@@ -274,7 +274,9 @@ module.exports = function(environment) {
     APP: {
       imgix: {
         source: 'my-social-network.imgix.net',
-        debug: true // Prints out diagnostic information on the image itself. Turn off in production.
+        debug: true, // Prints out diagnostic information on the image itself. Turn off in production.
+        classNames: 'imgix-image', // default class used on the img element
+        defaultParams: {}, // optional params that will be used in all generated paths
       }
     }
     // snip

@@ -49,7 +49,7 @@ const buildDebugParams = ({ width, height }) => {
 
 export default Component.extend({
   tagName: 'img',
-  classNames: get(config, 'APP.imgix.classNames') || 'imgix-image',
+  classNameBindings: ['elementClassNames'],
   attributeBindings: [
     'alt',
     'crossorigin',
@@ -245,6 +245,8 @@ export default Component.extend({
 
       // Build base options
       const options = {
+        // default params from application config
+        ...(config.APP.imgix.defaultParams || {}),
         // Add fit from 'fit' prop
         fit: get(this, 'fit'),
         // Add width from computed width, or width prop
@@ -337,6 +339,10 @@ export default Component.extend({
       }, {})
     });
     return placeholderURL;
+  }),
+
+  elementClassNames: computed('config.APP.imgix.classNames', function() {
+    return config.APP.imgix.classNames || 'imgix-image';
   }),
 
   _handleImageLoad(event) {

@@ -3,6 +3,7 @@ import { module, test } from 'qunit';
 
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
+import { assign } from '@ember/polyfills';
 import hbs from 'htmlbars-inline-precompile';
 import URI from 'jsuri';
 import config from 'ember-get-config';
@@ -258,6 +259,140 @@ module('Integration | Component | imgix image', function(hooks) {
     );
 
     assert.equal(this.$('img').attr('crossorigin'), 'imgix-is-rad');
+  });
+
+  module('application config', function(hooks) {
+    hooks.beforeEach(function() {
+      this.initialAppConfig = assign({}, config.APP.imgix);
+    });
+
+    hooks.afterEach(function() {
+      config.APP.imgix = this.initialAppConfig;
+    });
+
+    module('debug params', function() {
+      test('it does not render debug params when passing debug false', async function(assert) {
+        config.APP.imgix.debug = false;
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+        );
+
+        const debugParams = [
+          'txtalign',
+          'txtclr',
+          'txtfit',
+          'txtfont',
+          'txtpad',
+          'txtsize',
+        ];
+
+        expectSrcsTo(this.$, (_, uri) => debugParams.forEach(debugParam => assert.notOk(uri.hasQueryParam(debugParam))));
+      });
+
+      test('it will render debug params when passing debug true', async function(assert) {
+        config.APP.imgix.debug = true;
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+        );
+
+        const debugParams = [
+          'txtalign',
+          'txtclr',
+          'txtfit',
+          'txtfont',
+          'txtpad',
+          'txtsize',
+        ];
+
+        expectSrcsTo(this.$, (_, uri) => debugParams.forEach(debugParam => assert.ok(uri.hasQueryParam(debugParam))));
+      });
+    });
+
+    module('default css class', function() {
+      test('it allows setting overriding the default class via config', async function(assert) {
+        assert.expect(1);
+
+        config.APP.imgix.classNames = 'imgix-is-rad';
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+        );
+
+        assert.ok(this.$('img').hasClass('imgix-is-rad'));
+      });
+
+      test('the default class given to the rendered element is `imgix-image`', async function(assert) {
+        assert.expect(1);
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png'}}</div>`
+        );
+
+        assert.ok(this.$('img').hasClass('imgix-image'));
+      });
+    });
+
+    module('library param', function() {
+      test('it adds the library param to all srcs by default', async function(assert) {
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.ok(uri.hasQueryParam('ixlib')));
+      });
+
+      test('it allows disabling the imigx library param via conifg', async function(assert) {
+        config.APP.imgix.disableLibraryParam = true;
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.notOk(uri.hasQueryParam('ixlib')));
+      });
+    });
+
+    module('default params from app config', function() {
+      test('are respected ', async function(assert) {
+        config.APP.imgix.defaultParams = {
+          'toBoop': 'the-snoot',
+        };
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png'}}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('toBoop'), 'the-snoot'));
+      });
+
+      test('`options` attr takes precedence', async function(assert) {
+        config.APP.imgix.defaultParams = {
+          auto: 'faces',
+        };
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' options=(hash
+            auto='format'
+          )}}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+      });
+
+      test('params on the path take precedence', async function(assert) {
+        config.APP.imgix.defaultParams = {
+          auto: 'faces',
+        };
+
+        await render(
+          hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png?auto=format'}}</div>`
+        );
+
+        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+      });
+    });
   });
 
   // matcher should be in the form (url: string, uri: URI) => boolean
