@@ -225,6 +225,25 @@ module.exports = function(environment) {
 ```hbs
 {{imgix-image path="/test.png" disableLibraryParam={true} }}
 ```
+### imgix-bg
+
+This component will render a `div` whose `background-image` is set to the given image path. Content can be added within the `imgix-bg` tags and the component will automatically resize to fit around it.
+
+```hbs
+{{#imgix-bg path='/users/1.png' }}
+  Some content here
+{{/imgix-bg}}
+```
+
+This will generate html similar to the following:
+
+```html
+<div style="background-image: url('https://my-social-network.com/users/1.png?fit=crop&w=1246&h=15&dpr=2&ixlib=ember-2.0.0');background-size: cover" class="imgix-bg">    
+  Some content here
+</div>
+```
+
+**Note:** `imgix-bg` will respect any global default parameters unless explicitly overriden.
 
 ### imgix-image-wrapped - DEPRECATED
 
