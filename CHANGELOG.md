@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/imgix/ember-cli-imgix/compare/v2.0.0...v2.1.0) (2019-03-08)
+
+### Features
+
+* add global default parameters, which can be specified from the application config ([#72](https://github.com/imgix/ember-cli-imgix/pull/72)) ([0a12f4a](https://github.com/imgix/ember-cli-imgix/commit/0a12f4ab65ae6ddfeb1b3866a46a43d8f8d87d99))
+* `imgix-bg`: a new component which enables an image to be rendered as a background behind children components ([#70](https://github.com/imgix/ember-cli-imgix/pull/70/)) ([541f3d6](https://github.com/imgix/ember-cli-imgix/commit/541f3d63c0db9e0a3bfcfc44163c1d9f20b2ce66))
+
+
+
 <a name="2.0.0"></a>
 # [2.0.0](https://github.com/imgix/ember-cli-imgix/compare/v1.0.2...v2.0.0) (2018-11-01)
 

@@ -1,10 +1,11 @@
 {
   "name": "ember-cli-imgix",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "An Ember addon for easily adding responsive imagery via imgix to your application.",
   "contributors": [
     "Frederick Fogerty <frederick.fogerty@gmail.com>",
-    "Greg Larrenaga <greglarrenaga@gmail.com>"
+    "Greg Larrenaga <greglarrenaga@gmail.com>",
+    "Sherwin Heydarbeygi <sherwin@imgix.com>"
   ],
   "directories": {
     "doc": "doc",
