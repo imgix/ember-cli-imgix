@@ -73,7 +73,7 @@ export default Component.extend(ResizeAware, {
       get(this, 'disableLibraryParam');
 
     return new ImgixClient({
-      host: config.APP.imgix.source,
+      domains: config.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined

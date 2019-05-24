@@ -167,7 +167,7 @@ export default Mixin.create({
       get(this, 'disableLibraryParam');
 
     return new ImgixClient({
-      host: env.APP.imgix.source,
+      domains: env.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
