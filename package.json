@@ -61,7 +61,7 @@
     "babel-plugin-inline-package-json": "^2.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "broccoli-funnel": "^2.0.1",
-    "broccoli-merge-trees": "^2.0.0",
+    "broccoli-merge-trees": "^3.0.2",
     "ember-cli-babel": "^6.6.0",
     "ember-cli-htmlbars": "^2.0.1",
     "ember-cli-htmlbars-inline-precompile": "^1.0.0",
