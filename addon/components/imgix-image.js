@@ -126,7 +126,7 @@ export default Component.extend({
       get(this, 'disableLibraryParam');
 
     return new ImgixClient({
-      host: config.APP.imgix.source,
+      domain: config.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
