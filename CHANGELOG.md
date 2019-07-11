@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.1"></a>
+## [2.1.1](https://github.com/imgix/ember-cli-imgix/compare/v2.1.0...v2.1.1) (2019-07-11)
+
+* chore(deps): upgrade imgix-core-js to v2.0.0 ([#75](https://github.com/imgix/ember-cli-imgix/pull/75)) ([9a4c0de](https://github.com/imgix/ember-cli-imgix/commit/9a4c0dec07c03416b4c7bf9ff9b70e130493c6f2))
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/imgix/ember-cli-imgix/compare/v2.0.0...v2.1.0) (2019-03-08)
 
