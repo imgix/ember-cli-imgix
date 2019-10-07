@@ -56,8 +56,8 @@ module('Integration | Component | imgix image', function(hooks) {
 
   module('aspect ratio', function() {
     module(`valid ARs`, function() {
-      const testValidAR = ({ ar, arDecimal }) => {
-        test(`it generates the correct srcset heights for a valid AR (${ar})`, async function(assert) {
+      const testValidAR = ({ ar }) => {
+        test(`it generates an ar parameter for a valid AR (${ar})`, async function(assert) {
           const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
           const content = Ember.HTMLBars.compile(
             `<div>{{imgix-image path="/users/1.png" options=(hash ar="${ar}")}}</div>`
@@ -69,50 +69,27 @@ module('Integration | Component | imgix image', function(hooks) {
           removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
             const srcSetURI = new URI(srcSetUrl);
             const w = srcSetURI.getQueryParamValue('w');
-            const h = srcSetURI.getQueryParamValue('h');
-            assert.equal(h, Math.ceil(w / arDecimal));
+            const ar = srcSetURI.getQueryParamValue('ar');
             assert.ok(w);
-            assert.ok(h);
+            assert.ok(ar);
           });
         });
       };
       [
-        ['1:1', '1'],
-        ['1.1:1', '1.1'],
-        ['1.12:1', '1.12'],
-        ['1.123:1', '1.123'],
-        ['1:1.1', '0.9090909090909091'],
-        ['1:1.12', '0.8928571428571428'],
-        ['1.1:1.1', '1'],
-        ['1.123:1.123', '1'],
-        ['11.123:11.123', '1']
-      ].forEach(([validAR, validARDecimal]) =>
+        ['1:1'],
+        ['1.1:1'],
+        ['1.12:1'],
+        ['1.123:1'],
+        ['1:1.1'],
+        ['1:1.12'],
+        ['1.1:1.1'],
+        ['1.123:1.123'],
+        ['11.123:11.123']
+      ].forEach((validAR) =>
         testValidAR({
-          ar: validAR,
-          arDecimal: validARDecimal
+          ar: validAR
         })
       );
-
-      test(`it generates the correct srcset heights for a valid AR using the deprecated aspectRatio option`, async function(assert) {
-        const ar = 1.1;
-        const arDecimal = '1.1';
-        const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
-        const content = Ember.HTMLBars.compile(
-          `<div>{{imgix-image path="/users/1.png" aspectRatio=${ar}}}</div>`
-        );
-        await render(content);
-        const srcSet = this.$('img').attr('srcset');
-        const srcSets = srcSet.split(',').map(v => v.trim());
-        const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
-        removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
-          const srcSetURI = new URI(srcSetUrl);
-          const w = srcSetURI.getQueryParamValue('w');
-          const h = srcSetURI.getQueryParamValue('h');
-          assert.equal(h, Math.ceil(w / arDecimal));
-          assert.ok(w);
-          assert.ok(h);
-        });
-      });
     });
 
     module('invalid ARs', function() {
@@ -162,33 +139,24 @@ module('Integration | Component | imgix image', function(hooks) {
       });
     });
 
-    test('the generated src should not have ar included', async function(assert) {
+    test('the generated src should have ar included', async function(assert) {
       await render(
         hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1")}}</div>`
       );
 
       expectSrcsTo(this.$, (_, uri) => {
-        assert.notOk(uri.getQueryParamValue('ar'));
+        assert.ok(uri.getQueryParamValue('ar'));
       });
     });
 
     module('fixed dimensions', function() {
-      test(`it generates the correct image height when a width and ar are passed`, async function(assert) {
-        await render(
-          hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") width=200 }}</div>`
-        );
-
-        expectSrcsTo(this.$, (_, urlURI) => {
-          assert.equal(urlURI.getQueryParamValue('h'), 100);
-        });
-      });
-      test(`it generates the correct image width when a height and ar are passed`, async function(assert) {
+      test(`it generates an ar parameter when passed as an option`, async function(assert) {
         await render(
           hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") height=200 }}</div>`
         );
 
         expectSrcsTo(this.$, (_, urlURI) => {
-          assert.equal(urlURI.getQueryParamValue('w'), 400);
+          assert.equal(urlURI.getQueryParamValue('ar'), "2:1");
         });
       });
     });
