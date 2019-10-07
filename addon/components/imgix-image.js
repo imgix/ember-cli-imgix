@@ -7,23 +7,16 @@ import ImgixClient from 'imgix-core-js';
 import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
 import { constants, targetWidths } from '../common';
-import { deprecate } from '@ember/application/deprecations';
 
 /**
  * Parse an aspect ratio in the format w:h to a decimal. If false is returned, the aspect ratio is in the wrong format.
  */
-function parseAspectRatio(aspectRatio) {
+function isAspectRatioValid(aspectRatio) {
   if (typeof aspectRatio !== 'string') {
     return false;
   }
-  const isValidFormat = str => /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(str);
-  if (!isValidFormat(aspectRatio)) {
-    return false;
-  }
 
-  const [width, height] = aspectRatio.split(':');
-
-  return parseFloat(width) / parseFloat(height);
+  return /^\d+(\.\d+)?:\d+(\.\d+)?$/.test(aspectRatio);
 }
 
 const attributeMap = {
@@ -61,7 +54,6 @@ export default Component.extend({
   ],
 
   path: null, // The path to your image
-  aspectRatio: null,
   crop: null,
   fit: 'crop',
   onLoad: null,
@@ -142,21 +134,10 @@ export default Component.extend({
     'crop',
     'fit',
     'disableSrcSet',
-    'aspectRatio',
     function() {
       // Warnings, checks
       if (!get(this, 'path')) {
         return;
-      }
-      if (get(this, 'aspectRatio')) {
-        deprecate(
-          'aspectRatio as a option is deprecated in favour of passing `ar` as a direct parameter to imgix. aspectRatio will be removed in ember-cli-imgix@3.',
-          false,
-          {
-            id: 'ember-cli-imgix/aspectRatio-deprecation',
-            until: '3.0.0'
-          }
-        );
       }
       const widthProp = get(this, 'width');
       const heightProp = get(this, 'height');
@@ -178,66 +159,19 @@ export default Component.extend({
 
       const shouldShowDebugParams = get(config, 'APP.imgix.debug');
 
-      const { imgixOptions, aspectRatio } = (() => {
-        let imgixOptions = {
-          ...get(this, 'options')
-        };
-        const deprecatedAR = get(this, 'aspectRatio');
-        let aspectRatio = deprecatedAR ? deprecatedAR + ':1' : undefined;
-        if (imgixOptions.ar) {
-          aspectRatio = imgixOptions.ar;
-          delete imgixOptions.ar;
-        }
+      const imgixOptions = get(this, 'options');
 
-        return { imgixOptions, aspectRatio };
-      })();
-
-      // Calculate AR
-      const aspectRatioDecimal = parseAspectRatio(aspectRatio);
-      if (aspectRatio != null && aspectRatioDecimal === false) {
-        // false return value from parseAspectRatio indicates invalid response
+      const aspectRatio = imgixOptions.ar;
+      if (aspectRatio != null && !isAspectRatioValid(aspectRatio)) {
+        // false return value from isAspectRatioValid indicates invalid format
         // eslint-disable-next-line no-console
         console.warn(
           `[imgix] The aspect ratio passed ("${aspectRatio}") is not in the correct format. The correct format is "W:H".`
         );
       }
 
-      // Ensure width and height are set correctly according to aspect ratio
-      const { width, height } = (() => {
-        if (widthProp && heightProp && aspectRatio) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[imgix] All three of width, height, and aspect ratio were passed. The aspect ratio prop has no effect in this configuration.`
-          );
-        }
-        if (!widthProp && !heightProp && disableSrcSet && aspectRatio) {
-          // eslint-disable-next-line no-console
-          console.warn(
-            `[imgix] The aspect ratio prop has no effect when when srcsets are disabled and neither width nor height are set. To use aspect ratio, please either pass a width or height value, or enable src sets.`
-          );
-        }
-
-        const neitherWidthNorHeightPassed = !(widthProp || heightProp);
-        const bothWidthAndHeightPassed = widthProp && heightProp;
-        const shouldReturnOriginalDimensions =
-          neitherWidthNorHeightPassed || // we need at least one dimension to generate the other one
-          bothWidthAndHeightPassed || // if both dimensions are already passed, we don't need to generate one
-          !aspectRatioDecimal; // can't generate dimensions without an AR
-
-        if (shouldReturnOriginalDimensions) {
-          return { width: widthProp, height: heightProp };
-        }
-
-        if (widthProp) {
-          const height = Math.ceil(widthProp / aspectRatioDecimal);
-          return { width: widthProp, height };
-        } else if (heightProp) {
-          const width = Math.ceil(heightProp * aspectRatioDecimal);
-          return { width, height: heightProp };
-        } else {
-          return { width: widthProp, height: heightProp };
-        }
-      })();
+      const width = widthProp;
+      const height = heightProp;
 
       const debugParams = shouldShowDebugParams
         ? buildDebugParams({ width, height })
@@ -286,26 +220,15 @@ export default Component.extend({
           return `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
           const buildSrcSetPair = targetWidth => {
-            const targetHeight = (() => {
-              const isARInvalid = !(
-                aspectRatioDecimal && aspectRatioDecimal > 0
-              );
-              if (options.h || isARInvalid) {
-                return options.h;
-              }
-
-              return Math.ceil(targetWidth / aspectRatioDecimal);
-            })();
 
             const debugParams = shouldShowDebugParams
-              ? buildDebugParams({ width: targetWidth, height: targetHeight })
+              ? buildDebugParams({ width: targetWidth })
               : {};
 
             const urlOptions = {
               ...options,
               ...debugParams,
-              w: targetWidth,
-              ...(targetHeight ? { h: targetHeight } : {})
+              w: targetWidth
             };
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
