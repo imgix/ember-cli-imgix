@@ -155,7 +155,7 @@ export default Component.extend({
       const buildWithOptions = options =>
         client.buildURL(pathAsUri.path(), options);
 
-      const isFixedDimensionsMode = widthProp != null || heightProp != null;
+      const isFixedWidthMode = widthProp != null;
 
       const shouldShowDebugParams = get(config, 'APP.imgix.debug');
 
@@ -209,8 +209,8 @@ export default Component.extend({
           return;
         }
 
-        // w-type srcsets should not be used if one of the dimensions has been fixed as it will have no effect
-        if (isFixedDimensionsMode) {
+        // w-type srcsets should not be used if one of the width has been fixed as it will have no effect
+        if (isFixedWidthMode) {
           const buildWithDpr = dpr =>
             buildWithOptions({
               ...options,
@@ -233,7 +233,7 @@ export default Component.extend({
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
           };
-          
+
           return targetWidths.map(buildSrcSetPair).join(', ');
         }
       })();

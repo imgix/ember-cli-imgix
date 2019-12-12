@@ -152,7 +152,7 @@ module('Integration | Component | imgix image', function(hooks) {
     module('fixed dimensions', function() {
       test(`it generates an ar parameter when passed as an option`, async function(assert) {
         await render(
-          hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") height=200 }}</div>`
+          hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") width=200 }}</div>`
         );
 
         expectSrcsTo(this.$, (_, urlURI) => {
