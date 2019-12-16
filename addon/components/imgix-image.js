@@ -233,9 +233,8 @@ export default Component.extend({
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
           };
-          const addFallbackSrc = srcset => srcset.concat(src);
-
-          return addFallbackSrc(targetWidths.map(buildSrcSetPair)).join(', ');
+          
+          return targetWidths.map(buildSrcSetPair).join(', ');
         }
       })();
 

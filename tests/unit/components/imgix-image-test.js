@@ -38,7 +38,7 @@ module('Unit | Component | imgix image', function(hooks) {
   });
 
   test('the generated img has the correct number of srcsets', function(assert) {
-    const expectedNumberOfSrcSets = 32;
+    const expectedNumberOfSrcSets = 31;
 
     const component = this.owner.factoryFor('component:imgix-image').create();
     setProperties(component, {
@@ -49,6 +49,7 @@ module('Unit | Component | imgix image', function(hooks) {
     const actualNumberOfSrcSets = srcset.split(',').length;
     assert.equal(actualNumberOfSrcSets, expectedNumberOfSrcSets);
   });
+
   test('the generated img has srcsets in the correct format', function(assert) {
     const component = this.owner.factoryFor('component:imgix-image').create();
     setProperties(component, {
@@ -58,18 +59,12 @@ module('Unit | Component | imgix image', function(hooks) {
     const srcset = component.get('srcset');
     const srcsets = srcset.split(',').map(v => v.trim());
 
-    const srcsetsWithoutFallback = srcsets.slice(0, -1);
-
-    srcsetsWithoutFallback.forEach(srcset => {
+    srcsets.forEach(srcset => {
       assert.equal(srcset.split(' ').length, 2);
       const [url, width] = srcset.split(' ');
       assert.ok(url);
       assert.ok(width.match(/^\d+w$/));
     });
-
-    const fallbackSrcSet = srcsets[srcsets.length - 1];
-    assert.equal(fallbackSrcSet.split(' ').length, 1);
-    assert.notOk(fallbackSrcSet.match(/^\d+w$/));
   });
 
   test('the generated img should not contain a srcset when disableSrcSet is set', function(assert) {
