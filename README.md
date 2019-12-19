@@ -1,14 +1,44 @@
-# ember-cli-imgix
+<!-- ix-docs-ignore -->
+![imgix logo](https://assets.imgix.net/sdk-imgix-logo.svg)
 
-[![Build Status](https://travis-ci.org/imgix/ember-cli-imgix.png?branch=master)](https://travis-ci.org/imgix/ember-cli-imgix)
+`ember-cli-imgix` is an add-on that provides custom components for integrating [imgix](https://www.imgix.com) into Ember sites.
 
-An Ember addon for easily adding responsive imagery via [imgix](https://www.imgix.com) to your application. This addons supports FastBoot.
+[![Version](https://badge.fury.io/js/ember-cli-imgix.svg)](https://www.npmjs.com/package/ember-cli-imgix)
+[![Build Status](https://travis-ci.org/imgix/ember-cli-imgix.svg?branch=master)](https://travis-ci.org/imgix/ember-cli-imgix)
+![Downloads](https://img.shields.io/npm/dt/ember-cli-imgix)
+[![License](https://img.shields.io/github/license/imgix/ember-cli-imgix)](https://github.com/imgix/ember-cli-imgix/blob/master/LICENSE.md)
 
-**Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with imgix Web Folder or S3 Sources.
+---
+<!-- /ix-docs-ignore -->
+
+- [Overview-Resources](#overview--resources)
+- [Installation](#installation)
+  - [Global Configuration](#global-configuration)
+- [Usage](#usage)
+  - [imgix-image](#imgix-image)
+    - [Parameters](#parameters)
+    - [Other imgix Options](#other-imgix-options)
+    - [Aspect Ratio](#aspect-ratio)
+    - [attributeNameMap](#attributenamemap)
+    - [Lifecycle Hooks](#lifecycle-hooks)
+    - [Lazy Loading](#lazy-loading)
+    - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
+    - [ixlib param](#ixlib-param)
+  - [imgix-bg](#imgix-bg)
+  - [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
+  - [imgix-core-js](#imgix-core-js)
+- [Upgrade Guide](#upgrade-guide)
+  - [version 0.x to version 1](#version-0x-to-version-1)
+  - [version 1.x to version 2.x](#version-1x-to-version-2x)
+- [Browser Support](#browser-support)
+- [Running a Test App](#running-a-test-app)
+- [Running Tests](#running-tests)
+
+**Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with S3, Azure, Google Cloud Storage, or Web Folder sources.
 
 ## Overview / Resources
 
-**Before you get started with ember-cli-imgix**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of ember-cli-imgix is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your ember-cli-imgix experience.
+**Before you get started with `ember-cli-imgix`**, it's _highly recommended_ that you read Eric Portis' [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/). This article explains the history of responsive images in responsive design, why they're necessary, and how all these technologies work together to save bandwidth and provide a better experience for users. The primary goal of `ember-cli-imgix` is to make these tools easier for developers to implement, so having an understanding of how they work will significantly improve your experience when using these components. For a demonstration of this library in action, check out [this demo](https://imgix.github.io/ember-cli-imgix/).
 
 Below are some other articles that help explain responsive imagery, and how it can work alongside imgix:
 
@@ -22,9 +52,25 @@ From within an existing ember-cli project:
 $ ember install ember-cli-imgix
 ```
 
-Next, set up some configuration flags:
+### Global Configuration
 
-```javascript
+The global configuration for this library should be located in `APP.imgix`, and has the following schema:
+
+```js
+imgix: {
+  source: string,
+  debug?: boolean,
+  attributeNameMap?: {
+    src: string
+    srcset: string
+    sizes: string
+  }
+}
+```
+
+It should look like this in `config/environment.js`.
+
+```js
 // config/environment.js
 
 module.exports = function(environment) {
@@ -33,7 +79,9 @@ module.exports = function(environment) {
     APP: {
       imgix: {
         source: 'my-social-network.imgix.net',
-        debug: true // Prints out diagnostic information on the image itself. Turn off in production.
+        debug: true, // Prints out diagnostic information on the image itself. Turn off in production.
+        classNames: 'imgix-image', // default class used on the img element
+        defaultParams: {}, // optional params that will be used in all generated paths
       }
     }
     // snip
@@ -43,17 +91,17 @@ module.exports = function(environment) {
 
 ## Usage
 
-**NOTE:** These docs are for the latest version of ember-cli-imgix (version 1). For the old docs, please go [here](https://github.com/imgix/ember-cli-imgix/blob/f9b5cd724e92270cfba96f3def977177c647cb00/README.md)
+**NOTE:** These docs are for the latest version of `ember-cli-imgix` (version 1). For the old docs, please go [here](https://github.com/imgix/ember-cli-imgix/blob/f9b5cd724e92270cfba96f3def977177c647cb00/README.md)
 
 ### imgix-image
 
-`ember-cli-imgix` exposes a `img` element with expanded functionality. It simply renders an `img`, but has some extra parameters
+`ember-cli-imgix` exposes an `img` element with expanded functionality:
 
 ```hbs
 {{imgix-image path='/users/1.png' sizes='100vw'}}
 ```
 
-Which will generate some HTML similar to this:
+Which will generate HTML similar to this:
 
 ```html
 <img
@@ -68,7 +116,7 @@ The src attribute will have imgix URL API parameters added to it to perform the 
 
 **Please note:** `100vw` is an appropriate `sizes` value for a full-bleed image. If your image is not full-bleed, you should use a different value for `sizes`. [Eric Portis' "Srcset and sizes"](https://ericportis.com/posts/2014/srcset-sizes/) article goes into depth on how to use the `sizes` attribute.
 
-Since imgix can generate as many derivative resolutions as needed, ember-cli-imgix calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
+Since imgix can generate as many derivative resolutions as needed, `ember-cli-imgix` calculates them programmatically, using the dimensions you specify. All of this information has been placed into the srcset and sizes attributes.
 
 **Width and height known:** If the width and height are known beforehand, it is recommended that they are set explicitly:
 
@@ -78,71 +126,13 @@ Since imgix can generate as many derivative resolutions as needed, ember-cli-img
 
 NB: Since this library sets [`fit`](https://docs.imgix.com/apis/url/size/fit) to `crop` by default, when just a width or height is set, the image will resize and maintain aspect ratio. When both are set, the image will be cropped to that size, maintaining pixel aspect ratio (i.e. edges are clipped in order to not stretch the photo). If this isn't desired, set `fit` to be another value (e.g. `clip`)
 
-#### Lazy Loading
-
-If you'd like to lazy load images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use ember-cli-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
-
-```jsx
-// config/environment.js
-
-module.exports = function(environment) {
-  var ENV = {
-    // snip
-    APP: {
-      imgix: {
-        attributeNameMap: {
-          src: 'data-src',
-          srcset: 'data-srcset'
-        }
-      }
-    }
-    // snip
-  };
-};
-```
-
-Otherwise, you can use the component as normal.
-
-**NB:** It is recommended to use the [attribute change plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/attrchange) in order to capture changes in the data-\* attributes. Without this, changing the attributes to this library will have no effect on the rendered image.
-
-#### Low Quality Image Placeholder Technique (LQIP)
-
-If you'd like to use LQIP images we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use ember-cli-imgix with lazysizes, you can simply tell it to generate lazysizes-compatible attributes instead of the standard `src`, `srcset` by changing some configuration settings, and providing a fallback image to `placeholderPath`.
-
-```jsx
-// config/environment.js
-
-module.exports = function(environment) {
-  var ENV = {
-    // snip
-    APP: {
-      imgix: {
-        attributeNameMap: {
-          src: 'data-src',
-          srcset: 'data-srcset'
-        }
-      }
-    }
-    // snip
-  };
-};
-```
-
-```hbs
-// usage
-
-{{imgix-image path='/abc.png' placeholderPath='/abc.png?w=80&h=50' }}
-```
-
-**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the maintainers of ember-cli-imgix, so use at your own risk.
-
 #### Parameters
 
 You can pass through most of the [params that imgix urls accept](https://docs.imgix.com/apis/url).
 
 Some of the defaults are:
 
-```javascript
+```js
 path: null, // The path to your image
 crop: null,
 fit: 'crop',
@@ -179,6 +169,22 @@ This component can also accept an `ar` parameter to constrain the aspect ratio o
 {{imgix-image path="/users/1.png" crossorigin="anonymous" options=(hash ar="1.33:1"}}
 ```
 
+#### attributeNameMap
+
+`attributeNameMap` should be used if it is required to remap the HTML attribute to be used to set the src of the image. For example, if `data-src` should be used rather than `src`, `attributeNameMap` helps with this.
+
+In the global config, `attributeNameMap` allows the following to be remapped: `src`, `srcset`, and `sizes`.
+
+For example, to remap `srcset` to `data-srcset`:
+
+```js
+attributeNameMap: {
+  srcset: `data-srcset`
+}
+```
+
+The equivalent works for `src` and `sizes`.
+
 #### Lifecycle hooks
 
 This element also exposes `onLoad` and `onError` actions which you can hook into to know when the image has loaded or failed to load:
@@ -195,13 +201,71 @@ This will maintain the same aspect ratio as the image is resized.
 
 Please see the [dummy app](./tests/dummy) for insight into setting this up and configuring this.
 
+#### Lazy Loading
+
+If you'd like to lazy load images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use `ember-cli-imgix` with lazysizes generate the component with lazysizes-compatible attributes instead of the standard `src`, `srcset`, and `sizes` by changing some configuration settings:
+
+```jsx
+// config/environment.js
+
+module.exports = function(environment) {
+  var ENV = {
+    // snip
+    APP: {
+      imgix: {
+        attributeNameMap: {
+          src: 'data-src',
+          srcset: 'data-srcset'
+        }
+      }
+    }
+    // snip
+  };
+};
+```
+
+Otherwise, you can use the component as normal.
+
+**NB:** It is recommended to use the [attribute change plugin](https://github.com/aFarkas/lazysizes/tree/gh-pages/plugins/attrchange) in order to capture changes in the data-\* attributes. Without this, changing the attributes to this library will have no effect on the rendered image.
+
+#### Low Quality Image Placeholder Technique (LQIP)
+
+If you'd like to use LQIP images, we recommend using [lazysizes](https://github.com/aFarkas/lazysizes). In order to use `ember-cli-imgix` with lazysizes, generate the component with lazysizes-compatible attributes instead of the standard `src` and `srcset` by changing some configuration settings, and providing a fallback image to `placeholderPath`.
+
+```jsx
+// config/environment.js
+
+module.exports = function(environment) {
+  var ENV = {
+    // snip
+    APP: {
+      imgix: {
+        attributeNameMap: {
+          src: 'data-src',
+          srcset: 'data-srcset'
+        }
+      }
+    }
+    // snip
+  };
+};
+```
+
+```hbs
+// usage
+
+{{imgix-image path='/abc.png' placeholderPath='/abc.png?w=80&h=50' }}
+```
+
+**NB:** If the props of the image are changed after the first load, the low quality image will replace the high quality image. In this case, the `src` attribute may have to be set by modifying the DOM directly, or the lazysizes API may have to be called manually after the props are changed. In any case, this behaviour is not supported by the maintainers of `ember-cli-imgix`, so use at your own risk.
+
 #### ixlib param
 
-This library adds an `ixlib` parameter to generated image urls for two reasons: a) it helps Imgix support see what versions of libraries that customers are using, and b) it help Imgix to see how many people overall are using the ember library, and the specific versions.
+This library adds an `ixlib` parameter to generated image urls for two reasons: a) it helps imgix support see what versions of libraries that customers are using, and b) it help imgix to see how many people overall are using the ember library, and the specific versions.
 
 If this behaviour is not desired, it can be turned off in two ways:
 
-1.  Environment config
+1. Environment config
 
 ```js
 // config/environment.js
@@ -220,11 +284,12 @@ module.exports = function(environment) {
 };
 ```
 
-2.  Component parameter
+2. Component parameter
 
 ```hbs
 {{imgix-image path="/test.png" disableLibraryParam={true} }}
 ```
+
 ### imgix-bg
 
 This component will render a `div` whose `background-image` is set to the given image path. Content can be added within the `imgix-bg` tags and the component will automatically resize to fit around it.
@@ -266,65 +331,12 @@ The HTML generated by this might look like the following:
 
 The `src` attribute will have [imgix URL API parameters](https://www.imgix.com/docs/reference) added to it to perform the resize.
 
-### Global Configuration
+### imgix-core-js
 
-The global configuration for this library should be located in `APP.imgix`, and has the following schema:
-
-```js
-imgix: {
-  source: string,
-  debug?: boolean,
-  attributeNameMap?: {
-    src: string
-    srcset: string
-    sizes: string
-  }
-}
-```
-
-It should look like this in `config/environment.js`.
+`imgix-core-js` is available to you shimmed as:
 
 ```js
-// config/environment.js
-
-module.exports = function(environment) {
-  var ENV = {
-    // snip
-    APP: {
-      imgix: {
-        source: 'my-social-network.imgix.net',
-        debug: true, // Prints out diagnostic information on the image itself. Turn off in production.
-        classNames: 'imgix-image', // default class used on the img element
-        defaultParams: {}, // optional params that will be used in all generated paths
-      }
-    }
-    // snip
-  };
-};
-```
-
-#### attributeNameMap
-
-`attributeNameMap` should be used if it is required to remap the HTML attribute to be used to set the src of the image. For example, if `data-src` should be used rather than `src`, `attributeNameMap` helps with this.
-
-In the global config, `attributeNameMap` allows the following to be remapped: `src`, `srcset`, and `sizes`.
-
-For example, to remap `srcset` to `data-srcset`:
-
-```
-attributeNameMap: {
-  srcset: `data-srcset`
-}
-```
-
-The equivalent works for `src` and `sizes`.
-
-### Imgix Core JS
-
-Imgix core js is available to you shimmed as:
-
-```javascript
-import ImgixCoreJs from 'imgix-core-js';
+import imgix from 'imgix-core-js';
 ```
 
 ## Upgrade Guide
@@ -344,10 +356,10 @@ The largest change in this major version bump is the move to width-based `srcSet
 
 ## Browser Support
 
-- By default, browsers that don't support [`srcset`](http://caniuse.com/#feat=srcset), [`sizes`](http://caniuse.com/#feat=srcset), or [`picture`](http://caniuse.com/#feat=picture) will gracefully fall back to the default `img` `src` when appropriate. If you want to provide a fully-responsive experience for these browsers, ember-cli-imgix works great alongside [Picturefill](https://github.com/scottjehl/picturefill)!
+- By default, browsers that don't support [`srcset`](http://caniuse.com/#feat=srcset), [`sizes`](http://caniuse.com/#feat=srcset), or [`picture`](http://caniuse.com/#feat=picture) will gracefully fall back to the default `img` `src` when appropriate. If you want to provide a fully-responsive experience for these browsers, `ember-cli-imgix` works great alongside [Picturefill](https://github.com/scottjehl/picturefill)!
 - We support the latest version of Google Chrome (which [automatically updates](https://support.google.com/chrome/answer/95414) whenever it detects that a new version of the browser is available). We also support the current and previous major releases of desktop Firefox, Internet Explorer, and Safari on a rolling basis. Mobile support is tested on the most recent minor version of the current and previous major release for the default browser on iOS and Android (e.g., iOS 9.2 and 8.4). Each time a new version is released, we begin supporting that version and stop supporting the third most recent version.
 
-## Running a test app
+## Running a Test App
 
 To see this in action with some stock photos, clone this repo and then run `ember serve`
 
@@ -363,6 +375,6 @@ Now visit [http://localhost:4200](http://localhost:4200).
 
 Pretty simple:
 
-```base
+```bash
 ember test
 ```
