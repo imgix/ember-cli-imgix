@@ -3,7 +3,7 @@
 
 `ember-cli-imgix` is an add-on that provides custom components for integrating [imgix](https://www.imgix.com) into Ember sites.
 
-[![Version](https://badge.fury.io/js/ember-cli-imgix.svg)](https://www.npmjs.com/package/ember-cli-imgix)
+[![Version](https://img.shields.io/npm/v/ember-cli-imgix.svg)](https://www.npmjs.com/package/ember-cli-imgix)
 [![Build Status](https://travis-ci.org/imgix/ember-cli-imgix.svg?branch=master)](https://travis-ci.org/imgix/ember-cli-imgix)
 ![Downloads](https://img.shields.io/npm/dt/ember-cli-imgix)
 [![License](https://img.shields.io/github/license/imgix/ember-cli-imgix)](https://github.com/imgix/ember-cli-imgix/blob/master/LICENSE.md)
@@ -11,7 +11,7 @@
 ---
 <!-- /ix-docs-ignore -->
 
-- [Overview-Resources](#overview--resources)
+- [Overview / Resources](#overview--resources)
 - [Installation](#installation)
   - [Global Configuration](#global-configuration)
 - [Usage](#usage)
@@ -148,7 +148,7 @@ width: null, // override if you want to hardcode a width into the image
 height: null, // override if you want to hardcode a height into the image
 ```
 
-#### Other imgix options
+#### Other imgix Options
 
 If you want to pass in any other arbitrary imgix options, use the hash helper
 
@@ -185,7 +185,7 @@ attributeNameMap: {
 
 The equivalent works for `src` and `sizes`.
 
-#### Lifecycle hooks
+#### Lifecycle Hooks
 
 This element also exposes `onLoad` and `onError` actions which you can hook into to know when the image has loaded or failed to load:
 
@@ -347,7 +347,7 @@ import imgix from 'imgix-core-js';
 
 `imgix-image` has been renamed to `imgix-image-wrapped` and has been deprecated. All usage of `imgix-image` can be replaced with `imgix-image-wrapped` for the duration of version 2. No parameter changes are necessary. After version 2, `imgix-image-wrapped` will not exist.
 
-## version 1.x to version 2.x
+### version 1.x to version 2.x
 
 The largest change in this major version bump is the move to width-based `srcSet` and `sizes` for responsiveness. This has a host of benefits, including better server rendering, better responsiveness, less potential for bugs, and perfomance improvements.
 
