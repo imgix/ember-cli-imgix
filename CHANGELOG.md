@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.2"></a>
+## [2.1.2](https://github.com/imgix/ember-cli-imgix/compare/v2.1.1...v2.1.2) (2020-01-03)
+
+
+### Bug Fixes
+
+* remove fallback src from srcset list ([#122](https://github.com/imgix/ember-cli-imgix/issues/122)) ([95206ff](https://github.com/imgix/ember-cli-imgix/commit/95206ff))
+
+
+
 <a name="2.1.1"></a>
 ## [2.1.1](https://github.com/imgix/ember-cli-imgix/compare/v2.1.0...v2.1.1) (2019-07-11)
 
