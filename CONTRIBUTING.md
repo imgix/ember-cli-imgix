@@ -170,6 +170,6 @@ Ensure all commits and PR titles are correctly described using the [Conventional
 ```sh
 npm install                             # update dependencies to latest
 npm run release                         # build code, bump package version according to commit messages, and generate changelog
-git push --follow-tags origin main    # push to github and publish
+git push --follow-tags origin main      # push to github and publish
 npm publish                             # publish to npm
 ```
