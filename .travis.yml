@@ -11,7 +11,7 @@ cache:
 
 branches:
   only:
-    - master
+    - main
     - version-2
 
 env:
