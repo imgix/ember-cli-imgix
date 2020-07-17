@@ -70,7 +70,7 @@
     "ember-resize-aware": "1.2.0",
     "fastboot-transform": "^0.1.2",
     "imgix-core-js": "2.0.0",
-    "js-base64": "2.4.4",
+    "js-base64": "3.2.3",
     "jsuri": "^1.3.1"
   },
   "ember-addon": {
