@@ -7,32 +7,34 @@
 [![Build Status](https://travis-ci.com/imgix/ember-cli-imgix.svg?branch=main)](https://travis-ci.com/imgix/ember-cli-imgix)
 ![Downloads](https://img.shields.io/npm/dt/ember-cli-imgix)
 [![License](https://img.shields.io/github/license/imgix/ember-cli-imgix)](https://github.com/imgix/ember-cli-imgix/blob/main/LICENSE.md)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix?ref=badge_shield)
 
 ---
 <!-- /ix-docs-ignore -->
 
 - [Overview / Resources](#overview--resources)
 - [Installation](#installation)
-  - [Global Configuration](#global-configuration)
+    * [Global Configuration](#global-configuration)
 - [Usage](#usage)
-  - [imgix-image](#imgix-image)
-    - [Parameters](#parameters)
-    - [Other imgix Options](#other-imgix-options)
-    - [Aspect Ratio](#aspect-ratio)
-    - [attributeNameMap](#attributenamemap)
-    - [Lifecycle Hooks](#lifecycle-hooks)
-    - [Lazy Loading](#lazy-loading)
-    - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
-    - [ixlib param](#ixlib-param)
-  - [imgix-bg](#imgix-bg)
-  - [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
-  - [imgix-core-js](#imgix-core-js)
+    * [imgix-image](#imgix-image)
+        + [Parameters](#parameters)
+        + [Other imgix Options](#other-imgix-options)
+        + [Aspect Ratio](#aspect-ratio)
+        + [attributeNameMap](#attributenamemap)
+        + [Lifecycle Hooks](#lifecycle-hooks)
+        + [Lazy Loading](#lazy-loading)
+        + [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
+        + [ixlib param](#ixlib-param)
+    * [imgix-bg](#imgix-bg)
+    * [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
+    * [imgix-core-js](#imgix-core-js)
 - [Upgrade Guide](#upgrade-guide)
-  - [version 0.x to version 1](#version-0x-to-version-1)
-  - [version 1.x to version 2.x](#version-1x-to-version-2x)
+    * [version 0.x to version 1](#version-0x-to-version-1)
+    * [version 1.x to version 2.x](#version-1x-to-version-2x)
 - [Browser Support](#browser-support)
 - [Running a Test App](#running-a-test-app)
 - [Running Tests](#running-tests)
+- [License](#license)
 
 **Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with S3, Azure, Google Cloud Storage, or Web Folder sources.
 
@@ -378,3 +380,6 @@ Pretty simple:
 ```bash
 ember test
 ```
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix?ref=badge_large)
