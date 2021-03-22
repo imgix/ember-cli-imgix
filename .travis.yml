@@ -31,7 +31,7 @@ before_install:
   - yarn global add greenkeeper-lockfile@1
 
 install:
-  - yarn install --non-interactive
+  - yarn install --frozen-lockfile --non-interactive
 
 before_script:
   - greenkeeper-lockfile-update
