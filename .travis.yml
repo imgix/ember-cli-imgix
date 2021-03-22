@@ -9,11 +9,6 @@ addons:
 cache:
   yarn: true
 
-branches:
-  only:
-    - main
-    - version-2
-
 env:
   global:
     - JOBS=1
