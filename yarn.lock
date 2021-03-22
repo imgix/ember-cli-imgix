@@ -5556,10 +5556,10 @@ ignore@^5.1.1:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.8.tgz#f150a8b50a34289b33e22f5889abd4d8016f0e57"
   integrity sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==
 
-imgix-core-js@2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-2.0.0.tgz#2e50c43f9c754f6aea9739f8847e71fb1047cd21"
-  integrity sha512-W8lPoy51yBC427Bp7ii+M6WJAymK8PKN86ynYZfa6Ai/k6+PzGZ6Zy2l8MeI/Th+gKUP9SwBMoy6wdvcNZ2hgA==
+imgix-core-js@2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-2.3.2.tgz#f71a418c60232700993b4bd57526a6d9e0820b95"
+  integrity sha512-O5jThQLXwlf6k8oZr7e+05LLLnxupx/MNpJftKTBnsb1A8fL2UzL/2JGK9LuOlcXQP94O7O2r8W0KZnutjc3eg==
   dependencies:
     js-base64 "^2.1.9"
     md5 "^2.2.1"
