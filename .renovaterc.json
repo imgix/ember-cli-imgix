@@ -1,0 +1,4 @@
+{
+  "extends": ["github>imgix/renovate-config"],
+  "packageRules": [{ "depTypeList": ["dependencies"], "enabled": false }]
+}
