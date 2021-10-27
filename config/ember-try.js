@@ -1,3 +1,5 @@
+const { embroiderSafe, embroiderOptimized } = require('@embroider/test-setup');
+
 /* eslint-env node */
 module.exports = {
   useYarn: true,
@@ -32,6 +34,8 @@ module.exports = {
       npm: {
         devDependencies: {}
       }
-    }
+    },
+    embroiderSafe(),
+    embroiderOptimized(),
   ]
 };
