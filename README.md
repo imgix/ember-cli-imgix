@@ -14,23 +14,23 @@
 
 - [Overview / Resources](#overview--resources)
 - [Installation](#installation)
-    * [Global Configuration](#global-configuration)
+  - [Global Configuration](#global-configuration)
 - [Usage](#usage)
-    * [imgix-image](#imgix-image)
-        + [Parameters](#parameters)
-        + [Other imgix Options](#other-imgix-options)
-        + [Aspect Ratio](#aspect-ratio)
-        + [attributeNameMap](#attributenamemap)
-        + [Lifecycle Hooks](#lifecycle-hooks)
-        + [Lazy Loading](#lazy-loading)
-        + [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
-        + [ixlib param](#ixlib-param)
-    * [imgix-bg](#imgix-bg)
-    * [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
-    * [imgix-core-js](#imgix-core-js)
+  - [imgix-image](#imgix-image)
+    - [Parameters](#parameters)
+    - [Other imgix Options](#other-imgix-options)
+    - [Aspect Ratio](#aspect-ratio)
+    - [attributeNameMap](#attributenamemap)
+    - [Lifecycle Hooks](#lifecycle-hooks)
+    - [Lazy Loading](#lazy-loading)
+    - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
+    - [ixlib param](#ixlib-param)
+  - [imgix-bg](#imgix-bg)
+  - [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
+  - [imgix-core-js](#imgix-core-js)
 - [Upgrade Guide](#upgrade-guide)
-    * [version 0.x to version 1](#version-0x-to-version-1)
-    * [version 1.x to version 2.x](#version-1x-to-version-2x)
+  - [version 0.x to version 1](#version-0x-to-version-1)
+  - [version 1.x to version 2.x](#version-1x-to-version-2x)
 - [Browser Support](#browser-support)
 - [Running a Test App](#running-a-test-app)
 - [Running Tests](#running-tests)
@@ -51,7 +51,7 @@ Below are some other articles that help explain responsive imagery, and how it c
 From within an existing ember-cli project:
 
 ```bash
-$ ember install ember-cli-imgix
+ember install ember-cli-imgix
 ```
 
 ### Global Configuration
@@ -382,4 +382,5 @@ ember test
 ```
 
 ## License
+
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix?ref=badge_large)
