@@ -23,12 +23,12 @@ module.exports = function (environment) {
     APP: {
       imgix: {
         source: 'assets.imgix.net',
-        debug: true
-      }
+        debug: true,
+      },
     },
     contentSecurityPolicy: {
-      'img-src': "'self' assets.imgix.net"
-    }
+      'img-src': "'self' assets.imgix.net",
+    },
   };
 
   if (environment === 'development') {

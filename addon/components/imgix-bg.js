@@ -18,11 +18,12 @@ const buildDebugParams = ({ width, height }) => {
     txtfont: 'Helvetica Neue',
     txtclr: 'ffffff',
     txtpad: 40,
-    txtfit: 'max'
+    txtfit: 'max',
   };
 };
 
-const findNearestWidth = actualWidth => findClosest(actualWidth, targetWidths);
+const findNearestWidth = (actualWidth) =>
+  findClosest(actualWidth, targetWidths);
 
 function isDimensionInvalid(widthProp) {
   return widthProp != null && (typeof widthProp !== 'number' || widthProp <= 0);
@@ -45,23 +46,23 @@ export default Component.extend(ResizeAware, {
   sizes: null,
   disableSrcSet: false,
 
-  style: computed('_src', function() {
-    const src = get(this, '_src');
+  style: computed('_src', function () {
+    const src = this._src;
 
     const style = {
       ...(src && {
         'background-image': `url('${src}')`,
-        'background-size': 'cover'
-      })
+        'background-size': 'cover',
+      }),
     };
     return htmlSafe(
       Object.keys(style)
-        .map(key => `${key}: ${style[key]}`)
+        .map((key) => `${key}: ${style[key]}`)
         .join(';')
     );
   }),
 
-  _client: computed('disableLibraryParam', function() {
+  _client: computed('disableLibraryParam', function () {
     if (!config || !get(config, 'APP.imgix.source')) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
@@ -69,37 +70,39 @@ export default Component.extend(ResizeAware, {
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') ||
-      get(this, 'disableLibraryParam');
+      get(config, 'APP.imgix.disableLibraryParam') || this.disableLibraryParam;
 
     return new ImgixClient({
       domain: config.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
-        : `ember-${constants.APP_VERSION}`
+        : `ember-${constants.APP_VERSION}`,
     });
   }),
 
   _src: computed(
-    '_width',
+    '_client',
+    '_dpr',
     '_height',
-    'path',
     '_pathAsUri',
-    'width',
-    'height',
+    '_width',
     'crop',
-    'fit',
     'disableSrcSet',
-    function() {
+    'fit',
+    'height',
+    'options',
+    'path',
+    'width',
+    function () {
       // Warnings, checks
-      if (!get(this, 'path')) {
+      if (!this.path) {
         return;
       }
-      const forcedWidth = get(this, 'width');
-      const forcedHeight = get(this, 'height');
-      const measuredWidth = get(this, '_width');
-      const measuredHeight = get(this, '_height');
+      const forcedWidth = this.width;
+      const forcedHeight = this.height;
+      const measuredWidth = this._width;
+      const measuredHeight = this._height;
 
       const hasDOMDimensions = measuredWidth != null;
       if (isDimensionInvalid(forcedWidth) || isDimensionInvalid(forcedHeight)) {
@@ -110,14 +113,14 @@ export default Component.extend(ResizeAware, {
       }
 
       // Setup
-      const pathAsUri = get(this, '_pathAsUri');
-      const client = get(this, '_client');
-      const buildWithOptions = options =>
+      const pathAsUri = this._pathAsUri;
+      const client = this._client;
+      const buildWithOptions = (options) =>
         client.buildURL(pathAsUri.path(), options);
 
       const shouldShowDebugParams = get(config, 'APP.imgix.debug');
 
-      const imgixOptions = get(this, 'options') || {};
+      const imgixOptions = this.options || {};
       const { width, height } = (() => {
         const bothWidthAndHeightPassed =
           forcedWidth != null && forcedHeight != null;
@@ -157,7 +160,7 @@ export default Component.extend(ResizeAware, {
 
       const dpr = toFixed(
         2,
-        Number.parseFloat(imgixOptions.dpr) || get(this, '_dpr') || 1
+        Number.parseFloat(imgixOptions.dpr) || this._dpr || 1
       );
 
       // Build base options
@@ -165,13 +168,13 @@ export default Component.extend(ResizeAware, {
         // default params from application config
         ...(config.APP.imgix.defaultParams || {}),
         // Add fit from 'fit' prop
-        fit: get(this, 'fit'),
+        fit: this.fit,
         // Add width from computed width, or width prop
         ...(width != null ? { w: width } : {}),
         // Add height from computed height, or height prop
         ...(height != null ? { h: height } : {}),
         // Add crop from 'crop' prop
-        ...(get(this, 'crop') != null ? { crop: get(this, 'crop') } : {}),
+        ...(this.crop != null ? { crop: this.crop } : {}),
         // Add imgix options from 'options' prop
         ...imgixOptions,
         // Add debug params
@@ -181,7 +184,7 @@ export default Component.extend(ResizeAware, {
           memo[param[0]] = param[1];
           return memo;
         }, {}),
-        dpr
+        dpr,
       };
 
       // Build src from base options
@@ -191,17 +194,17 @@ export default Component.extend(ResizeAware, {
     }
   ),
 
-  elementClassNames: computed('config.APP.imgix.classNames', function() {
+  elementClassNames: computed('config.APP.imgix.classNames', function () {
     return config.APP.imgix.classNames || 'imgix-bg';
   }),
 
   didResize(width, height) {
-    if (get(this, 'path')) {
+    if (this.path) {
       const newWidth = Math.ceil(
-        get(this, '_pathAsUri').getQueryParamValue('w') || width
+        this._pathAsUri.getQueryParamValue('w') || width
       );
       const newHeight = Math.floor(
-        get(this, '_pathAsUri').getQueryParamValue('h') || height
+        this._pathAsUri.getQueryParamValue('h') || height
       );
       const newDpr = toFixed(2, window.devicePixelRatio || 1);
 
@@ -211,24 +214,24 @@ export default Component.extend(ResizeAware, {
     }
   },
 
-  _pathAsUri: computed('path', function() {
-    if (!get(this, 'path')) {
+  _pathAsUri: computed('path', function () {
+    if (!this.path) {
       return false;
     }
 
-    return new URI(get(this, 'path'));
+    return new URI(this.path);
   }),
 
   didInsertElement(...args) {
     this._super(...args);
 
     this.didResize(
-      get(this, '_width') ||
+      this._width ||
         this.element.clientWidth ||
         this.element.parentElement.clientWidth,
-      get(this, '_height') ||
+      this._height ||
         this.element.clientHeight ||
         this.element.parentElement.clientHeight
     );
-  }
+  },
 });

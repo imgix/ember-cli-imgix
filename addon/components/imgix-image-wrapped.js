@@ -14,8 +14,8 @@ export default Component.extend(ResizeAware, ImgixPathBehavior, {
       false,
       {
         id: 'ember-cli-imgix/imgix-image-wrapper-deprecation',
-        until: '3.0.0'
+        until: '3.0.0',
       }
     );
-  }
+  },
 });

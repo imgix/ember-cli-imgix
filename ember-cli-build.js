@@ -7,8 +7,8 @@ module.exports = function (defaults) {
   let app = new EmberAddon(defaults, {
     snippetPaths: ['tests/dummy/app/snippets'],
     'ember-cli-babel': {
-      includePolyfill: true
-    }
+      includePolyfill: true,
+    },
   });
 
   if (app.env === 'test') {

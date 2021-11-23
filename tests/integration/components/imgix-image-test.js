@@ -8,20 +8,20 @@ import hbs from 'htmlbars-inline-precompile';
 import URI from 'jsuri';
 import config from 'ember-get-config';
 
-module('Integration | Component | imgix image', function(hooks) {
+module('Integration | Component | imgix image', function (hooks) {
   setupRenderingTest(hooks);
 
-  test('it renders an image', async function(assert) {
+  test('it renders an image', async function (assert) {
     await render(hbs`{{imgix-image path="/users/1.png"}}`);
     assert.ok(this.$('img'));
   });
 
-  test('it does not throw an exception when given an undefined path', async function(assert) {
+  test('it does not throw an exception when given an undefined path', async function (assert) {
     await render(hbs`{{imgix-image}}`);
     assert.notEqual(this.element.querySelector('img'), null);
   });
 
-  test(`the rendered image's srcs have the correct path`, async function(assert) {
+  test(`the rendered image's srcs have the correct path`, async function (assert) {
     await render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
     expectSrcsTo(this.$, (_, uri) => {
@@ -29,16 +29,16 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  test(`the rendered image's srcs have the correct host`, async function(assert) {
+  test(`the rendered image's srcs have the correct host`, async function (assert) {
     await render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
     expectSrcsTo(this.$, (_, uri) => {
       assert.equal(config.APP.imgix.source, uri.host());
-      assert.equal('https', uri.protocol());
+      assert.equal(uri.protocol(), 'https');
     });
   });
 
-  test(`the image's srcs have the fit parameter set to crop by default`, async function(assert) {
+  test(`the image's srcs have the fit parameter set to crop by default`, async function (assert) {
     await render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
     expectSrcsTo(this.$, (_, uri) => {
@@ -46,7 +46,7 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  test(`the image's srcs contains an query parameters passed in via the 'path' attribute`, async function(assert) {
+  test(`the image's srcs contains an query parameters passed in via the 'path' attribute`, async function (assert) {
     await render(hbs`<div>{{imgix-image path="/users/1.png?sat=100"}}</div>`);
 
     expectSrcsTo(this.$, (_, uri) => {
@@ -54,19 +54,19 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  module('aspect ratio', function() {
-    module(`valid ARs`, function() {
+  module('aspect ratio', function () {
+    module(`valid ARs`, function () {
       const testValidAR = ({ ar }) => {
-        test(`it generates an ar parameter for a valid AR (${ar})`, async function(assert) {
-          const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
+        test(`it generates an ar parameter for a valid AR (${ar})`, async function (assert) {
+          const removeFallbackSrcSet = (srcSets) => srcSets.slice(0, -1);
           const content = Ember.HTMLBars.compile(
             `<div>{{imgix-image path="/users/1.png" options=(hash ar="${ar}")}}</div>`
           );
           await render(content);
           const srcSet = this.$('img').attr('srcset');
-          const srcSets = srcSet.split(',').map(v => v.trim());
-          const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
-          removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
+          const srcSets = srcSet.split(',').map((v) => v.trim());
+          const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
+          removeFallbackSrcSet(srcSetUrls).forEach((srcSetUrl) => {
             const srcSetURI = new URI(srcSetUrl);
             const w = srcSetURI.getQueryParamValue('w');
             const ar = srcSetURI.getQueryParamValue('ar');
@@ -84,21 +84,21 @@ module('Integration | Component | imgix image', function(hooks) {
         ['1:1.12'],
         ['1.1:1.1'],
         ['1.123:1.123'],
-        ['11.123:11.123']
+        ['11.123:11.123'],
       ].forEach((validAR) =>
         testValidAR({
-          ar: validAR
+          ar: validAR,
         })
       );
     });
 
-    module('invalid ARs', function() {
-      const testInvalidAR = ar => {
-        test(`height should not be set when an invalid aspectRatio (${ar}) is passed`, async function(assert) {
+    module('invalid ARs', function () {
+      const testInvalidAR = (ar) => {
+        test(`height should not be set when an invalid aspectRatio (${ar}) is passed`, async function (assert) {
           const oldConsole = global.console;
           global.console = { warn: () => {} };
 
-          const removeFallbackSrcSet = srcSets => srcSets.slice(0, -1);
+          const removeFallbackSrcSet = (srcSets) => srcSets.slice(0, -1);
 
           const content = Ember.HTMLBars.compile(
             `<div>{{imgix-image path="/users/1.png" options=(hash ar="${ar}")}}</div>`
@@ -106,9 +106,9 @@ module('Integration | Component | imgix image', function(hooks) {
           await render(content);
 
           const srcSet = this.$('img').attr('srcset');
-          const srcSets = srcSet.split(',').map(v => v.trim());
-          const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
-          removeFallbackSrcSet(srcSetUrls).forEach(srcSetUrl => {
+          const srcSets = srcSet.split(',').map((v) => v.trim());
+          const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
+          removeFallbackSrcSet(srcSetUrls).forEach((srcSetUrl) => {
             const srcSetURI = new URI(srcSetUrl);
             const w = srcSetURI.getQueryParamValue('w');
             const h = srcSetURI.getQueryParamValue('h');
@@ -122,24 +122,24 @@ module('Integration | Component | imgix image', function(hooks) {
       };
 
       ['4x3', '4:', 'blah:1:1', 'blah1:1', '1x1', '1:1blah', '1:blah1'].forEach(
-        invalidAR => testInvalidAR(invalidAR)
+        (invalidAR) => testInvalidAR(invalidAR)
       );
     });
 
-    test('srcsets should not have a height set when aspectRatio is not set', async function(assert) {
+    test('srcsets should not have a height set when aspectRatio is not set', async function (assert) {
       await render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
       const srcSet = this.$('img').attr('srcset');
-      const srcSets = srcSet.split(',').map(v => v.trim());
-      const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
-      srcSetUrls.forEach(srcSetUrl => {
+      const srcSets = srcSet.split(',').map((v) => v.trim());
+      const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
+      srcSetUrls.forEach((srcSetUrl) => {
         const srcSetURI = new URI(srcSetUrl);
         const h = srcSetURI.getQueryParamValue('h');
         assert.notOk(h);
       });
     });
 
-    test('the generated src should have ar included', async function(assert) {
+    test('the generated src should have ar included', async function (assert) {
       await render(
         hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1")}}</div>`
       );
@@ -149,20 +149,20 @@ module('Integration | Component | imgix image', function(hooks) {
       });
     });
 
-    module('fixed dimensions', function() {
-      test(`it generates an ar parameter when passed as an option`, async function(assert) {
+    module('fixed dimensions', function () {
+      test(`it generates an ar parameter when passed as an option`, async function (assert) {
         await render(
           hbs`<div>{{imgix-image path="/users/1.png" options=(hash ar="2:1") height=200 }}</div>`
         );
 
         expectSrcsTo(this.$, (_, urlURI) => {
-          assert.equal(urlURI.getQueryParamValue('ar'), "2:1");
+          assert.equal(urlURI.getQueryParamValue('ar'), '2:1');
         });
       });
     });
   });
 
-  test(`it respects the width and height passed in`, async function(assert) {
+  test(`it respects the width and height passed in`, async function (assert) {
     await render(hbs`{{imgix-image path="/users/1.png" width=100 height=200}}`);
 
     expectSrcsTo(this.$, (_, uri) => {
@@ -171,7 +171,7 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  test(`it respects passed in 'crop' and 'fit' values`, async function(assert) {
+  test(`it respects passed in 'crop' and 'fit' values`, async function (assert) {
     await render(
       hbs`{{imgix-image path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
     );
@@ -182,7 +182,7 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  test(`it respects 'crop' and 'fit' values passed as attributes`, async function(assert) {
+  test(`it respects 'crop' and 'fit' values passed as attributes`, async function (assert) {
     await render(
       hbs`{{imgix-image path="/users/1.png" crop="top,left" fit="min"}}`
     );
@@ -193,14 +193,14 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  test(`it allows setting the 'alt' attribute`, async function(assert) {
+  test(`it allows setting the 'alt' attribute`, async function (assert) {
     await render(hbs`{{imgix-image path="/users/1.png" alt="User 1"}}`);
     const alt = this.$('img').attr('alt');
 
     assert.equal(alt, 'User 1');
   });
 
-  test('it allows passing ANY imgix parameter as an option hash', async function(assert) {
+  test('it allows passing ANY imgix parameter as an option hash', async function (assert) {
     await render(
       hbs`<div>{{imgix-image path='/users/1.png' options=(hash exp=20 invert=true)}}</div>`
     );
@@ -211,7 +211,7 @@ module('Integration | Component | imgix image', function(hooks) {
     });
   });
 
-  test('attribute bindings: the draggable argument will set the draggable attribute on the image element', async function(assert) {
+  test('attribute bindings: the draggable argument will set the draggable attribute on the image element', async function (assert) {
     await render(
       hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' draggable=false}}</div>`
     );
@@ -219,7 +219,7 @@ module('Integration | Component | imgix image', function(hooks) {
     assert.equal(this.$('img').attr('draggable'), 'false');
   });
 
-  test('attribute bindings: the crossorigin argument will set the crossorigin attribute on the image element', async function(assert) {
+  test('attribute bindings: the crossorigin argument will set the crossorigin attribute on the image element', async function (assert) {
     assert.expect(1);
 
     await render(
@@ -229,17 +229,17 @@ module('Integration | Component | imgix image', function(hooks) {
     assert.equal(this.$('img').attr('crossorigin'), 'imgix-is-rad');
   });
 
-  module('application config', function(hooks) {
-    hooks.beforeEach(function() {
+  module('application config', function (hooks) {
+    hooks.beforeEach(function () {
       this.initialAppConfig = assign({}, config.APP.imgix);
     });
 
-    hooks.afterEach(function() {
+    hooks.afterEach(function () {
       config.APP.imgix = this.initialAppConfig;
     });
 
-    module('debug params', function() {
-      test('it does not render debug params when passing debug false', async function(assert) {
+    module('debug params', function () {
+      test('it does not render debug params when passing debug false', async function (assert) {
         config.APP.imgix.debug = false;
 
         await render(
@@ -255,10 +255,14 @@ module('Integration | Component | imgix image', function(hooks) {
           'txtsize',
         ];
 
-        expectSrcsTo(this.$, (_, uri) => debugParams.forEach(debugParam => assert.notOk(uri.hasQueryParam(debugParam))));
+        expectSrcsTo(this.$, (_, uri) =>
+          debugParams.forEach((debugParam) =>
+            assert.notOk(uri.hasQueryParam(debugParam))
+          )
+        );
       });
 
-      test('it will render debug params when passing debug true', async function(assert) {
+      test('it will render debug params when passing debug true', async function (assert) {
         config.APP.imgix.debug = true;
 
         await render(
@@ -274,12 +278,16 @@ module('Integration | Component | imgix image', function(hooks) {
           'txtsize',
         ];
 
-        expectSrcsTo(this.$, (_, uri) => debugParams.forEach(debugParam => assert.ok(uri.hasQueryParam(debugParam))));
+        expectSrcsTo(this.$, (_, uri) =>
+          debugParams.forEach((debugParam) =>
+            assert.ok(uri.hasQueryParam(debugParam))
+          )
+        );
       });
     });
 
-    module('default css class', function() {
-      test('it allows setting overriding the default class via config', async function(assert) {
+    module('default css class', function () {
+      test('it allows setting overriding the default class via config', async function (assert) {
         assert.expect(1);
 
         config.APP.imgix.classNames = 'imgix-is-rad';
@@ -291,7 +299,7 @@ module('Integration | Component | imgix image', function(hooks) {
         assert.ok(this.$('img').hasClass('imgix-is-rad'));
       });
 
-      test('the default class given to the rendered element is `imgix-image`', async function(assert) {
+      test('the default class given to the rendered element is `imgix-image`', async function (assert) {
         assert.expect(1);
 
         await render(
@@ -302,8 +310,8 @@ module('Integration | Component | imgix image', function(hooks) {
       });
     });
 
-    module('library param', function() {
-      test('it adds the library param to all srcs by default', async function(assert) {
+    module('library param', function () {
+      test('it adds the library param to all srcs by default', async function (assert) {
         await render(
           hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
         );
@@ -311,31 +319,35 @@ module('Integration | Component | imgix image', function(hooks) {
         expectSrcsTo(this.$, (_, uri) => assert.ok(uri.hasQueryParam('ixlib')));
       });
 
-      test('it allows disabling the imigx library param via conifg', async function(assert) {
+      test('it allows disabling the imigx library param via conifg', async function (assert) {
         config.APP.imgix.disableLibraryParam = true;
 
         await render(
           hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
         );
 
-        expectSrcsTo(this.$, (_, uri) => assert.notOk(uri.hasQueryParam('ixlib')));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.notOk(uri.hasQueryParam('ixlib'))
+        );
       });
     });
 
-    module('default params from app config', function() {
-      test('are respected ', async function(assert) {
+    module('default params from app config', function () {
+      test('are respected ', async function (assert) {
         config.APP.imgix.defaultParams = {
-          'toBoop': 'the-snoot',
+          toBoop: 'the-snoot',
         };
 
         await render(
           hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png'}}</div>`
         );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('toBoop'), 'the-snoot'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('toBoop'), 'the-snoot')
+        );
       });
 
-      test('`options` attr takes precedence', async function(assert) {
+      test('`options` attr takes precedence', async function (assert) {
         config.APP.imgix.defaultParams = {
           auto: 'faces',
         };
@@ -346,10 +358,12 @@ module('Integration | Component | imgix image', function(hooks) {
           )}}</div>`
         );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('auto'), 'format')
+        );
       });
 
-      test('params on the path take precedence', async function(assert) {
+      test('params on the path take precedence', async function (assert) {
         config.APP.imgix.defaultParams = {
           auto: 'faces',
         };
@@ -358,7 +372,9 @@ module('Integration | Component | imgix image', function(hooks) {
           hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png?auto=format'}}</div>`
         );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('auto'), 'format')
+        );
       });
     });
   });
@@ -373,9 +389,9 @@ module('Integration | Component | imgix image', function(hooks) {
     if (!srcSet) {
       throw new Error("srcSet doesn't exist");
     }
-    const srcSets = srcSet.split(',').map(v => v.trim());
-    const srcSetUrls = srcSets.map(srcSet => srcSet.split(' ')[0]);
-    srcSetUrls.forEach(srcSetUrl => {
+    const srcSets = srcSet.split(',').map((v) => v.trim());
+    const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
+    srcSetUrls.forEach((srcSetUrl) => {
       matcher(srcSetUrl, new URI(srcSetUrl));
     });
   }

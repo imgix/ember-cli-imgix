@@ -23,7 +23,7 @@ const attributeMap = {
   src: 'src',
   srcset: 'srcset',
   sizes: 'sizes',
-  ...(get(config, 'APP.imgix.attributeNameMap') || {})
+  ...(get(config, 'APP.imgix.attributeNameMap') || {}),
 };
 
 const buildDebugParams = ({ width, height }) => {
@@ -36,7 +36,7 @@ const buildDebugParams = ({ width, height }) => {
     txtfont: 'Helvetica Neue',
     txtclr: 'ffffff',
     txtpad: 40,
-    txtfit: 'max'
+    txtfit: 'max',
   };
 };
 
@@ -50,7 +50,7 @@ export default Component.extend({
     `src:${attributeMap.src}`,
     `placeholderSrc:${attributeMap.src === 'src' ? '_src' : 'src'}`,
     `srcset:${attributeMap.srcset}`,
-    `sizes:${attributeMap.sizes}`
+    `sizes:${attributeMap.sizes}`,
   ],
 
   path: null, // The path to your image
@@ -75,38 +75,38 @@ export default Component.extend({
   didInsertElement(...args) {
     this._super(...args);
 
-    if (get(this, 'onLoad')) {
+    if (this.onLoad) {
       this._handleImageLoad = this._handleImageLoad.bind(this);
       this.element.addEventListener('load', this._handleImageLoad);
     }
 
-    if (get(this, 'onError')) {
+    if (this.onError) {
       this._handleImageError = this._handleImageError.bind(this);
       this.element.addEventListener('error', this._handleImageError);
     }
   },
 
   willDestroyElement(...args) {
-    if (get(this, 'onLoad') && typeof FastBoot === 'undefined') {
+    if (this.onLoad && typeof FastBoot === 'undefined') {
       this.element.removeEventListener('load', this._handleImageLoad);
     }
 
-    if (get(this, 'onError') && typeof FastBoot === 'undefined') {
+    if (this.onError && typeof FastBoot === 'undefined') {
       this.element.removeEventListener('error', this._handleImageError);
     }
 
     this._super(...args);
   },
 
-  _pathAsUri: computed('path', function() {
-    if (!get(this, 'path')) {
+  _pathAsUri: computed('path', function () {
+    if (!this.path) {
       return false;
     }
 
-    return new URI(get(this, 'path'));
+    return new URI(this.path);
   }),
 
-  _client: computed('disableLibraryParam', function() {
+  _client: computed('disableLibraryParam', function () {
     if (!config || !get(config, 'APP.imgix.source')) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
@@ -114,33 +114,34 @@ export default Component.extend({
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') ||
-      get(this, 'disableLibraryParam');
+      get(config, 'APP.imgix.disableLibraryParam') || this.disableLibraryParam;
 
     return new ImgixClient({
       domain: config.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
-        : `ember-${constants.APP_VERSION}`
+        : `ember-${constants.APP_VERSION}`,
     });
   }),
 
   _srcAndSrcSet: computed(
-    'path',
+    '_client',
     '_pathAsUri',
-    'width',
-    'height',
     'crop',
-    'fit',
     'disableSrcSet',
-    function() {
+    'fit',
+    'height',
+    'options',
+    'path',
+    'width',
+    function () {
       // Warnings, checks
-      if (!get(this, 'path')) {
+      if (!this.path) {
         return;
       }
-      const widthProp = get(this, 'width');
-      const heightProp = get(this, 'height');
+      const widthProp = this.width;
+      const heightProp = this.height;
       if (isDimensionInvalid(widthProp) || isDimensionInvalid(heightProp)) {
         // eslint-disable-next-line no-console
         console.warn(
@@ -149,17 +150,17 @@ export default Component.extend({
       }
 
       // Setup
-      const pathAsUri = get(this, '_pathAsUri');
-      const disableSrcSet = get(this, 'disableSrcSet');
-      const client = get(this, '_client');
-      const buildWithOptions = options =>
+      const pathAsUri = this._pathAsUri;
+      const disableSrcSet = this.disableSrcSet;
+      const client = this._client;
+      const buildWithOptions = (options) =>
         client.buildURL(pathAsUri.path(), options);
 
       const isFixedDimensionsMode = widthProp != null || heightProp != null;
 
       const shouldShowDebugParams = get(config, 'APP.imgix.debug');
 
-      const imgixOptions = get(this, 'options');
+      const imgixOptions = this.options;
 
       const aspectRatio = imgixOptions.ar;
       if (aspectRatio != null && !isAspectRatioValid(aspectRatio)) {
@@ -182,13 +183,13 @@ export default Component.extend({
         // default params from application config
         ...(config.APP.imgix.defaultParams || {}),
         // Add fit from 'fit' prop
-        fit: get(this, 'fit'),
+        fit: this.fit,
         // Add width from computed width, or width prop
         ...(width != null ? { w: width } : {}),
         // Add height from computed height, or height prop
         ...(height != null ? { h: height } : {}),
         // Add crop from 'crop' prop
-        ...(get(this, 'crop') != null ? { crop: get(this, 'crop') } : {}),
+        ...(this.crop != null ? { crop: this.crop } : {}),
         // Add imgix options from 'options' prop
         ...imgixOptions,
         // Add debug params
@@ -197,7 +198,7 @@ export default Component.extend({
         ...pathAsUri.queryPairs.reduce((memo, param) => {
           memo[param[0]] = param[1];
           return memo;
-        }, {})
+        }, {}),
       };
 
       // Build src from base options
@@ -211,16 +212,15 @@ export default Component.extend({
 
         // w-type srcsets should not be used if one of the dimensions has been fixed as it will have no effect
         if (isFixedDimensionsMode) {
-          const buildWithDpr = dpr =>
+          const buildWithDpr = (dpr) =>
             buildWithOptions({
               ...options,
-              dpr
+              dpr,
             });
           // prettier-ignore
           return `${buildWithDpr(2)} 2x, ${buildWithDpr(3)} 3x, ${buildWithDpr(4)} 4x, ${buildWithDpr(5)} 5x`;
         } else {
-          const buildSrcSetPair = targetWidth => {
-
+          const buildSrcSetPair = (targetWidth) => {
             const debugParams = shouldShowDebugParams
               ? buildDebugParams({ width: targetWidth })
               : {};
@@ -228,12 +228,12 @@ export default Component.extend({
             const urlOptions = {
               ...options,
               ...debugParams,
-              w: targetWidth
+              w: targetWidth,
             };
             const url = buildWithOptions(urlOptions);
             return `${url} ${targetWidth}w`;
           };
-          
+
           return targetWidths.map(buildSrcSetPair).join(', ');
         }
       })();
@@ -242,35 +242,35 @@ export default Component.extend({
     }
   ),
 
-  src: computed('_srcAndSrcSet', function() {
+  src: computed('_srcAndSrcSet.src', function () {
     return get(this, '_srcAndSrcSet.src');
   }),
-  srcset: computed('_srcAndSrcSet', function() {
+  srcset: computed('_srcAndSrcSet.srcset', function () {
     return get(this, '_srcAndSrcSet.srcset');
   }),
-  placeholderSrc: computed('placeholderPath', function() {
+  placeholderSrc: computed('_client', 'placeholderPath', function () {
     if (attributeMap.src === 'src') {
       return null;
     }
-    const client = get(this, '_client');
-    const placeholderPathURI = new URI(get(this, 'placeholderPath'));
+    const client = this._client;
+    const placeholderPathURI = new URI(this.placeholderPath);
     const placeholderURL = client.buildURL(placeholderPathURI.path(), {
       ...placeholderPathURI.queryPairs.reduce((memo, param) => {
         memo[param[0]] = param[1];
         return memo;
-      }, {})
+      }, {}),
     });
     return placeholderURL;
   }),
 
-  elementClassNames: computed('config.APP.imgix.classNames', function() {
+  elementClassNames: computed('config.APP.imgix.classNames', function () {
     return config.APP.imgix.classNames || 'imgix-image';
   }),
 
   _handleImageLoad(event) {
     debounce(
       this,
-      () => !get(this, 'isDestroyed') && tryInvoke(this, 'onLoad', [event]),
+      () => !this.isDestroyed && tryInvoke(this, 'onLoad', [event]),
       500
     );
   },
@@ -278,10 +278,10 @@ export default Component.extend({
   _handleImageError(event) {
     debounce(
       this,
-      () => !get(this, 'isDestroyed') && tryInvoke(this, 'onError', [event]),
+      () => !this.isDestroyed && tryInvoke(this, 'onError', [event]),
       500
     );
-  }
+  },
 });
 
 function isDimensionInvalid(widthProp) {
