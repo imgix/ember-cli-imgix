@@ -2,6 +2,7 @@
 import { module, test } from 'qunit';
 
 import { setupRenderingTest } from 'ember-qunit';
+import { compileTemplate } from '@ember/template-compilation';
 import { render, find } from '@ember/test-helpers';
 import { assign } from '@ember/polyfills';
 import hbs from 'htmlbars-inline-precompile';
@@ -59,7 +60,7 @@ module('Integration | Component | imgix image', function (hooks) {
       const testValidAR = ({ ar }) => {
         test(`it generates an ar parameter for a valid AR (${ar})`, async function (assert) {
           const removeFallbackSrcSet = (srcSets) => srcSets.slice(0, -1);
-          const content = Ember.HTMLBars.compile(
+          const content = compileTemplate(
             `<div>{{imgix-image path="/users/1.png" options=(hash ar="${ar}")}}</div>`
           );
           await render(content);
@@ -100,7 +101,7 @@ module('Integration | Component | imgix image', function (hooks) {
 
           const removeFallbackSrcSet = (srcSets) => srcSets.slice(0, -1);
 
-          const content = Ember.HTMLBars.compile(
+          const content = compileTemplate(
             `<div>{{imgix-image path="/users/1.png" options=(hash ar="${ar}")}}</div>`
           );
           await render(content);
