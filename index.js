@@ -7,7 +7,7 @@ const path = require('path');
 const FastbootTransform = require('fastboot-transform');
 
 module.exports = {
-  name: 'ember-cli-imgix',
+name: require('./package').name,
 
   options: {
     babel: {
