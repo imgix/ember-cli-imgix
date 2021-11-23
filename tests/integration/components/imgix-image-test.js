@@ -2,7 +2,7 @@
 import { module, test } from 'qunit';
 
 import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
+import { render, find } from '@ember/test-helpers';
 import { assign } from '@ember/polyfills';
 import hbs from 'htmlbars-inline-precompile';
 import URI from 'jsuri';
@@ -63,7 +63,7 @@ module('Integration | Component | imgix image', function (hooks) {
             `<div>{{imgix-image path="/users/1.png" options=(hash ar="${ar}")}}</div>`
           );
           await render(content);
-          const srcSet = this.$('img').attr('srcset');
+          const srcSet = find('img').getAttribute('srcset');
           const srcSets = srcSet.split(',').map((v) => v.trim());
           const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
           removeFallbackSrcSet(srcSetUrls).forEach((srcSetUrl) => {
@@ -105,7 +105,7 @@ module('Integration | Component | imgix image', function (hooks) {
           );
           await render(content);
 
-          const srcSet = this.$('img').attr('srcset');
+          const srcSet = find('img').getAttribute('srcset');
           const srcSets = srcSet.split(',').map((v) => v.trim());
           const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
           removeFallbackSrcSet(srcSetUrls).forEach((srcSetUrl) => {
@@ -129,7 +129,7 @@ module('Integration | Component | imgix image', function (hooks) {
     test('srcsets should not have a height set when aspectRatio is not set', async function (assert) {
       await render(hbs`<div>{{imgix-image path="/users/1.png"}}</div>`);
 
-      const srcSet = this.$('img').attr('srcset');
+      const srcSet = find('img').getAttribute('srcset');
       const srcSets = srcSet.split(',').map((v) => v.trim());
       const srcSetUrls = srcSets.map((srcSet) => srcSet.split(' ')[0]);
       srcSetUrls.forEach((srcSetUrl) => {
@@ -195,7 +195,7 @@ module('Integration | Component | imgix image', function (hooks) {
 
   test(`it allows setting the 'alt' attribute`, async function (assert) {
     await render(hbs`{{imgix-image path="/users/1.png" alt="User 1"}}`);
-    const alt = this.$('img').attr('alt');
+    const alt = find('img').getAttribute('alt');
 
     assert.equal(alt, 'User 1');
   });
@@ -216,7 +216,7 @@ module('Integration | Component | imgix image', function (hooks) {
       hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' draggable=false}}</div>`
     );
 
-    assert.equal(this.$('img').attr('draggable'), 'false');
+    assert.dom('img').hasAttribute('draggable', 'false');
   });
 
   test('attribute bindings: the crossorigin argument will set the crossorigin attribute on the image element', async function (assert) {
@@ -226,7 +226,7 @@ module('Integration | Component | imgix image', function (hooks) {
       hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' crossorigin='imgix-is-rad'}}</div>`
     );
 
-    assert.equal(this.$('img').attr('crossorigin'), 'imgix-is-rad');
+    assert.dom('img').hasAttribute('crossorigin', 'imgix-is-rad');
   });
 
   module('application config', function (hooks) {
@@ -296,7 +296,7 @@ module('Integration | Component | imgix image', function (hooks) {
           hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png' }}</div>`
         );
 
-        assert.ok(this.$('img').hasClass('imgix-is-rad'));
+        assert.dom('img').hasClass('imgix-is-rad');
       });
 
       test('the default class given to the rendered element is `imgix-image`', async function (assert) {
@@ -306,7 +306,7 @@ module('Integration | Component | imgix image', function (hooks) {
           hbs`<div style='width:1250px;height:200px;'>{{imgix-image path='/users/1.png'}}</div>`
         );
 
-        assert.ok(this.$('img').hasClass('imgix-image'));
+        assert.dom('img').hasClass('imgix-image');
       });
     });
 
