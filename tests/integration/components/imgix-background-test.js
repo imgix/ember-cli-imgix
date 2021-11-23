@@ -58,7 +58,7 @@ const shouldHaveDimensions = async (
   assert.equal(bgImageSrcURL.getQueryParamValue('h'), '' + expectedHeight);
 };
 
-const renderAndCallbackBeforeImageLoad = async function(markup) {
+const renderAndCallbackBeforeImageLoad = async function (markup) {
   let resolve;
 
   // Overriding didInsertElement to stop DOM measuring and subsequent rendering
@@ -68,18 +68,18 @@ const renderAndCallbackBeforeImageLoad = async function(markup) {
       didInsertElement() {
         resolve();
         this._super(...arguments);
-      }
+      },
     })
   );
 
   render(markup);
 
-  return new Promise(_resolve => {
+  return new Promise((_resolve) => {
     resolve = _resolve;
   });
 };
 
-const shouldRenderNoBGImage = async function(assert, markup) {
+const shouldRenderNoBGImage = async function (assert, markup) {
   await renderAndCallbackBeforeImageLoad.call(this, markup);
 
   const container = find('.imgix-bg');
@@ -88,7 +88,7 @@ const shouldRenderNoBGImage = async function(assert, markup) {
   assert.ok(!bgImage.includes('url'));
 };
 
-const findClosestWidthFromTargetWidths = targetWidth =>
+const findClosestWidthFromTargetWidths = (targetWidth) =>
   targetWidths.reduce((acc, value) => {
     // <= ensures that the largest value is used
     if (Math.abs(value - targetWidth) <= Math.abs(acc - targetWidth)) {
@@ -97,10 +97,10 @@ const findClosestWidthFromTargetWidths = targetWidth =>
     return acc;
   }, Number.MAX_VALUE);
 
-module('Integration | Component | imgix background', function(hooks) {
+module('Integration | Component | imgix background', function (hooks) {
   setupRenderingTest(hooks);
 
-  test(`renders a div`, async function(assert) {
+  test(`renders a div`, async function (assert) {
     await render(hbs`
     {{#imgix-bg path="/users/1.png"}}Content{{/imgix-bg}}`);
 
@@ -108,14 +108,14 @@ module('Integration | Component | imgix background', function(hooks) {
   });
 
   module(`when neither width nor height are passed`, () => {
-    test(`renders nothing at first`, async function(assert) {
+    test(`renders nothing at first`, async function (assert) {
       await shouldRenderNoBGImage.call(
         this,
         assert,
         hbs`{{#imgix-bg path="/users/1.png"}}Content{{/imgix-bg}}`
       );
     });
-    test(`sets the size of the background image to the size of the containing element`, async function(assert) {
+    test(`sets the size of the background image to the size of the containing element`, async function (assert) {
       const targetWidth = 105;
       const targetHeight = 110;
       const aspectRatio = targetWidth / targetHeight;
@@ -138,7 +138,7 @@ module('Integration | Component | imgix background', function(hooks) {
     });
   });
   module('when both width and height provided', () => {
-    test('renders immediately when both width and height provided', async function(assert) {
+    test('renders immediately when both width and height provided', async function (assert) {
       await renderAndCallbackBeforeImageLoad.call(
         this,
         hbs`
@@ -156,7 +156,7 @@ module('Integration | Component | imgix background', function(hooks) {
       assert.equal(bgImageSrcURL.getQueryParamValue('w'), '300');
       assert.equal(bgImageSrcURL.getQueryParamValue('h'), '350');
     });
-    test('sets width and height to values passed', async function(assert) {
+    test('sets width and height to values passed', async function (assert) {
       await render(hbs`
           <div>
             <style>.imgix-bg { width: 200px; height: 250px; }</style>
@@ -178,14 +178,14 @@ module('Integration | Component | imgix background', function(hooks) {
   });
 
   module('when only width is passed', () => {
-    test('renders nothing at first', async function(assert) {
+    test('renders nothing at first', async function (assert) {
       await shouldRenderNoBGImage.call(
         this,
         assert,
         hbs`{{#imgix-bg path="/users/1.png" width=200}}Content{{/imgix-bg}}`
       );
     });
-    test('sets height dynamically', async function(assert) {
+    test('sets height dynamically', async function (assert) {
       await shouldHaveDimensions(
         assert,
         { width: 200, height: 210 },
@@ -202,14 +202,14 @@ module('Integration | Component | imgix background', function(hooks) {
     });
   });
   module('when only height is passed', () => {
-    test('renders nothing at first', async function(assert) {
+    test('renders nothing at first', async function (assert) {
       await shouldRenderNoBGImage.call(
         this,
         assert,
         hbs`{{#imgix-bg path="/users/1.png" height=200}}Content{{/imgix-bg}}`
       );
     });
-    test('sets width dynamically', async function(assert) {
+    test('sets width dynamically', async function (assert) {
       await shouldHaveDimensions(
         assert,
         { width: 200, height: 210 },
@@ -226,7 +226,7 @@ module('Integration | Component | imgix background', function(hooks) {
     });
   });
 
-  test('scales the background image by the devices dpr', async function(assert) {
+  test('scales the background image by the devices dpr', async function (assert) {
     // window.devicePixelRatio is not allowed in IE.
     if (isIE) {
       return;
@@ -254,7 +254,7 @@ module('Integration | Component | imgix background', function(hooks) {
     global.devicePixelRatio = oldDPR;
   });
 
-  test('the dpr can be overriden', async function(assert) {
+  test('the dpr can be overriden', async function (assert) {
     // IE doesn't allow us to override window.devicePixelRatio
     if (isIE) {
       return;
@@ -275,7 +275,8 @@ module('Integration | Component | imgix background', function(hooks) {
           Content
         {{/imgix-bg}}
       </div>
-      `);
+      `
+    );
 
     const bgImageSrcURL = findURI();
 
@@ -284,7 +285,7 @@ module('Integration | Component | imgix background', function(hooks) {
     global.devicePixelRatio = oldDPR;
   });
 
-  test(`the dpr is rounded to 2dp`, async function(assert) {
+  test(`the dpr is rounded to 2dp`, async function (assert) {
     await render(hbs`
         <div>
           <style>.imgix-bg { width: 10px; height: 10px; }</style>
@@ -304,7 +305,7 @@ module('Integration | Component | imgix background', function(hooks) {
     assert.equal(bgImageSrcURL.getQueryParamValue('dpr'), '3.44');
   });
 
-  test(`can pass alt to component`, async function(assert) {
+  test(`can pass alt to component`, async function (assert) {
     await render(hbs`
     {{#imgix-bg path="1.png" alt="Test alt"}}
     Content
@@ -314,17 +315,17 @@ module('Integration | Component | imgix background', function(hooks) {
     assert.equal(find('.imgix-bg').getAttribute('alt'), 'Test alt');
   });
 
-  module('application config', function(hooks) {
-    hooks.beforeEach(function() {
+  module('application config', function (hooks) {
+    hooks.beforeEach(function () {
       this.initialAppConfig = assign({}, config.APP.imgix);
     });
 
-    hooks.afterEach(function() {
+    hooks.afterEach(function () {
       config.APP.imgix = this.initialAppConfig;
     });
 
-    module('debug params', function() {
-      test('it does not render debug params when passing debug false', async function(assert) {
+    module('debug params', function () {
+      test('it does not render debug params when passing debug false', async function (assert) {
         config.APP.imgix.debug = false;
 
         await render(
@@ -337,7 +338,8 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
         const debugParams = [
           'txtalign',
@@ -348,10 +350,14 @@ module('Integration | Component | imgix background', function(hooks) {
           'txtsize',
         ];
 
-        expectSrcsTo(this.$, (_, uri) => debugParams.forEach(debugParam => assert.notOk(uri.hasQueryParam(debugParam))));
+        expectSrcsTo(this.$, (_, uri) =>
+          debugParams.forEach((debugParam) =>
+            assert.notOk(uri.hasQueryParam(debugParam))
+          )
+        );
       });
 
-      test('it will render debug params when passing debug true', async function(assert) {
+      test('it will render debug params when passing debug true', async function (assert) {
         config.APP.imgix.debug = true;
 
         await render(
@@ -364,7 +370,8 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
         const debugParams = [
           'txtalign',
@@ -375,12 +382,16 @@ module('Integration | Component | imgix background', function(hooks) {
           'txtsize',
         ];
 
-        expectSrcsTo(this.$, (_, uri) => debugParams.forEach(debugParam => assert.ok(uri.hasQueryParam(debugParam))));
+        expectSrcsTo(this.$, (_, uri) =>
+          debugParams.forEach((debugParam) =>
+            assert.ok(uri.hasQueryParam(debugParam))
+          )
+        );
       });
     });
 
-    module('default css class', function() {
-      test('it allows overriding the default class via config', async function(assert) {
+    module('default css class', function () {
+      test('it allows overriding the default class via config', async function (assert) {
         assert.expect(1);
 
         config.APP.imgix.classNames = 'imgix-is-rad';
@@ -395,12 +406,13 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
         assert.ok(this.$('div').hasClass('imgix-is-rad'));
       });
 
-      test('the default class given to the rendered element is `imgix-bg`', async function(assert) {
+      test('the default class given to the rendered element is `imgix-bg`', async function (assert) {
         assert.expect(1);
 
         await render(
@@ -413,14 +425,15 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
         assert.ok(this.$('div').hasClass('imgix-bg'));
       });
     });
 
-    module('library param', function() {
-      test('it adds the library param to all srcs by default', async function(assert) {
+    module('library param', function () {
+      test('it adds the library param to all srcs by default', async function (assert) {
         await render(
           hbs`
           <div>
@@ -431,12 +444,13 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
         expectSrcsTo(this.$, (_, uri) => assert.ok(uri.hasQueryParam('ixlib')));
       });
 
-      test('it allows disabling the imigx library param via conifg', async function(assert) {
+      test('it allows disabling the imigx library param via conifg', async function (assert) {
         config.APP.imgix.disableLibraryParam = true;
 
         await render(
@@ -449,16 +463,19 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
-        expectSrcsTo(this.$, (_, uri) => assert.notOk(uri.hasQueryParam('ixlib')));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.notOk(uri.hasQueryParam('ixlib'))
+        );
       });
     });
 
-    module('default params from app config', function() {
-      test('are respected ', async function(assert) {
+    module('default params from app config', function () {
+      test('are respected ', async function (assert) {
         config.APP.imgix.defaultParams = {
-          'toBoop': 'the-snoot',
+          toBoop: 'the-snoot',
         };
 
         await render(
@@ -471,12 +488,15 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('toBoop'), 'the-snoot'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('toBoop'), 'the-snoot')
+        );
       });
 
-      test('`options` attr takes precedence', async function(assert) {
+      test('`options` attr takes precedence', async function (assert) {
         config.APP.imgix.defaultParams = {
           auto: 'faces',
         };
@@ -494,12 +514,15 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('auto'), 'format')
+        );
       });
 
-      test('params on the path take precedence', async function(assert) {
+      test('params on the path take precedence', async function (assert) {
         config.APP.imgix.defaultParams = {
           auto: 'faces',
         };
@@ -514,9 +537,12 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('auto'), 'format')
+        );
       });
     });
   });

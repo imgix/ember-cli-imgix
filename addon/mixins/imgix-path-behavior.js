@@ -31,24 +31,20 @@ export default Mixin.create({
    * @private
    * @property {string} The computed path from the input path. This should not include any query parameters passed in, e.g. "/users/1.png?sat=100"
    */
-  _path: computed('path', function() {
-    let path = get(this, 'path');
-    return path
-      ? new URI(path).path()
-      : '';
+  _path: computed('path', function () {
+    let path = this.path;
+    return path ? new URI(path).path() : '';
   }),
 
   /**
    * @private
    * @property {Object} a hash of key-value pairs for parameters that were passed in via the `path` property
    */
-  _query: computed('path', function() {
-    let path = get(this, 'path');
+  _query: computed('path', function () {
+    let path = this.path;
     let query = {};
 
-    const searchParams = new URI(
-      path,
-    ).queryPairs;
+    const searchParams = new URI(path).queryPairs;
 
     for (let item of searchParams) {
       query[item[0]] = item[1];
@@ -57,11 +53,11 @@ export default Mixin.create({
     return path ? EmberObject.create(query) : {};
   }),
 
-  _widthFromPath: computed('_query', function() {
+  _widthFromPath: computed('_query.w', function () {
     return get(this, '_query.w');
   }),
 
-  _heightFromPath: computed('_query', function() {
+  _heightFromPath: computed('_query.h', function () {
     return get(this, '_query.h');
   }),
 
@@ -81,58 +77,63 @@ export default Mixin.create({
    * @return the fully built string
    */
   src: computed(
+    '_client',
+    '_config',
+    '_debugParams',
+    '_dpr',
+    '_height',
     '_path',
     '_query',
     '_width',
-    '_height',
-    '_dpr',
+    'auto',
     'crop',
     'fit',
-    function() {
-      if (!get(this, '_width')) {
+    function () {
+      if (!this._width) {
         return;
       }
 
-      let env = get(this, '_config');
+      let env = this._config;
 
       // These operations are defaults and should be overidden by any incoming
       // query parameters
       let options = {
-        fit: get(this, 'fit') || 'crop'
+        fit: this.fit || 'crop',
       };
 
-      if (get(this, 'crop')) {
-        merge(options, { crop: get(this, 'crop') });
+      if (this.crop) {
+        merge(options, { crop: this.crop });
       }
 
-      if (get(this, 'auto')) {
-        merge(options, { auto: get(this, 'auto') });
+      if (this.auto) {
+        merge(options, { auto: this.auto });
       }
 
-      if (get(this, '_query')) {
-        merge(options, get(this, '_query'));
+      if (this._query) {
+        merge(options, this._query);
       }
 
       if (!!env && get(env, 'APP.imgix.debug')) {
-        merge(options, get(this, '_debugParams'));
+        merge(options, this._debugParams);
       }
 
       // This is where the magic happens. These are the parameters that force the
       // responsiveness that we're looking for.
       merge(options, {
-        w: get(this, '_width'),
-        h: get(this, '_height'),
-        dpr: get(this, '_dpr')
+        w: this._width,
+        h: this._height,
+        dpr: this._dpr,
       });
 
-      return get(this, '_client').buildURL(get(this, '_path'), options);
+      return this._client.buildURL(this._path, options);
     }
   ),
 
   /**
    * Fire off a resize after our element has been added to the DOM.
    */
-  didInsertElement: function() {
+  didInsertElement: function () {
+    this._super(...arguments);
     schedule('afterRender', this, this._incrementResizeCounter);
   },
 
@@ -140,9 +141,9 @@ export default Mixin.create({
    * Observer to trigger image resizes, but debounced.
    * @private
    */
-  didResize: function() {
+  didResize: function () {
     let debounceRate = 200;
-    let env = get(this, '_config');
+    let env = this._config;
     if (!!env && !!get(env, 'APP.imgix.debounceRate')) {
       debounceRate = get(env, 'APP.imgix.debounceRate');
     }
@@ -154,8 +155,8 @@ export default Mixin.create({
    * @throws {EmberError} Will throw an error if the imgix config information is not found in config/environment.js
    * @return ImgixClient return an instantiated ImgixClient instance.
    */
-  _client: computed(function() {
-    let env = get(this, '_config');
+  _client: computed('_config', 'disableLibraryParam', function () {
+    let env = this._config;
     if (!env || !get(env, 'APP.imgix.source')) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
@@ -163,15 +164,14 @@ export default Mixin.create({
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') ||
-      get(this, 'disableLibraryParam');
+      get(config, 'APP.imgix.disableLibraryParam') || this.disableLibraryParam;
 
     return new ImgixClient({
       domain: env.APP.imgix.source,
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
-        : `ember-${constants.APP_VERSION}`
+        : `ember-${constants.APP_VERSION}`,
     });
   }),
 
@@ -181,8 +181,8 @@ export default Mixin.create({
    * @private
    * @method _incrementResizeCounter
    */
-  _incrementResizeCounter: function() {
-    if (get(this, 'isDestroyed') || get(this, 'isDestroying')) {
+  _incrementResizeCounter: function () {
+    if (this.isDestroyed || this.isDestroying) {
       return;
     }
     this.incrementProperty('_resizeCounter');
@@ -193,19 +193,16 @@ export default Mixin.create({
    * @return {Object} a POJO with some extra imgix parameters to overlay debug data on our image.
    * @private
    */
-  _debugParams: computed('_width', '_height', '_dpr', function() {
+  _debugParams: computed('_width', '_height', '_dpr', function () {
     return {
-      txt64: `${get(this, '_width')} x ${get(this, '_height')} @ DPR ${get(
-        this,
-        '_dpr'
-      )}`,
+      txt64: `${this._width} x ${this._height} @ DPR ${this._dpr}`,
       txtalign: 'center,bottom',
       txtsize: 20,
       txtfont: 'Helvetica Neue',
       txtclr: 'ffffff',
       txtpad: 20,
       txtfit: 'max',
-      exp: -2
+      exp: -2,
     };
   }),
 
@@ -215,22 +212,26 @@ export default Mixin.create({
    * @property _width
    * @default 0
    */
-  _width: computed('_resizeCounter', 'pixelStep', 'useParentWidth', function() {
-    let newWidth = 0;
+  _width: computed(
+    '_resizeCounter',
+    '_widthFromPath',
+    'element.clientWidth',
+    'pixelStep',
+    'useParentWidth',
+    function () {
+      let newWidth = 0;
 
-    if (get(this, 'useParentWidth') && get(this, 'element')) {
-      newWidth = this.$()
-        .parent()
-        .outerWidth();
-    }
+      if (this.useParentWidth && this.element) {
+        newWidth = this.$().parent().outerWidth();
+      }
 
-    if (!newWidth) {
-      newWidth =
-        get(this, 'element.clientWidth') || get(this, '_widthFromPath');
+      if (!newWidth) {
+        newWidth = get(this, 'element.clientWidth') || this._widthFromPath;
+      }
+      let pixelStep = this.pixelStep;
+      return Math.ceil(newWidth / pixelStep) * pixelStep;
     }
-    let pixelStep = get(this, 'pixelStep');
-    return Math.ceil(newWidth / pixelStep) * pixelStep;
-  }),
+  ),
 
   /**
    * Height as computed by the child image element's clientHeight
@@ -238,15 +239,21 @@ export default Mixin.create({
    * @property _height
    * @default 0
    */
-  _height: computed('aspectRatio', '_resizeCounter', '_width', function() {
-    let newHeight = get(this, 'element.clientHeight') || 0;
+  _height: computed(
+    '_resizeCounter',
+    '_width',
+    'aspectRatio',
+    'element.clientHeight',
+    function () {
+      let newHeight = get(this, 'element.clientHeight') || 0;
 
-    if (get(this, 'aspectRatio')) {
-      newHeight = get(this, '_width') / get(this, 'aspectRatio');
+      if (this.aspectRatio) {
+        newHeight = this._width / this.aspectRatio;
+      }
+
+      return Math.floor(newHeight);
     }
-
-    return Math.floor(newHeight);
-  }),
+  ),
 
   /**
    * Device Pixel Ratio as reported by the client.
@@ -255,7 +262,7 @@ export default Mixin.create({
    * @return {Number} devicePixelRatio for the client
    * @default 1
    */
-  _dpr: computed('_resizeCounter', function() {
+  _dpr: computed('_resizeCounter', function () {
     return toFixed(2, window.devicePixelRatio || 1);
   }),
 
@@ -263,7 +270,7 @@ export default Mixin.create({
    * Simple abstraction for reading the app's configuration. Useful for testing.
    * @private
    */
-  _config: computed(function() {
+  _config: computed(function () {
     return getOwner(this).resolveRegistration('config:environment');
-  })
+  }),
 });
