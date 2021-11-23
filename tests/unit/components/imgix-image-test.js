@@ -8,6 +8,7 @@ module('Unit | Component | imgix image', function (hooks) {
   setupTest(hooks);
 
   test('the generated img has a srcset in the format of 2x, 3x, 4x, 5x when passing a fixed width', function (assert) {
+    assert.expect(5);
     const component = this.owner.factoryFor('component:imgix-image').create();
     setProperties(component, {
       path: '/users/1.png',
@@ -23,6 +24,7 @@ module('Unit | Component | imgix image', function (hooks) {
   });
 
   test('the generated img has a srcset in the format of 2x, 3x, 4x, 5x when passing a fixed height', function (assert) {
+    assert.expect(5);
     const component = this.owner.factoryFor('component:imgix-image').create();
     setProperties(component, {
       path: '/users/1.png',
@@ -51,6 +53,7 @@ module('Unit | Component | imgix image', function (hooks) {
   });
 
   test('the generated img has srcsets in the correct format', function (assert) {
+    assert.expect(93);
     const component = this.owner.factoryFor('component:imgix-image').create();
     setProperties(component, {
       path: '/users/1.png',
