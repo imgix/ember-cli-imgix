@@ -3,7 +3,7 @@ import { module, test } from 'qunit';
 
 import targetWidths from 'ember-cli-imgix/common/targetWidths';
 import ImgixBG from 'ember-cli-imgix/components/imgix-bg';
-
+import { compileTemplate } from '@ember/template-compilation';
 import { setupRenderingTest } from 'ember-qunit';
 import { render, find } from '@ember/test-helpers';
 import { assign } from '@ember/polyfills';
@@ -120,7 +120,7 @@ module('Integration | Component | imgix background', function (hooks) {
       const targetHeight = 110;
       const aspectRatio = targetWidth / targetHeight;
       await render(
-        Ember.HTMLBars.compile(`<div>
+        compileTemplate(`<div>
           <style
           >.imgix-bg { width: ${targetWidth}px; height: ${targetHeight}px}</style>
           {{#imgix-bg path="/users/1.png"}}Content{{/imgix-bg}}
