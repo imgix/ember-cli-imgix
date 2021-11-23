@@ -312,7 +312,7 @@ module('Integration | Component | imgix background', function (hooks) {
     {{/imgix-bg}}
     `);
 
-    assert.equal(find('.imgix-bg').getAttribute('alt'), 'Test alt');
+    assert.dom('.imgix-bg').hasAttribute('alt', 'Test alt');
   });
 
   module('application config', function (hooks) {
@@ -409,7 +409,7 @@ module('Integration | Component | imgix background', function (hooks) {
           `
         );
 
-        assert.ok(this.$('div').hasClass('imgix-is-rad'));
+        assert.dom('div').hasClass('imgix-is-rad');
       });
 
       test('the default class given to the rendered element is `imgix-bg`', async function (assert) {
@@ -428,7 +428,7 @@ module('Integration | Component | imgix background', function (hooks) {
           `
         );
 
-        assert.ok(this.$('div').hasClass('imgix-bg'));
+        assert.dom('div').hasClass('imgix-bg');
       });
     });
 
