@@ -89,7 +89,7 @@
     "broccoli-merge-trees": "^2.0.0",
     "ember-cli-babel": "^7.26.6",
     "ember-cli-htmlbars": "^5.7.1",
-    "ember-get-config": "0.2.4",
+    "ember-get-config": "0.2.4 - 0.5.0",
     "ember-resize-aware": "1.2.0",
     "fastboot-transform": "^0.1.2",
     "imgix-core-js": "2.3.2",
