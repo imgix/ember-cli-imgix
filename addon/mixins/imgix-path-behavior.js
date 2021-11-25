@@ -53,13 +53,9 @@ export default Mixin.create({
     return path ? EmberObject.create(query) : {};
   }),
 
-  _widthFromPath: computed('_query.w', function () {
-    return this._query.w;
-  }),
+  _widthFromPath: computed.reads('_query.w'),
 
-  _heightFromPath: computed('_query.h', function () {
-    return this._query.h;
-  }),
+  _heightFromPath: computed.reads('_query.h'),
 
   /**
    * @private
