@@ -263,19 +263,11 @@ export default Component.extend({
   }),
 
   _handleImageLoad(event) {
-    debounce(
-      this,
-      () => !this.isDestroyed && this.onLoad?.(event)),
-      500
-    );
+    debounce(this, () => !this.isDestroyed && this.onLoad?.(event), 500);
   },
 
   _handleImageError(event) {
-    debounce(
-      this,
-      () => !this.isDestroyed && this.onError?.(event)),
-      500
-    );
+    debounce(this, () => !this.isDestroyed && this.onError?.(event), 500);
   },
 });
 
