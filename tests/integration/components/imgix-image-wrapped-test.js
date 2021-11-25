@@ -10,7 +10,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
 
   test('it renders', async function (assert) {
     await render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
-    assert.ok(this.$());
+    assert.dom('img').exists();
   });
 
   test('it renders event more better', async function (assert) {
@@ -18,8 +18,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`<div style='width:200px;height:200px;'>{{imgix-image-wrapped path='/users/1.png' }}</div>`
     );
 
-    let uri = new URI(this.$('img').attr('src'));
-    assert.equal(this.$().text().trim(), '');
+    let uri = new URI(document.querySelector('img').src);
     assert.equal(uri.path(), '/users/1.png');
   });
 
@@ -29,18 +28,18 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
     );
 
     assert.ok(
-      this.$('img')
-        .attr('src')
-        .indexOf('https://assets.imgix.net/users/1.png') > -1
+      document
+        .querySelector('img')
+        .src.indexOf('https://assets.imgix.net/users/1.png') > -1
     );
-    assert.ok(this.$('img').attr('src').indexOf('w=1250') > -1);
+    assert.ok(document.querySelector('img').src.indexOf('w=1250') > -1);
   });
 
   test('it builds the default URL', async function (assert) {
     await render(
       hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png"}}</div>`
     );
-    let uri = new URI(this.$('img').attr('src'));
+    let uri = new URI(document.querySelector('img').src);
 
     assert.equal(uri.getQueryParamValue('w'), '1250');
     assert.equal(uri.path(), '/users/1.png');
@@ -54,7 +53,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png?sat=100"}}</div>`
     );
 
-    let uri = new URI(this.$('img').attr('src'));
+    let uri = new URI(document.querySelector('img').src);
     assert.equal(uri.getQueryParamValue('sat'), '100');
     assert.equal(uri.getQueryParamValue('w'), '1250');
   });
@@ -64,8 +63,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`<div style='width:1250px;'>{{imgix-image-wrapped path="/users/1.png" aspectRatio=1.3333}}</div>`
     );
 
-    assert.equal(this.$().text().trim(), '');
-    let uri = new URI(this.$('img').attr('src'));
+    let uri = new URI(document.querySelector('img').src);
 
     assert.equal(uri.getQueryParamValue('w'), '1250');
     assert.equal(uri.getQueryParamValue('h'), '937');
@@ -77,7 +75,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`{{imgix-image-wrapped path="/users/1.png?sat=100&fit=min&crop=top,left"}}`
     );
 
-    let uri = new URI(this.$('img').attr('src'));
+    let uri = new URI(document.querySelector('img').src);
     assert.equal(uri.getQueryParamValue('fit'), 'min');
     assert.equal(uri.getQueryParamValue('crop'), 'top,left');
   });
@@ -88,7 +86,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`{{imgix-image-wrapped path="/users/1.png" crop="top,left" fit="min"}}`
     );
 
-    let uri = new URI(this.$('img').attr('src'));
+    let uri = new URI(document.querySelector('img').src);
     assert.equal(uri.getQueryParamValue('crop'), 'top,left');
     assert.equal(uri.getQueryParamValue('fit'), 'min');
   });
@@ -99,14 +97,14 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`{{imgix-image-wrapped path="/users/1.png" auto="compress,enhance"}}`
     );
 
-    let uri = new URI(this.$('img').attr('src'));
+    let uri = new URI(document.querySelector('img').src);
     assert.equal(uri.getQueryParamValue('auto'), 'compress,enhance');
   });
 
   test('it allows setting the alt attribute', async function (assert) {
     await render(hbs`{{imgix-image-wrapped path="/users/1.png" alt="User 1"}}`);
 
-    let alt = this.$('img').attr('alt');
+    let alt = document.querySelector('img').alt;
     assert.equal(alt, 'User 1');
   });
 
@@ -116,7 +114,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
 
     await render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
 
-    const uri = new URI(this.$('img').attr('src'));
+    const uri = new URI(document.querySelector('img').src);
 
     assert.equal(uri.getQueryParamValue('dpr'), '1.33');
 
@@ -126,7 +124,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
   test('the generated src url has an ixlib parameter', async function (assert) {
     await render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
 
-    const src = this.$('img').attr('src');
+    const src = document.querySelector('img').src;
     const uri = new URI(src);
     assert.ok(src.includes('ixlib=ember-'));
     assert.ok(/^ember-\d\.\d\.\d$/.test(uri.getQueryParamValue('ixlib')));
@@ -137,7 +135,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
       hbs`{{imgix-image-wrapped path="/users/1.png" disableLibraryParam=true}}`
     );
 
-    const src = this.$('img').attr('src');
+    const src = document.querySelector('img').src;
     assert.false(src.includes('ixlib=ember-'));
   });
 
@@ -147,7 +145,7 @@ module('Integration | Component | imgix image wrapped', function (hooks) {
     config.APP.imgix.disableLibraryParam = true;
     await render(hbs`{{imgix-image-wrapped path="/users/1.png"}}`);
 
-    const src = this.$('img').attr('src');
+    const src = document.querySelector('img').src;
     assert.false(src.includes('ixlib=ember-'));
 
     config.APP.imgix.disableLibraryParam = oldDisableLibraryParam;
