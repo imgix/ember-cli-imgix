@@ -1,5 +1,5 @@
 import Mixin from '@ember/object/mixin';
-import EmberObject, { computed, get } from '@ember/object';
+import EmberObject, { computed } from '@ember/object';
 import { merge } from '@ember/polyfills';
 import { schedule, debounce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
@@ -54,11 +54,11 @@ export default Mixin.create({
   }),
 
   _widthFromPath: computed('_query.w', function () {
-    return get(this, '_query.w');
+    return this._query.w;
   }),
 
   _heightFromPath: computed('_query.h', function () {
-    return get(this, '_query.h');
+    return this._query.h;
   }),
 
   /**
@@ -113,7 +113,7 @@ export default Mixin.create({
         merge(options, this._query);
       }
 
-      if (!!env && get(env, 'APP.imgix.debug')) {
+      if (!!env && env.APP.imgix.debug) {
         merge(options, this._debugParams);
       }
 
@@ -144,8 +144,8 @@ export default Mixin.create({
   didResize: function () {
     let debounceRate = 200;
     let env = this._config;
-    if (!!env && !!get(env, 'APP.imgix.debounceRate')) {
-      debounceRate = get(env, 'APP.imgix.debounceRate');
+    if (!!env && !!env.APP.imgix.debounceRate) {
+      debounceRate = env.APP.imgix.debounceRate;
     }
     debounce(this, this._incrementResizeCounter, debounceRate);
   },
@@ -157,14 +157,14 @@ export default Mixin.create({
    */
   _client: computed('_config', 'disableLibraryParam', function () {
     let env = this._config;
-    if (!env || !get(env, 'APP.imgix.source')) {
+    if (!env || !env.APP.imgix.source) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') || this.disableLibraryParam;
+      config.APP.imgix.disableLibraryParam || this.disableLibraryParam;
 
     return new ImgixClient({
       domain: env.APP.imgix.source,
@@ -226,7 +226,7 @@ export default Mixin.create({
       }
 
       if (!newWidth) {
-        newWidth = get(this, 'element.clientWidth') || this._widthFromPath;
+        newWidth = this.element.clientWidth || this._widthFromPath;
       }
       let pixelStep = this.pixelStep;
       return Math.ceil(newWidth / pixelStep) * pixelStep;
@@ -245,7 +245,7 @@ export default Mixin.create({
     'aspectRatio',
     'element.clientHeight',
     function () {
-      let newHeight = get(this, 'element.clientHeight') || 0;
+      let newHeight = this.element.clientHeight || 0;
 
       if (this.aspectRatio) {
         newHeight = this._width / this.aspectRatio;

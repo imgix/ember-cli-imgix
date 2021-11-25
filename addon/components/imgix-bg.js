@@ -1,5 +1,5 @@
 import Component from '@ember/component';
-import { computed, set, get } from '@ember/object';
+import { computed, set } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import config from 'ember-get-config';
 import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
@@ -63,14 +63,14 @@ export default Component.extend(ResizeAware, {
   }),
 
   _client: computed('disableLibraryParam', function () {
-    if (!config || !get(config, 'APP.imgix.source')) {
+    if (!config || !config.APP.imgix.source) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') || this.disableLibraryParam;
+      config.APP.imgix.disableLibraryParam || this.disableLibraryParam;
 
     return new ImgixClient({
       domain: config.APP.imgix.source,
@@ -118,7 +118,7 @@ export default Component.extend(ResizeAware, {
       const buildWithOptions = (options) =>
         client.buildURL(pathAsUri.path(), options);
 
-      const shouldShowDebugParams = get(config, 'APP.imgix.debug');
+      const shouldShowDebugParams = config.APP.imgix.debug;
 
       const imgixOptions = this.options || {};
       const { width, height } = (() => {
