@@ -22,7 +22,7 @@ const attributeMap = {
   src: 'src',
   srcset: 'srcset',
   sizes: 'sizes',
-  ...(get(config, 'APP.imgix.attributeNameMap') || {}),
+  ...(config.APP.imgix.attributeNameMap || {}),
 };
 
 const buildDebugParams = ({ width, height }) => {
@@ -106,14 +106,14 @@ export default Component.extend({
   }),
 
   _client: computed('disableLibraryParam', function () {
-    if (!config || !get(config, 'APP.imgix.source')) {
+    if (!config || !config.APP.imgix.source) {
       throw new EmberError(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }
 
     const disableLibraryParam =
-      get(config, 'APP.imgix.disableLibraryParam') || this.disableLibraryParam;
+      config.APP.imgix.disableLibraryParam || this.disableLibraryParam;
 
     return new ImgixClient({
       domain: config.APP.imgix.source,
@@ -157,7 +157,7 @@ export default Component.extend({
 
       const isFixedDimensionsMode = widthProp != null || heightProp != null;
 
-      const shouldShowDebugParams = get(config, 'APP.imgix.debug');
+      const shouldShowDebugParams = config.APP.imgix.debug;
 
       const imgixOptions = this.options;
 
@@ -242,10 +242,10 @@ export default Component.extend({
   ),
 
   src: computed('_srcAndSrcSet.src', function () {
-    return get(this, '_srcAndSrcSet.src');
+    return this._srcAndSrcSet.src;
   }),
   srcset: computed('_srcAndSrcSet.srcset', function () {
-    return get(this, '_srcAndSrcSet.srcset');
+    return this._srcAndSrcSet.srcset;
   }),
   placeholderSrc: computed('_client', 'placeholderPath', function () {
     if (attributeMap.src === 'src') {
