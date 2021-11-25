@@ -1,6 +1,5 @@
 import Component from '@ember/component';
 import { computed, get } from '@ember/object';
-import { tryInvoke } from '@ember/utils';
 import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from 'imgix-core-js';
@@ -270,7 +269,7 @@ export default Component.extend({
   _handleImageLoad(event) {
     debounce(
       this,
-      () => !this.isDestroyed && tryInvoke(this, 'onLoad', [event]),
+      () => !this.isDestroyed && this.onLoad?.(event)),
       500
     );
   },
@@ -278,7 +277,7 @@ export default Component.extend({
   _handleImageError(event) {
     debounce(
       this,
-      () => !this.isDestroyed && tryInvoke(this, 'onError', [event]),
+      () => !this.isDestroyed && this.onError?.(event)),
       500
     );
   },
