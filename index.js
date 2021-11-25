@@ -13,6 +13,11 @@ module.exports = {
     babel: {
       plugins: ['@babel/plugin-proposal-object-rest-spread'],
     },
+    '@embroider/macros': {
+      setOwnConfig: {
+        version: require('./package').version,
+      },
+    },
   },
 
   treeForVendor(vendorTree) {
