@@ -1,4 +1,3 @@
-/* global Ember Promise global */
 import { module, test } from 'qunit';
 
 import targetWidths from 'ember-cli-imgix/common/targetWidths';
