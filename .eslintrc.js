@@ -19,7 +19,10 @@ module.exports = {
   env: {
     browser: true,
   },
-  rules: {},
+  rules: {
+    // Change these to warning for now as we migrate away from Jquery
+    'ember/no-jquery': 'warn',
+  },
   overrides: [
     // node files
     {
