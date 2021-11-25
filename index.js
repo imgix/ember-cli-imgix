@@ -11,7 +11,7 @@ module.exports = {
 
   options: {
     babel: {
-      plugins: [],
+      plugins: ['@babel/plugin-proposal-object-rest-spread'],
     },
   },
 

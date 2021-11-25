@@ -83,6 +83,7 @@
     "responsive"
   ],
   "dependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^2.0.0",
     "ember-cli-babel": "^7.26.6",
