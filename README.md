@@ -66,7 +66,9 @@ imgix: {
     src: string
     srcset: string
     sizes: string
-  }
+  },
+  classNames?: string,
+  defaultParams?: {}
 }
 ```
 
