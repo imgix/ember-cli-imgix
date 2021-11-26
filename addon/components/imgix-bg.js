@@ -77,7 +77,8 @@ export default Component.extend(ResizeAware, {
       includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
-        : `ember-${constants.APP_VERSION}`
+        : `ember-${constants.APP_VERSION}`,
+      secureURLToken: config.APP.imgix.secureURLToken
     });
   }),
 

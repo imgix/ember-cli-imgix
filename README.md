@@ -66,7 +66,8 @@ imgix: {
     src: string
     srcset: string
     sizes: string
-  }
+  },
+  secureURLToken?: string
 }
 ```
 
@@ -84,6 +85,7 @@ module.exports = function(environment) {
         debug: true, // Prints out diagnostic information on the image itself. Turn off in production.
         classNames: 'imgix-image', // default class used on the img element
         defaultParams: {}, // optional params that will be used in all generated paths
+        secureURLToken: 'sometoken', // optional token used to generate secure URLs
       }
     }
     // snip

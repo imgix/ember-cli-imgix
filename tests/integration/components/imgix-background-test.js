@@ -514,9 +514,59 @@ module('Integration | Component | imgix background', function(hooks) {
               Content
             {{/imgix-bg}}
           </div>
-          `);
+          `
+        );
 
-        expectSrcsTo(this.$, (_, uri) => assert.equal(uri.getQueryParamValue('auto'), 'format'));
+        expectSrcsTo(this.$, (_, uri) =>
+          assert.equal(uri.getQueryParamValue('auto'), 'format')
+        );
+      });
+    });
+
+    module('secure url token', function () {
+      test('is included as a query parameter when configured ', async function (assert) {
+        config.APP.imgix.secureURLToken = 'sometoken';
+
+        await render(
+          hbs`
+          <div>
+            <style>.imgix-bg { width: 1250px; height: 200px;}</style>
+            {{#imgix-bg
+              path="/users/1.png"
+            }}
+              Content
+            {{/imgix-bg}}
+          </div>
+        `
+        );
+
+        expectSrcsTo(this.$, (_, uri) => {
+          const secureParam = uri.getQueryParamValue('s');
+          assert.ok(secureParam);
+        });
+      });
+
+      test('is omitted as a query parameter when not configured ', async function (assert) {
+        // Explicitly set it to undefined
+        config.APP.imgix.secureURLToken = undefined;
+
+        await render(
+          hbs`
+          <div>
+            <style>.imgix-bg { width: 1250px; height: 200px;}</style>
+            {{#imgix-bg
+              path="/users/1.png"
+            }}
+              Content
+            {{/imgix-bg}}
+          </div>
+        `
+        );
+
+        expectSrcsTo(this.$, (_, uri) => {
+          const secureParam = uri.getQueryParamValue('s');
+          assert.notOk(secureParam);
+        });
       });
     });
   });
