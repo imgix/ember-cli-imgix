@@ -11,30 +11,33 @@
 
 ---
 <!-- /ix-docs-ignore -->
+<!-- prettier-ignore-start -->
 
 - [Overview / Resources](#overview--resources)
 - [Installation](#installation)
-  - [Global Configuration](#global-configuration)
+    * [Global Configuration](#global-configuration)
 - [Usage](#usage)
-  - [imgix-image](#imgix-image)
-    - [Parameters](#parameters)
-    - [Other imgix Options](#other-imgix-options)
-    - [Aspect Ratio](#aspect-ratio)
-    - [attributeNameMap](#attributenamemap)
-    - [Lifecycle Hooks](#lifecycle-hooks)
-    - [Lazy Loading](#lazy-loading)
-    - [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
-    - [ixlib param](#ixlib-param)
-  - [imgix-bg](#imgix-bg)
-  - [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
-  - [imgix-core-js](#imgix-core-js)
+    * [imgix-image](#imgix-image)
+        + [Parameters](#parameters)
+        + [Other imgix Options](#other-imgix-options)
+        + [Aspect Ratio](#aspect-ratio)
+        + [attributeNameMap](#attributenamemap)
+        + [Lifecycle Hooks](#lifecycle-hooks)
+        + [Lazy Loading](#lazy-loading)
+        + [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
+        + [ixlib param](#ixlib-param)
+    * [imgix-bg](#imgix-bg)
+    * [imgix-image-wrapped - DEPRECATED](#imgix-image-wrapped---deprecated)
+    * [imgix-core-js](#imgix-core-js)
 - [Upgrade Guide](#upgrade-guide)
-  - [version 0.x to version 1](#version-0x-to-version-1)
-  - [version 1.x to version 2.x](#version-1x-to-version-2x)
+    * [version 0.x to version 1](#version-0x-to-version-1)
+    * [version 1.x to version 2.x](#version-1x-to-version-2x)
 - [Browser Support](#browser-support)
 - [Running a Test App](#running-a-test-app)
 - [Running Tests](#running-tests)
 - [License](#license)
+
+<!-- prettier-ignore-end -->
 
 **Note:** Front-end imgix libraries and framework integrations will not work with imgix Web Proxy Sources. They will only work with S3, Azure, Google Cloud Storage, or Web Folder sources.
 
