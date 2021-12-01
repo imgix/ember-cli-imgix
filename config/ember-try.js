@@ -31,32 +31,6 @@ module.exports = async function () {
           },
         },
       },
-      // Comment out the release, beta and canary builds as they use Ember@4
-      // which is not compatible atm
-      // {
-      //   name: 'ember-release',
-      //   npm: {
-      //     devDependencies: {
-      //       'ember-source': await getChannelURL('release'),
-      //     },
-      //   },
-      // },
-      // {
-      //   name: 'ember-beta',
-      //   npm: {
-      //     devDependencies: {
-      //       'ember-source': await getChannelURL('beta'),
-      //     },
-      //   },
-      // },
-      // {
-      //   name: 'ember-canary',
-      //   npm: {
-      //     devDependencies: {
-      //       'ember-source': await getChannelURL('canary'),
-      //     },
-      //   },
-      // },
       {
         name: 'ember-classic',
         env: {
@@ -75,9 +49,44 @@ module.exports = async function () {
           },
         },
       },
+      // The rest of the scenarios are allowed to fail as they use Ember@4,
+      // which is not supported by this library yet
+      {
+        name: 'ember-release',
+        allowedToFail: true,
+        npm: {
+          devDependencies: {
+            'ember-source': await getChannelURL('release'),
+          },
+        },
+      },
+      {
+        name: 'ember-beta',
+        allowedToFail: true,
+        npm: {
+          devDependencies: {
+            'ember-source': await getChannelURL('beta'),
+          },
+        },
+      },
+      {
+        name: 'ember-canary',
+        allowedToFail: true,
+        npm: {
+          devDependencies: {
+            'ember-source': await getChannelURL('canary'),
+          },
+        },
+      },
       // Remove Embroider builds for now as there are compat issues
-      // embroiderSafe(),
-      // embroiderOptimized(),
+      // {
+      //   ...embroiderSafe(),
+      //   allowedToFail: true,
+      // },
+      // {
+      //   ...embroiderOptimized(),
+      //   allowedToFail: true,
+      // }
     ],
   };
 };
