@@ -40,7 +40,7 @@ jobs:
       install:
         - yarn install --no-lockfile --non-interactive
       script:
-        - yarn test:ember
+        - yarn test:ember-compatibility
 
     # we recommend new addons test the current and previous LTS
     # as well as latest stable release (bonus points to beta/canary)
