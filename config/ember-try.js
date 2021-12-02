@@ -31,30 +31,32 @@ module.exports = async function () {
           },
         },
       },
-      {
-        name: 'ember-release',
-        npm: {
-          devDependencies: {
-            'ember-source': await getChannelURL('release'),
-          },
-        },
-      },
-      {
-        name: 'ember-beta',
-        npm: {
-          devDependencies: {
-            'ember-source': await getChannelURL('beta'),
-          },
-        },
-      },
-      {
-        name: 'ember-canary',
-        npm: {
-          devDependencies: {
-            'ember-source': await getChannelURL('canary'),
-          },
-        },
-      },
+      // Comment out the release, beta and canary builds as they use Ember@4
+      // which is not compatible atm
+      // {
+      //   name: 'ember-release',
+      //   npm: {
+      //     devDependencies: {
+      //       'ember-source': await getChannelURL('release'),
+      //     },
+      //   },
+      // },
+      // {
+      //   name: 'ember-beta',
+      //   npm: {
+      //     devDependencies: {
+      //       'ember-source': await getChannelURL('beta'),
+      //     },
+      //   },
+      // },
+      // {
+      //   name: 'ember-canary',
+      //   npm: {
+      //     devDependencies: {
+      //       'ember-source': await getChannelURL('canary'),
+      //     },
+      //   },
+      // },
       {
         name: 'ember-classic',
         env: {
