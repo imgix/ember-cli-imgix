@@ -84,7 +84,6 @@
     "responsive"
   ],
   "dependencies": {
-    "@babel/plugin-proposal-object-rest-spread": "^7.16.0",
     "@embroider/macros": "^0.47.2",
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^2.0.0",
