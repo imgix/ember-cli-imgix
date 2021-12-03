@@ -11,6 +11,7 @@ module.exports = {
 
   options: {
     babel: {
+      // Brought in via ember-cli-babel's dep on babel preset env
       plugins: ['@babel/plugin-proposal-object-rest-spread'],
     },
     '@embroider/macros': {
