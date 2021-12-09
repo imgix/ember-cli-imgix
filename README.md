@@ -31,6 +31,7 @@
 - [Upgrade Guide](#upgrade-guide)
     * [version 0.x to version 1](#version-0x-to-version-1)
     * [version 1.x to version 2.x](#version-1x-to-version-2x)
+    * [version 2.x to version 3.x](#version-2x-to-version-3x)
 - [Browser Support](#browser-support)
 - [Running a Test App](#running-a-test-app)
 - [Running Tests](#running-tests)
@@ -338,6 +339,10 @@ The largest change in this major version bump is the move to width-based `srcSet
 
 - A `sizes` prop should be added to all usages of ember-cli-imgix, unless the width or height of the image are known beforehand (see above). If `sizes` is new to you (or even if it's not), Eric's [seminal article on `srcset` and `sizes`](https://ericportis.com/posts/2014/srcset-sizes/) is highly recommended.
 - `aspectRatio` has been moved to `options.ar`. Thus, `aspectRatio` has been deprecated. It will be supported until the v3 release. The format of the new `options.ar` attribute is `w:h`.
+
+### version 2.x to version 3.x
+
+The largest change in this major version is that the `imgix-image-wrapped` component has been removed and we've upgraded the base Ember CLI blueprint to the latest. This version should also work with applications using Embroider.
 
 ## Browser Support
 
