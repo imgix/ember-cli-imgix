@@ -8468,14 +8468,6 @@ ignore@^5.1.4:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.1.9.tgz#9ec1a5cbe8e1446ec60d4420060d43aa6e7382fb"
   integrity sha512-2zeMQpbKz5dhZ9IwL0gbxSW5w0NK/MSAMtNuhgIHEPmaU3vPdKPL0UdvUCXs5SS4JAwsBxysK5sFMW8ocFiVjQ==
 
-imgix-core-js@2.3.2:
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/imgix-core-js/-/imgix-core-js-2.3.2.tgz#f71a418c60232700993b4bd57526a6d9e0820b95"
-  integrity sha512-O5jThQLXwlf6k8oZr7e+05LLLnxupx/MNpJftKTBnsb1A8fL2UzL/2JGK9LuOlcXQP94O7O2r8W0KZnutjc3eg==
-  dependencies:
-    js-base64 "^2.1.9"
-    md5 "^2.2.1"
-
 import-fresh@^3.0.0, import-fresh@^3.2.1:
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/import-fresh/-/import-fresh-3.3.0.tgz#37162c25fcb9ebaa2e6e53d5b4d88ce17d9e0c2b"
@@ -9055,7 +9047,7 @@ js-base64@2.4.4:
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.4.4.tgz#1300ffc679d0d106c7318da903636d687d8e222a"
   integrity sha512-s3ziugxf5q/1tR/NZk0oKtlrI4ySUD7MFkWBow1GiA1MlkQHhagV/b8e+AFLXhMIQh805eQnG3So737IBYhyxA==
 
-js-base64@^2.1.8, js-base64@^2.1.9:
+js-base64@^2.1.8:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.6.4.tgz#f4e686c5de1ea1f867dbcad3d46d969428df98c4"
   integrity sha512-pZe//GGmwJndub7ZghVHz7vjb2LgC1m8B07Au3eYqeqv9emhESByMXxaEgkUkEqJe87oBbSniGYoQNIBklc7IQ==
