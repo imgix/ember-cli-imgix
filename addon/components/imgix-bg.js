@@ -6,7 +6,7 @@ import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
 import { toFixed, constants, targetWidths, findClosest } from '../common';
 import URI from 'jsuri';
 import EmberError from '@ember/error';
-import ImgixClient from 'imgix-core-js';
+import ImgixClient from '@imgix/js-core';
 
 const buildDebugParams = ({ width, height }) => {
   return {
@@ -74,7 +74,7 @@ export default Component.extend(ResizeAware, {
 
     return new ImgixClient({
       domain: config.APP.imgix.source,
-      includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
+      includeLibraryParam: false, // to disable @imgix/js-core setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
         : `ember-${constants.APP_VERSION}`,

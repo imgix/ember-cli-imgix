@@ -2,7 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import config from 'ember-get-config';
 import EmberError from '@ember/error';
-import ImgixClient from 'imgix-core-js';
+import ImgixClient from '@imgix/js-core';
 import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
 import { constants, targetWidths } from '../common';
@@ -117,7 +117,7 @@ export default Component.extend({
 
     return new ImgixClient({
       domain: config.APP.imgix.source,
-      includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
+      includeLibraryParam: false, // to disable @imgix/js-core setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
         : `ember-${constants.APP_VERSION}`,
