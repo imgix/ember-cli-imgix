@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/imgix/ember-cli-imgix/compare/v2.1.2...v3.0.0) (2021-12-09)
+
+### BREAKING CHANGES
+
+* The deprecated imgix-image-wrapped component has been removed.
+* Ember 2.x is no longer supported.
+
+
+
 <a name="2.1.2"></a>
 ## [2.1.2](https://github.com/imgix/ember-cli-imgix/compare/v2.1.1...v2.1.2) (2020-01-03)
 
