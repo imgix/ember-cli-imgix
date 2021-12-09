@@ -4,7 +4,7 @@ import { merge } from '@ember/polyfills';
 import { schedule, debounce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
 import EmberError from '@ember/error';
-import ImgixClient from 'imgix-core-js';
+import ImgixClient from '@imgix/js-core';
 import config from 'ember-get-config';
 import URI from 'jsuri';
 import { toFixed, constants } from '../common';
@@ -164,7 +164,7 @@ export default Mixin.create({
 
     return new ImgixClient({
       domain: env.APP.imgix.source,
-      includeLibraryParam: false, // to disable imgix-core-js setting ixlib=js by default
+      includeLibraryParam: false, // to disable @imgix/js-core setting ixlib=js by default
       libraryParam: disableLibraryParam
         ? undefined
         : `ember-${constants.APP_VERSION}`,
