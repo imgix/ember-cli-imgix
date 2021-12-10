@@ -30,9 +30,9 @@ module.exports = {
 
     trees.push(
       FastbootTransform(
-        new Funnel(path.dirname(require.resolve('imgix-core-js')), {
-          files: ['imgix-core-js.js'],
-          destDir: 'imgix-core-js',
+        new Funnel(path.dirname(require.resolve('@imgix/js-core')), {
+          files: ['imgix-js-core.js'],
+          destDir: 'imgix-js-core',
         })
       )
     );
@@ -60,8 +60,8 @@ module.exports = {
     this._super(arguments);
 
     this.import('vendor/js-base64/base64.js');
-    this.import('vendor/imgix-core-js/imgix-core-js.js');
-    this.import('vendor/imgix-core-js-shim.js');
+    this.import('vendor/imgix-js-core/imgix-js-core.js');
+    this.import('vendor/imgix-js-core-shim.js');
 
     this.import('vendor/jsuri/Uri.js', {
       using: [
