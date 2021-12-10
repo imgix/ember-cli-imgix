@@ -9,9 +9,11 @@ All notable changes to this project will be documented in this file. See [standa
 
 * The deprecated imgix-image-wrapped component has been removed.
 * Ember 2.x is no longer supported.
+* Upgraded ember-cli-babel to 7.26.6
 
-
-
+### Internal
+* Update Ember CLI blueprint to 3.28
+* Widen range of allowed ember-get-config versions
 <a name="2.1.2"></a>
 ## [2.1.2](https://github.com/imgix/ember-cli-imgix/compare/v2.1.1...v2.1.2) (2020-01-03)
 
