@@ -6,7 +6,7 @@ orbs:
 jobs:
   test:
     docker:
-      - image: 'cimg/node:12.22-browser'
+      - image: 'cimg/node:12.22-browsers'
     steps:
       - checkout
       - browser-tools/install-chrome
