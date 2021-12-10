@@ -27,7 +27,7 @@
         + [Low Quality Image Placeholder Technique (LQIP)](#low-quality-image-placeholder-technique-lqip)
         + [ixlib param](#ixlib-param)
     * [imgix-bg](#imgix-bg)
-    * [imgix-core-js](#imgix-core-js)
+    * [@imgix/js-core](#imgix/js-core)
 - [Upgrade Guide](#upgrade-guide)
     * [version 0.x to version 1](#version-0x-to-version-1)
     * [version 1.x to version 2.x](#version-1x-to-version-2x)
@@ -317,12 +317,12 @@ This will generate html similar to the following:
 
 **Note:** `imgix-bg` will respect any global default parameters unless explicitly overriden.
 
-### imgix-core-js
+### @imgix/js-core
 
-`imgix-core-js` is available to you shimmed as:
+`@imgix/js-core` is available to you shimmed as:
 
 ```js
-import imgix from 'imgix-core-js';
+import imgix from '@imgix/js-core';
 ```
 
 ## Upgrade Guide
