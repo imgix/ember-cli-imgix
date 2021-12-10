@@ -8,5 +8,5 @@
     });
   }
 
-  generateModule('imgix-core-js', { 'default': window.ImgixClient });
+  generateModule('@imgix/js-core', { 'default': window.ImgixClient });
 })();
