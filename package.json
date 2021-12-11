@@ -84,7 +84,7 @@
     "responsive"
   ],
   "dependencies": {
-    "@embroider/macros": "^0.47.2",
+    "@embroider/macros": ">=0.47.2",
     "@imgix/js-core": "^3.2.2",
     "broccoli-funnel": "^2.0.1",
     "broccoli-merge-trees": "^2.0.0",
