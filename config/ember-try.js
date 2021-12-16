@@ -78,15 +78,14 @@ module.exports = async function () {
           },
         },
       },
-      // Remove Embroider builds for now as there are compat issues
-      // {
-      //   ...embroiderSafe(),
-      //   allowedToFail: true,
-      // },
-      // {
-      //   ...embroiderOptimized(),
-      //   allowedToFail: true,
-      // }
+      {
+        ...embroiderSafe(),
+        allowedToFail: true,
+      },
+      {
+        ...embroiderOptimized(),
+        allowedToFail: true,
+      },
     ],
   };
 };
