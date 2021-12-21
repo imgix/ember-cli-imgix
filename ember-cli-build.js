@@ -11,9 +11,9 @@ module.exports = function (defaults) {
     },
   });
 
-  if (app.env === 'test') {
-    app.import('vendor/ember/ember-template-compiler.js');
-  }
+  // if (app.env === 'test') {
+  //   app.import('vendor/ember/ember-template-compiler.js');
+  // }
 
   const { maybeEmbroider } = require('@embroider/test-setup');
   return maybeEmbroider(app, {
