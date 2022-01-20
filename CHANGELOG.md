@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/imgix/ember-cli-imgix/compare/v3.0.0...v3.0.1) (2022-01-20)
+
+
+### Bug Fixes
+
+* **deps:** bump to ember-get-config@1.0.0 ([#221](https://github.com/imgix/ember-cli-imgix/issues/221)) ([bd1a5a3](https://github.com/imgix/ember-cli-imgix/commit/bd1a5a3))
+
+
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/imgix/ember-cli-imgix/compare/v2.1.2...v3.0.0) (2021-12-09)
 
