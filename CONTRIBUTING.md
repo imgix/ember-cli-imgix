@@ -169,5 +169,5 @@ Ensure all commits and PR titles are correctly described using the [Conventional
 yarn install                             # update dependencies to latest
 yarn release                         # build code, bump package version according to commit messages, and generate changelog
 git push --follow-tags origin main      # push to github and publish
-yarn publish                             # publish to npm
+npm publish                             # publish to npm
 ```
