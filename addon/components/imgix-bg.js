@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { computed, set } from '@ember/object';
-import { htmlSafe } from '@ember/string';
+import { htmlSafe } from '@ember/template';
 import config from 'ember-get-config';
 import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
 import { toFixed, constants, targetWidths, findClosest } from '../common';
