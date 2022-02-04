@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.2"></a>
+## [3.0.2](https://github.com/imgix/ember-cli-imgix/compare/v3.0.1...v3.0.2) (2022-02-04)
+
+### Bug Fixes
+
+* update htmlSafe import to @ember/template rather than @ember/string
+
 <a name="3.0.1"></a>
 ## [3.0.1](https://github.com/imgix/ember-cli-imgix/compare/v3.0.0...v3.0.1) (2022-01-20)
 
