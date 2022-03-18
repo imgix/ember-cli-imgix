@@ -4,7 +4,7 @@
 `ember-cli-imgix` is an add-on that provides custom components for integrating [imgix](https://www.imgix.com) into Ember sites.
 
 [![Version](https://img.shields.io/npm/v/ember-cli-imgix.svg)](https://www.npmjs.com/package/ember-cli-imgix)
-[![Build Status](https://travis-ci.com/imgix/ember-cli-imgix.svg?branch=main)](https://travis-ci.com/imgix/ember-cli-imgix)
+[![Build Status](https://circleci.com/gh/imgix/ember-cli-imgix.svg?style=shield)](https://circleci.com/gh/imgix/ember-cli-imgix)
 ![Downloads](https://img.shields.io/npm/dt/ember-cli-imgix)
 [![License](https://img.shields.io/github/license/imgix/ember-cli-imgix)](https://github.com/imgix/ember-cli-imgix/blob/main/LICENSE.md)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix?ref=badge_shield)
