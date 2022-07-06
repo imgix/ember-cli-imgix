@@ -1,5 +1,6 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import config from 'ember-get-config';
 import EmberError from '@ember/error';
 import ImgixClient from '@imgix/js-core';
@@ -241,8 +242,8 @@ export default Component.extend({
     }
   ),
 
-  src: computed.reads('_srcAndSrcSet.src'),
-  srcset: computed.reads('_srcAndSrcSet.srcset'),
+  src: reads('_srcAndSrcSet.src'),
+  srcset: reads('_srcAndSrcSet.srcset'),
   placeholderSrc: computed('_client', 'placeholderPath', function () {
     if (attributeMap.src === 'src') {
       return null;
