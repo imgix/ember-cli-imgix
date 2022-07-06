@@ -1,5 +1,6 @@
 import Mixin from '@ember/object/mixin';
 import EmberObject, { computed } from '@ember/object';
+import { reads } from '@ember/object/computed';
 import { merge } from '@ember/polyfills';
 import { schedule, debounce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
@@ -53,9 +54,9 @@ export default Mixin.create({
     return path ? EmberObject.create(query) : {};
   }),
 
-  _widthFromPath: computed.reads('_query.w'),
+  _widthFromPath: reads('_query.w'),
 
-  _heightFromPath: computed.reads('_query.h'),
+  _heightFromPath: reads('_query.h'),
 
   /**
    * @private
