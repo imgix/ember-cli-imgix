@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="3.0.3"></a>
+## [3.0.3](https://github.com/imgix/ember-cli-imgix/compare/v3.0.2...v3.0.3) (2022-08-01)
+
+* deprecations: import reads from '@ember/object/computed' ([#227](https://github.com/imgix/ember-cli-imgix/pull/227)) ([4bba9f9](https://github.com/imgix/ember-cli-imgix/commit/4bba9f90cce0f6bee48ec2ce3ca2e12aa01293bb))
+
 <a name="3.0.2"></a>
 ## [3.0.2](https://github.com/imgix/ember-cli-imgix/compare/v3.0.1...v3.0.2) (2022-02-04)
 
