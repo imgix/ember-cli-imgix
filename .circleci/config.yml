@@ -28,6 +28,9 @@ jobs:
       - run:
           name: Test compat
           command: yarn test:ember-compatibility
+      - run:
+          name: Test build
+          command: yarn build
 
 workflows:
   test-frontend:
