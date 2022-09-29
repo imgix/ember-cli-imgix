@@ -18,7 +18,7 @@ jobs:
             chromedriver --version
           name: Check install
       - node/install-packages:
-          pkg-manager: yarn
+          override-ci-command: yarn install
       - run:
           name: Lint
           command: yarn link
