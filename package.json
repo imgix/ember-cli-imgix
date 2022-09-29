@@ -22,7 +22,6 @@
     "lint:hbs:fix": "ember-template-lint . --fix",
     "lint:js": "eslint .",
     "lint:js:fix": "eslint . --fix",
-    "prepare": "ember build",
     "prepublishOnly": "ember build",
     "start": "ember server",
     "test": "npm-run-all test:*",
