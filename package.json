@@ -49,7 +49,7 @@
     "ember-cli-github-pages": "^0.2.0",
     "ember-cli-google-fonts": "^2.16.2",
     "ember-cli-inject-live-reload": "^2.1.0",
-    "ember-cli-sass": "^7.1.7",
+    "ember-cli-sass": "^11.0",
     "ember-cli-sri": "^2.1.1",
     "ember-cli-terser": "^4.0.2",
     "ember-code-snippet": "^2.0.1",
@@ -75,6 +75,7 @@
     "prettier": "^2.3.2",
     "qunit": "^2.16.0",
     "qunit-dom": "^1.6.0",
+    "sass": "^1.55.0",
     "standard-version": "^4.4.0"
   },
   "keywords": [
