@@ -4,7 +4,6 @@ import { reads } from '@ember/object/computed';
 import { merge } from '@ember/polyfills';
 import { schedule, debounce } from '@ember/runloop';
 import { getOwner } from '@ember/application';
-import EmberError from '@ember/error';
 import ImgixClient from '@imgix/js-core';
 import config from 'ember-get-config';
 import URI from 'jsuri';
@@ -149,13 +148,13 @@ export default Mixin.create({
 
   /**
    * @property ImgixClient instantiated ImgixClient
-   * @throws {EmberError} Will throw an error if the imgix config information is not found in config/environment.js
+   * @throws {Error} Will throw an error if the imgix config information is not found in config/environment.js
    * @return ImgixClient return an instantiated ImgixClient instance.
    */
   _client: computed('_config', 'disableLibraryParam', function () {
     let env = this._config;
     if (!env || !env.APP.imgix.source) {
-      throw new EmberError(
+      throw new Error(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }

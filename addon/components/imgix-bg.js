@@ -5,7 +5,6 @@ import config from 'ember-get-config';
 import ResizeAware from 'ember-resize-aware/mixins/resize-aware';
 import { toFixed, constants, targetWidths, findClosest } from '../common';
 import URI from 'jsuri';
-import EmberError from '@ember/error';
 import ImgixClient from '@imgix/js-core';
 
 const buildDebugParams = ({ width, height }) => {
@@ -64,7 +63,7 @@ export default Component.extend(ResizeAware, {
 
   _client: computed('disableLibraryParam', function () {
     if (!config || !config.APP.imgix.source) {
-      throw new EmberError(
+      throw new Error(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }

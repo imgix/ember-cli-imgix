@@ -2,7 +2,6 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { reads } from '@ember/object/computed';
 import config from 'ember-get-config';
-import EmberError from '@ember/error';
 import ImgixClient from '@imgix/js-core';
 import URI from 'jsuri';
 import { debounce } from '@ember/runloop';
@@ -108,7 +107,7 @@ export default Component.extend({
 
   _client: computed('disableLibraryParam', function () {
     if (!config || !config.APP.imgix.source) {
-      throw new EmberError(
+      throw new Error(
         'Could not find a source in the application configuration. Please configure APP.imgix.source in config/environment.js. See https://github.com/imgix/ember-cli-imgix for more information.'
       );
     }
