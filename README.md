@@ -1,4 +1,8 @@
 <!-- ix-docs-ignore -->
+[DEPRECATED]
+
+_This project has reached the end of its development. Feel free to browse the code, but please use other solutions for integrating imgix into your ember projects._
+
 ![imgix logo](https://assets.imgix.net/sdk-imgix-logo.svg)
 
 `ember-cli-imgix` is an add-on that provides custom components for integrating [imgix](https://www.imgix.com) into Ember sites.
@@ -8,6 +12,7 @@
 ![Downloads](https://img.shields.io/npm/dt/ember-cli-imgix)
 [![License](https://img.shields.io/github/license/imgix/ember-cli-imgix)](https://github.com/imgix/ember-cli-imgix/blob/main/LICENSE.md)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fimgix%2Fember-cli-imgix?ref=badge_shield)
+[![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
 ---
 <!-- /ix-docs-ignore -->
